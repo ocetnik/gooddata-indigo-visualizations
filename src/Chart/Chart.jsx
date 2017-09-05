@@ -1,5 +1,5 @@
 import Highcharts from 'highcharts';
-import { noop } from 'lodash';
+import { noop, isEqual } from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
@@ -25,13 +25,15 @@ export default class Chart extends Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        if (this.props.config === nextProps.config) {
-            return true;
+        if (isEqual(this.props.config, nextProps.config)) {
+            return false;
         }
 
-        this.createChart(nextProps.config);
+        return true;
+    }
 
-        return false;
+    componentDidUpdate() {
+        this.createChart(this.props.config);
     }
 
     componentWillUnmount() {
