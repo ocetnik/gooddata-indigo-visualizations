@@ -26,14 +26,15 @@
   },
   "files": [
     "es",
-    "lib"
+    "lib",
+    "LICENSE"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gooddata/gdc-indigo-visualizations.git"
   },
   "author": "ui@gooddata.com",
-  "license": "SEE LICENSE IN LICENSE.txt",
+  "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/gooddata/gdc-indigo-visualizations/issues"
   },
