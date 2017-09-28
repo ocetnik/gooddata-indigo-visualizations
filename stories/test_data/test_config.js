@@ -1,7 +1,5 @@
 import { assign } from 'lodash';
 
-/* eslint-disable max-len*/
-
 export const barChart2Series = {
     type: 'line',
     buckets: {

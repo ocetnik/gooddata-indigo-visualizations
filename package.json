@@ -11,6 +11,10 @@
     "build": "grunt prepublish",
     "prepublish": "npm run build",
     "storybook": "start-storybook -p 9001 -c .storybook",
+    "eslint": "./node_modules/eslint/bin/eslint.js --ext .js,.jsx src/ stories/",
+    "eslint-ci": "./node_modules/eslint/bin/eslint.js -f checkstyle -o ./ci/results/eslint-results.xml --ext .js,.jsx src/ stories/",
+    "validate": "yarn eslint && grunt stylelint",
+    "validate-ci": "yarn eslint-ci && grunt stylelint",
     "build-storybook": "build-storybook -c .storybook -o dist-storybook"
   },
   "jest": {
@@ -59,7 +63,7 @@
     "css-loader": "0.26.1",
     "enzyme": "3.0.0",
     "enzyme-adapter-react-15.4": "1.0.0",
-    "eslint-config-gooddata": "0.0.11",
+    "eslint-config-gooddata": "0.0.15",
     "file-loader": "0.10.0",
     "gemini": "4.18.1",
     "grunt": "1.0.1",
@@ -69,7 +73,6 @@
     "grunt-contrib-copy": "1.0.0",
     "grunt-grizzly": "0.15.0",
     "grunt-stylelint": "0.7.0",
-    "gruntify-eslint": "3.1.0",
     "html-reporter": "0.2.0",
     "jest": "21.0.0",
     "jest-junit": "3.0.0",

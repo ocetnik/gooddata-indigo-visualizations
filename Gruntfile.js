@@ -16,7 +16,6 @@ const babelConfig = {
 
 module.exports = (grunt) => {
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('gruntify-eslint');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks('grunt-stylelint');
@@ -59,18 +58,6 @@ module.exports = (grunt) => {
             }
         },
 
-        eslint: {
-            options: {
-                config: '.eslintrc'
-            },
-            all: {
-                src: [
-                    '**/*.{js,jsx}',
-                    '!{ci,es,gdc-ci,lib,node_modules,coverage,dist-storybook}/**/*'
-                ]
-            }
-        },
-
         stylelint: {
             all: {
                 options: {
@@ -89,6 +76,4 @@ module.exports = (grunt) => {
         'babel',
         'copy'
     ]);
-
-    grunt.registerTask('validate', ['eslint', 'stylelint']);
 };

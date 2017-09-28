@@ -66,7 +66,9 @@ export default class PieChartTransformation extends Component {
         afterRender: () => {},
         onDataTooLarge: () => {},
         onNegativeValues: () => {},
-        pieChartRenderer: renderPieChartTransformation
+        pieChartRenderer: renderPieChartTransformation,
+        height: undefined,
+        width: undefined
     };
 
     constructor(props) {

@@ -11,7 +11,6 @@ import StaticLegend from './StaticLegend';
 export const FLUID_LEGEND_THRESHOLD = 768;
 
 export default class Legend extends PureComponent {
-
     static propTypes = {
         chartType: PropTypes.string.isRequired,
         series: PropTypes.array.isRequired,

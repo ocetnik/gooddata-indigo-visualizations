@@ -11,7 +11,6 @@ export function renderTable(props) {
 }
 
 export default class TableTransformation extends Component {
-
     static propTypes = {
         afm: PropTypes.object,
         config: PropTypes.object,
@@ -32,7 +31,10 @@ export default class TableTransformation extends Component {
         config: {},
         drillableItems: [],
         tableRenderer: renderTable,
-        afterRender: () => {}
+        afterRender: () => {},
+        onSortChange: () => {},
+        height: undefined,
+        width: undefined
     };
 
 

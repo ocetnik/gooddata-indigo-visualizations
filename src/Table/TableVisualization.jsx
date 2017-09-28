@@ -406,7 +406,7 @@ export default class TableVisualization extends Component {
         const renderHeader =
             this.props.sortInTooltip ? this.renderTooltipHeader : this.renderDefaultHeader;
 
-        return columns.map((column, index) =>
+        return columns.map((column, index) => (
             <Column
                 key={`${index}.${column.id}`} // eslint-disable-line react/no-array-index-key
                 width={columnWidth}
@@ -416,7 +416,7 @@ export default class TableVisualization extends Component {
                 cell={this.renderCell(columns, index)}
                 allowCellsRecycling
             />
-        );
+        ));
     }
 
     render() {

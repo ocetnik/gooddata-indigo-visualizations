@@ -6,7 +6,6 @@ import LegendItem from './LegendItem';
 import { calculateFluidLegend } from './helpers';
 
 export default class FluidLegend extends PureComponent {
-
     static propTypes = {
         chartType: PropTypes.string.isRequired,
         series: PropTypes.array.isRequired,

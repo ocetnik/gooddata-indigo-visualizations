@@ -63,7 +63,11 @@ export default class LineFamilyChartTransformation extends Component {
         afm: {},
         drillableItems: [],
         lineFamilyChartRenderer: renderLineFamilyChart,
-        afterRender: () => {}
+        afterRender: () => {},
+        onDataTooLarge: null,
+        limits: {},
+        height: undefined,
+        width: undefined
     };
 
     constructor(props) {

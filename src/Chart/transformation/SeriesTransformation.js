@@ -108,7 +108,7 @@ export function setDrillableFlag(series) {
  * <pre>
  *
  * </pre>
- **/
+ * */
 export function getChartData(data, configuration, drillableItems) {
     const indices = configuration.indices;
 

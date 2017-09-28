@@ -6,7 +6,6 @@ import cx from 'classnames';
 import { ASC, DESC } from './Sort';
 
 export class TableSortBubbleContent extends Component {
-
     static propTypes = {
         title: PropTypes.string.isRequired,
         activeSortDir: PropTypes.oneOf([

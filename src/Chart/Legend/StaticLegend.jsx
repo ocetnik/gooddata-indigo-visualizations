@@ -8,7 +8,6 @@ import { TOP, BOTTOM, LEFT, RIGHT } from './PositionTypes';
 import { calculateStaticLegend, ITEM_HEIGHT } from './helpers';
 
 export default class StaticLegend extends PureComponent {
-
     static propTypes = {
         chartType: PropTypes.string.isRequired,
         series: PropTypes.array.isRequired,

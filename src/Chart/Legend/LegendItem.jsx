@@ -8,7 +8,6 @@ const VISIBLE_COLOR = '#6D7680';
 const DISABLED_COLOR = '#CCCCCC';
 
 export default class LegendItem extends Component {
-
     static propTypes = {
         item: PropTypes.shape({
             name: PropTypes.string.isRequired,

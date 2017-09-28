@@ -4,7 +4,6 @@ import Measure from 'react-measure';
 import TableVisualization from './TableVisualization';
 
 export default class Table extends PureComponent {
-
     static propTypes = {
         containerHeight: PropTypes.number,
         containerWidth: PropTypes.number
