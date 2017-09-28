@@ -21,7 +21,7 @@ describe('Chart', () => {
     it('should render highcharts', () => {
         const spy = jest.spyOn(Highcharts, 'Chart');
         const wrapper = createComponent();
-        const component = wrapper.component.getInstance();
+        const component = wrapper.instance();
         expect(component.chart).toBeTruthy();
         expect(spy).toHaveBeenCalledTimes(1);
     });
@@ -47,7 +47,7 @@ describe('Chart', () => {
 
     it('should call destroy callback on componentWillUnmount', () => {
         const wrapper = createComponent();
-        const component = wrapper.component.getInstance();
+        const component = wrapper.instance();
         component.chart.destroy = jest.fn();
 
         component.componentWillUnmount();

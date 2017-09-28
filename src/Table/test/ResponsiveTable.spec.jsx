@@ -6,7 +6,6 @@ import { withIntl } from '../../test/utils';
 
 import ResponsiveTable from '../ResponsiveTable';
 import Table from '../Table';
-import { TableControls } from '../TableControls';
 
 const HEADERS = [
     {
@@ -37,7 +36,7 @@ describe('Responsive Table', () => {
             onMore: () => {},
             onLess: () => {},
             ...customProps
-        }
+        };
         return mount(
             <WrappedTable
                 containerWidth={600}

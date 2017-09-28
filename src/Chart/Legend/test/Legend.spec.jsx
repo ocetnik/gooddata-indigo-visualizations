@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'enzyme';
+import { mount } from 'enzyme';
 import { BAR_CHART } from '../../../VisualizationTypes';
 import Legend, { FLUID_LEGEND_THRESHOLD } from '../Legend';
 import { withIntl } from '../../../test/utils';
@@ -35,7 +35,7 @@ describe('Legend', () => {
 
         const Wrapped = withIntl(Legend);
 
-        return render(<Wrapped {...props} />);
+        return mount(<Wrapped {...props} />);
     }
 
     it('should render StaticLegend on desktop', () => {
