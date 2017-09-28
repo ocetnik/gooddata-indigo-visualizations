@@ -1,7 +1,6 @@
 import React from 'react';
 import { range } from 'lodash';
-import { renderIntoDocument } from 'react-addons-test-utils';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import PieChartTransformation, { PIE_CHART_LIMIT } from '../PieChartTransformation';
 import HighChartRenderer from '../HighChartRenderer';
 import { TOP } from '../Legend/PositionTypes';
@@ -124,13 +123,13 @@ describe('PieChartTransformation', () => {
 
     it('should use custom renderer', () => {
         const pieChartRenderer = jest.fn().mockReturnValue(<div />);
-        renderIntoDocument(createComponent({ pieChartRenderer }));
+        mount(createComponent({ pieChartRenderer }));
         expect(pieChartRenderer).toHaveBeenCalled();
     });
 
     it('should always disable legend for series with one value', () => {
         const pieChartRenderer = jest.fn().mockReturnValue(<div />);
-        renderIntoDocument(createComponent({
+        mount(createComponent({
             pieChartRenderer,
             data: SINGLE_DATA_METRIC_DATA,
             config: {
@@ -159,7 +158,7 @@ describe('PieChartTransformation', () => {
             '#764361',
             '#A50061'
         ];
-        renderIntoDocument(createComponent({
+        mount(createComponent({
             pieChartRenderer,
             config: {
                 colors: customColors

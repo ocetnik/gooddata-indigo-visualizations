@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-    renderIntoDocument,
-    findRenderedDOMComponentWithClass,
-    scryRenderedDOMComponentsWithClass,
-    Simulate
-} from 'react-addons-test-utils';
-
+import { mount } from 'enzyme';
 import { TableSortBubbleContent } from '../TableSortBubbleContent';
 import { ASC, DESC } from '../Sort';
 import { withIntl } from '../../test/utils';
@@ -17,15 +11,15 @@ describe('TableSortBubbleContent', () => {
             ...customProps
         };
         const WrappedBubble = withIntl(TableSortBubbleContent);
-        return renderIntoDocument(
+        return mount(
             <WrappedBubble {...props} />
         );
     }
 
     it('should render 2 sort buttons', () => {
-        const bubble = createBubble();
-        const buttons = scryRenderedDOMComponentsWithClass(bubble, 'button');
-        expect(buttons.length).toEqual(2);
+        const wrapper = createBubble();
+        expect(wrapper.find('.button-sort-asc')).toHaveLength(1);
+        expect(wrapper.find('.button-sort-desc')).toHaveLength(1);
     });
 
     it('should trigger sort callback on button click & close', () => {
@@ -33,14 +27,12 @@ describe('TableSortBubbleContent', () => {
             onSortChange: jest.fn(),
             onClose: jest.fn()
         };
-        const bubble = createBubble(props);
+        const wrapper = createBubble(props);
 
-        const buttonAsc = findRenderedDOMComponentWithClass(bubble, 'button-sort-asc');
-        Simulate.click(buttonAsc);
+        wrapper.find('.button-sort-asc').simulate('click');
         expect(props.onSortChange.mock.calls[0][0]).toEqual(ASC);
 
-        const buttonDesc = findRenderedDOMComponentWithClass(bubble, 'button-sort-desc');
-        Simulate.click(buttonDesc);
+        wrapper.find('.button-sort-desc').simulate('click');
         expect(props.onSortChange.mock.calls[1][0]).toEqual(DESC);
 
         expect(props.onClose).toHaveBeenCalledTimes(2);
@@ -50,9 +42,8 @@ describe('TableSortBubbleContent', () => {
         const props = {
             onClose: jest.fn()
         };
-        const bubble = createBubble(props);
-        const closeButton = findRenderedDOMComponentWithClass(bubble, 'close-button');
-        Simulate.click(closeButton);
+        const wrapper = createBubble(props);
+        wrapper.find('.close-button').simulate('click');
 
         expect(props.onClose).toHaveBeenCalledTimes(1);
     });

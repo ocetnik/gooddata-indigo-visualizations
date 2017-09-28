@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-    renderIntoDocument,
-    findRenderedComponentWithType,
-    findRenderedDOMComponentWithClass,
-    Simulate
-} from 'react-addons-test-utils';
+import { mount } from 'enzyme';
 import { range } from 'lodash';
 
 import { withIntl } from '../../test/utils';
@@ -31,91 +26,83 @@ const HEADERS = [
 const DATA_ROW = ['Wile E. Coyote', '30', '1324'];
 
 const ROWS_PER_PAGE = 10;
+const WrappedTable = withIntl(ResponsiveTable);
+
+const getMore = wrapper => wrapper.find('.s-show_more');
+const getLess = wrapper => wrapper.find('.s-show_less');
 
 describe('Responsive Table', () => {
-    let table, visualization, controls, onMore, onLess; // eslint-disable-line
-
-    const renderTable = (data) => {
-        const WrappedTable = withIntl(ResponsiveTable);
-        table = renderIntoDocument(
+    function renderTable(data, customProps = {}) {
+        const props = {
+            onMore: () => {},
+            onLess: () => {},
+            ...customProps
+        }
+        return mount(
             <WrappedTable
                 containerWidth={600}
                 rows={data.rawData}
                 headers={data.headers}
                 rowsPerPage={ROWS_PER_PAGE}
-                onMore={onMore}
-                onLess={onLess}
+                {...props}
             />
         );
-
-        visualization = findRenderedComponentWithType(table, Table);
-        controls = findRenderedComponentWithType(table, TableControls);
-    };
-
-    const getMore = () => findRenderedDOMComponentWithClass(controls, 's-show_more');
-
-    const getLess = () => findRenderedDOMComponentWithClass(controls, 's-show_less');
-
-    beforeEach(() => {
-        onMore = jest.fn();
-        onLess = jest.fn();
-    });
+    }
 
     it('should set container width', () => {
-        renderTable({ headers: [], rawData: [] });
+        const wrapper = renderTable({ headers: [], rawData: [] });
 
-        expect(visualization.props.containerWidth).toEqual(600);
+        expect(wrapper.find(Table).prop('containerWidth')).toEqual(600);
     });
 
     describe('when data contains less than 1 page of rows', () => {
-        beforeEach(() => {
-            const fixture = {
-                headers: HEADERS,
-                rawData: [DATA_ROW]
-            };
-
-            renderTable(fixture);
-        });
+        const fixture = {
+            headers: HEADERS,
+            rawData: [DATA_ROW]
+        };
 
         it('should not show "More" button', () => {
-            expect(getMore).toThrow();
+            const wrapper = renderTable(fixture);
+            expect(getMore(wrapper)).toHaveLength(0);
         });
 
         it('should not show "Less" button', () => {
-            expect(getLess).toThrow();
+            const wrapper = renderTable(fixture);
+            expect(getLess(wrapper)).toHaveLength(0);
         });
 
         it('should set correct number of rows', () => {
-            expect(visualization.props.rows.length).toEqual(1);
+            const wrapper = renderTable(fixture);
+            expect(wrapper.find(Table).prop('rows').length).toEqual(1);
         });
     });
 
     describe('when data contains more than 1 page of rows', () => {
-        beforeEach(() => {
-            const fixture = {
-                headers: HEADERS,
-                rawData: range(0, 25).map(() => DATA_ROW)
-            };
-
-            renderTable(fixture);
-        });
+        const fixture = {
+            headers: HEADERS,
+            rawData: range(0, 25).map(() => DATA_ROW)
+        };
 
         describe('and table is showing first page', () => {
             it('should show "More" button', () => {
-                expect(getMore).not.toThrow();
+                const wrapper = renderTable(fixture);
+                expect(getMore(wrapper)).toHaveLength(1);
             });
 
             it('should not show "Less" button', () => {
-                expect(getLess).toThrow();
+                const wrapper = renderTable(fixture);
+                expect(getLess(wrapper)).toHaveLength(0);
             });
 
             it('should set correct number of rows', () => {
-                expect(visualization.props.rows.length).toEqual(ROWS_PER_PAGE);
+                const wrapper = renderTable(fixture);
+                expect(wrapper.find(Table).prop('rows').length).toEqual(ROWS_PER_PAGE);
             });
 
             it('should call onMore callback with number of rows and page when user clicks "More"', () => {
-                Simulate.click(getMore());
-
+                const onMore = jest.fn();
+                const wrapper = renderTable(fixture, { onMore });
+                getMore(wrapper).simulate('click');
                 expect(onMore).toBeCalledWith({
                     rows: ROWS_PER_PAGE * 2,
                     page: 2
@@ -124,56 +111,63 @@ describe('Responsive Table', () => {
         });
 
         describe('and table is showing some page', () => {
-            beforeEach(() => {
-                Simulate.click(getMore());
-            });
+            function prepareComponent(props = {}) {
+                const wrapper = renderTable(fixture, props);
+                getMore(wrapper).simulate('click');
+                return wrapper;
+            }
 
             it('should show "Less" button', () => {
-                expect(getLess).not.toThrow();
+                const wrapper = prepareComponent();
+                expect(getLess(wrapper)).toHaveLength(1);
             });
 
             it('should set correct number of rows', () => {
-                expect(visualization.props.rows.length).toEqual(ROWS_PER_PAGE * 2);
+                const wrapper = prepareComponent();
+                expect(wrapper.find(Table).prop('rows').length).toEqual(ROWS_PER_PAGE * 2);
             });
 
             it('should return to first page when user clicks "Less"', () => {
-                Simulate.click(getLess());
-
-                expect(visualization.props.rows.length).toEqual(ROWS_PER_PAGE);
+                const wrapper = prepareComponent();
+                getLess(wrapper).simulate('click');
+                expect(wrapper.find(Table).prop('rows').length).toEqual(ROWS_PER_PAGE);
             });
 
             it('should call onLess callback with number of rows when user clicks "Less"', () => {
-                Simulate.click(getLess());
-
+                const onLess = jest.fn();
+                const wrapper = prepareComponent({ onLess });
+                getLess(wrapper).simulate('click');
                 expect(onLess).toBeCalledWith({ rows: ROWS_PER_PAGE });
             });
         });
 
         describe('and table is showing last page', () => {
-            let more;
-
-            beforeEach(() => {
-                more = getMore();
-                Simulate.click(more);
-                Simulate.click(more);
-            });
+            function prepareComponent(props = {}) {
+                const wrapper = renderTable(fixture, props);
+                getMore(wrapper).simulate('click');
+                getMore(wrapper).simulate('click');
+                return wrapper;
+            }
 
             it('should hide "More" button', () => {
-                expect(getMore).toThrow();
+                const wrapper = prepareComponent();
+                expect(getMore(wrapper)).toHaveLength(0);
             });
 
             it('should show "Less" button', () => {
-                expect(getLess).not.toThrow();
+                const wrapper = prepareComponent();
+                expect(getLess(wrapper)).toHaveLength(1);
             });
 
             it('should set correct number of rows', () => {
-                expect(visualization.props.rows.length).toEqual(25);
+                const wrapper = prepareComponent();
+                expect(wrapper.find(Table).prop('rows').length).toEqual(25);
             });
 
             it('should return to first page when user clicks "Less"', () => {
-                Simulate.click(getLess());
-
-                expect(visualization.props.rows.length).toEqual(ROWS_PER_PAGE);
+                const wrapper = prepareComponent();
+                getLess(wrapper).simulate('click');
+                expect(wrapper.find(Table).prop('rows').length).toEqual(ROWS_PER_PAGE);
             });
         });
     });

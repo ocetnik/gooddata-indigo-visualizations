@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-    renderIntoDocument,
-    findRenderedDOMComponentWithClass,
-    Simulate
-} from 'react-addons-test-utils';
+import { mount } from 'enzyme';
 import LegendItem from '../LegendItem';
 
 describe('LegendItem', () => {
@@ -17,11 +13,10 @@ describe('LegendItem', () => {
             chartType: 'bar',
             onItemClick: jest.fn()
         };
-        const component = renderIntoDocument(<LegendItem {...props} />);
-        const node = findRenderedDOMComponentWithClass(component, 'series-item');
-        expect(node.textContent).toEqual('Foo');
+        const wrapper = mount(<LegendItem {...props} />);
+        expect(wrapper.find('.series-item').text()).toEqual('Foo');
 
-        Simulate.click(node);
+        wrapper.find('.series-item').simulate('click');
         expect(props.onItemClick).toHaveBeenCalled();
     });
 });

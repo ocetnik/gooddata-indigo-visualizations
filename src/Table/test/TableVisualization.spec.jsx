@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-    renderIntoDocument,
-    findRenderedComponentWithType,
-    scryRenderedDOMComponentsWithClass,
-    Simulate
-} from 'react-addons-test-utils';
+import { mount } from 'enzyme';
 import { Table } from 'fixed-data-table-2';
 
 import TableVisualization from '../TableVisualization';
@@ -43,9 +38,9 @@ const FIXTURE = {
     }
 };
 
-describe('Table', () => {
-    let table;
+const WrappedTable = withIntl(TableVisualization);
 
+describe('Table', () => {
     function renderTable(customProps = {}) {
         const props = {
             containerWidth: 600,
@@ -56,76 +51,76 @@ describe('Table', () => {
             ...customProps
         };
 
-        const WrappedTable = withIntl(TableVisualization);
-        const instance = renderIntoDocument(
+        return mount(
             <WrappedTable {...props} />
         );
-        return findRenderedComponentWithType(instance, Table);
     }
 
-    beforeEach(() => {
-        table = renderTable();
-    });
-
     it('should fit container dimensions', () => {
-        expect(table.props.width).toEqual(600);
-        expect(table.props.height).toEqual(400);
+        const wrapper = renderTable();
+        expect(wrapper.find(Table).prop('width')).toEqual(600);
+        expect(wrapper.find(Table).prop('height')).toEqual(400);
     });
 
     it('should render column headers', () => {
-        expect(table.props.children).toHaveLength(3);
+        const wrapper = renderTable();
+        expect(wrapper.find(Table).prop('children')).toHaveLength(3);
     });
 
     it('should align metric columns to the right', () => {
-        const columns = table.props.children;
+        const wrapper = renderTable();
+        const columns = wrapper.find(Table).prop('children');
         expect(columns[0].props.align).toEqual('left');
         expect(columns[1].props.align).toEqual('right');
         expect(columns[2].props.align).toEqual('right');
     });
 
     it('should distribute width evenly between columns', () => {
-        const columns = table.props.children;
+        const wrapper = renderTable();
+        const columns = wrapper.find(Table).prop('children');
         expect(columns[0].props.width).toEqual(200);
     });
 
     describe('renderers', () => {
-        function renderCell(columnKey) {
-            const columns = table.props.children;
+        function renderCell(wrapper, columnKey) {
+            const columns = wrapper.find(Table).prop('children');
             const cell = columns[columnKey].props.cell({ rowIndex: 0, columnKey });
             const span = cell.props.children;
             return span;
         }
 
         it('should format metrics', () => {
-            const span = renderCell(2);
+            const wrapper = renderTable();
+            const span = renderCell(wrapper, 2);
             const spanContent = span.props.children;
             expect(spanContent).toEqual('1,324');
             expect(span.props.style.color).toEqual('#FF0000');
         });
 
         it('should render attributes as strings', () => {
-            const span = renderCell(0);
+            const wrapper = renderTable();
+            const span = renderCell(wrapper, 0);
             const spanContent = span.props.children;
             expect(spanContent).toEqual('Wile E. Coyote');
             expect(span.props.style).toEqual({});
         });
 
         it('should render title into header', () => {
-            const titles = scryRenderedDOMComponentsWithClass(table, 'gd-table-header-title');
-            expect(titles[0].textContent).toEqual('Name');
+            const wrapper = renderTable();
+            expect(wrapper.find('.gd-table-header-title').first().text()).toEqual('Name');
         });
 
         it('should bind onclick when cell drillable', () => {
-            table = renderTable({ drillableItems: [{ uri: 'metric-1-uri' }] });
-            const columns = table.props.children;
+            const wrapper = renderTable({ drillableItems: [{ uri: 'metric-1-uri' }] });
+            const columns = wrapper.find(Table).prop('children');
             const cell = columns[1].props.cell({ rowIndex: 0, columnKey: 1 });
 
             expect(cell.props).toHaveProperty('onClick', expect.any(Function));
         });
 
         it('should not bind onclick when cell not drillable', () => {
-            table = renderTable({ drillableItems: [{ uri: 'metric-x-uri' }] });
-            const columns = table.props.children;
+            const wrapper = renderTable({ drillableItems: [{ uri: 'metric-x-uri' }] });
+            const columns = wrapper.find(Table).prop('children');
             const cell = columns[1].props.cell({ rowIndex: 0, columnKey: 1 });
 
             expect(cell.props).not.toHaveProperty('onClick', expect.any(Function));
@@ -135,8 +130,8 @@ describe('Table', () => {
     describe('sort', () => {
         describe('default header renderer', () => {
             it('should render up arrow', () => {
-                table = renderTable({ sortBy: 0, sortDir: ASC });
-                const columns = table.props.children;
+                const wrapper = renderTable({ sortBy: 0, sortDir: ASC });
+                const columns = wrapper.find(Table).prop('children');
                 const header = columns[0].props.header({ columnKey: 0 });
                 const sort = header.props.children[1];
 
@@ -144,8 +139,8 @@ describe('Table', () => {
             });
 
             it('should render down arrow', () => {
-                table = renderTable({ sortBy: 0, sortDir: DESC });
-                const columns = table.props.children;
+                const wrapper = renderTable({ sortBy: 0, sortDir: DESC });
+                const columns = wrapper.find(Table).prop('children');
                 const header = columns[0].props.header({ columnKey: 0 });
                 const sort = header.props.children[1];
 
@@ -153,8 +148,8 @@ describe('Table', () => {
             });
 
             it('should render arrow on second column', () => {
-                table = renderTable({ sortBy: 1, sortDir: ASC });
-                const columns = table.props.children;
+                const wrapper = renderTable({ sortBy: 1, sortDir: ASC });
+                const columns = wrapper.find(Table).prop('children');
                 const header = columns[1].props.header({ columnKey: 0 });
                 const sort = header.props.children[1];
 
@@ -162,8 +157,8 @@ describe('Table', () => {
             });
 
             it('should not render arrow if sort info is missing', () => {
-                table = renderTable({ sortBy: 0, sortDir: null });
-                const columns = table.props.children;
+                const wrapper = renderTable({ sortBy: 0, sortDir: null });
+                const columns = wrapper.find(Table).prop('children');
                 const header = columns[0].props.header({ columnKey: 0 });
                 const sort = header.props.children[1];
 
@@ -173,9 +168,9 @@ describe('Table', () => {
 
         describe('tooltip header renderer', () => {
             it('should render title into header', () => {
-                table = renderTable({ sortInTooltip: true });
-                const titles = scryRenderedDOMComponentsWithClass(table, 'gd-table-header-title');
-                Simulate.click(titles[0]);
+                const wrapper = renderTable({ sortInTooltip: true });
+
+                wrapper.find('.gd-table-header-title').first().simulate('click');
 
                 const bubble = document.querySelector('.gd-table-header-bubble');
                 expect(bubble).toBeDefined();

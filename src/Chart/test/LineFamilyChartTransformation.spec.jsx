@@ -1,6 +1,5 @@
 import React from 'react';
-import { renderIntoDocument } from 'react-addons-test-utils';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import LineFamilyChartTransformation from '../LineFamilyChartTransformation';
 import { data, config } from '../../test/fixtures';
 import { RIGHT } from '../Legend/PositionTypes';
@@ -80,14 +79,14 @@ describe('LineFamilyChartTransformation', () => {
 
     it('should use custom renderer', () => {
         const lineFamilyChartRenderer = jest.fn().mockReturnValue(<div />);
-        renderIntoDocument(createComponent({ lineFamilyChartRenderer }));
+        mount(createComponent({ lineFamilyChartRenderer }));
         expect(lineFamilyChartRenderer).toHaveBeenCalled();
     });
 
     describe('Legend config', () => {
         function createFamilyChartRendererProps(defaultData, defaultConfig, legendProps = {}) {
             const lineFamilyChartRenderer = jest.fn().mockReturnValue(<div />);
-            renderIntoDocument(createComponent({
+            mount(createComponent({
                 lineFamilyChartRenderer,
                 data: { ...defaultData },
                 config: {
@@ -130,7 +129,7 @@ describe('LineFamilyChartTransformation', () => {
                     series: 1
                 }
             };
-            renderIntoDocument(createComponent(props));
+            mount(createComponent(props));
             expect(onDataTooLarge).toHaveBeenCalled();
         });
 
@@ -142,7 +141,7 @@ describe('LineFamilyChartTransformation', () => {
                     categories: 1
                 }
             };
-            renderIntoDocument(createComponent(props));
+            mount(createComponent(props));
             expect(onDataTooLarge).toHaveBeenCalled();
         });
 

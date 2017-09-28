@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderIntoDocument } from 'react-addons-test-utils';
+import { mount } from 'enzyme';
 import TableTransformation from '../TableTransformation';
 import { data, config } from '../../test/fixtures';
 
@@ -16,13 +16,13 @@ describe('TableTransformation', () => {
 
     it('should use custom renderer', () => {
         const tableRenderer = jest.fn().mockImplementation(() => <div />);
-        renderIntoDocument(createComponent({ tableRenderer }));
+        mount(createComponent({ tableRenderer }));
         expect(tableRenderer).toHaveBeenCalled();
     });
 
     it('should pass containerHeight if height is set in props', () => {
         const tableRenderer = jest.fn().mockImplementation(() => <div />);
-        renderIntoDocument(createComponent({ tableRenderer, height: 255 }));
+        mount(createComponent({ tableRenderer, height: 255 }));
         expect(tableRenderer.mock.calls[0][0].containerHeight).toEqual(255);
     });
 });
