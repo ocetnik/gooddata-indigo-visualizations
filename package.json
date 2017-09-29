@@ -4,6 +4,7 @@
   "description": "Indigo Visualizations library",
   "module": "es/index.js",
   "main": "lib/index.js",
+  "typings": "index.d.ts",
   "jsnext:main": "es/index.js",
   "scripts": {
     "test": "jest --watch",
@@ -31,7 +32,8 @@
   "files": [
     "es",
     "lib",
-    "LICENSE"
+    "LICENSE",
+    "index.d.ts"
   ],
   "repository": {
     "type": "git",
