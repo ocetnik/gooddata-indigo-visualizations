@@ -1,4 +1,5 @@
 # Indigo Visualizations in React
+> Visualization library for GoodData visualizations built using React.js and HighCharts
 
 ## Development
 
@@ -49,3 +50,11 @@ To cleanup files after finishing tests run
   3. Create new version `npm version [major|minor|patch] -m "Release v%s"`
   4. Release `npm publish --access=restricted`
   5. Push to upstream `git push --tags upstream master`
+
+## Contributing
+Report bugs and features on our [issues page](https://github.com/gooddata/gdc-indigo-visualizations/issues).
+
+## License
+Copyright (C) 2007-2017, GoodData(R) Corporation. All rights reserved.
+
+For more information, please see [LICENSE](https://github.com/gooddata/gdc-indigo-visualizations/blob/master/LICENSE)
