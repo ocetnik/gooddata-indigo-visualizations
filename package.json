@@ -37,14 +37,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gooddata/gdc-indigo-visualizations.git"
+    "url": "git+https://github.com/gooddata/gooddata-indigo-visualizations.git"
   },
   "author": "ui@gooddata.com",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/gooddata/gdc-indigo-visualizations/issues"
+    "url": "https://github.com/gooddata/gooddata-indigo-visualizations/issues"
   },
-  "homepage": "https://github.com/gooddata/gdc-indigo-visualizations#readme",
+  "homepage": "https://github.com/gooddata/gooddata-indigo-visualizations#readme",
   "engines": {
     "node": ">=4.*"
   },

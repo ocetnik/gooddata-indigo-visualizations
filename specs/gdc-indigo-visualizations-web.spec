@@ -1,13 +1,13 @@
 %global gdc_prefix /var/www/doc
 
-Name: gdc-indigo-visualizations-web
+Name: gooddata-indigo-visualizations-web
 Version: 3.%{gdcversion}
 Release: 1%{dist}
 Summary: GDC Indigo Visualizations Web
 
 Group: Applications/Productivity
 License: Proprietary
-URL: https://github.com/gooddata/gdc-indigo-visualizations
+URL: https://github.com/gooddata/gooddata-indigo-visualizations
 Source0: %{name}.tar.gz
 BuildArch: noarch
 

@@ -21,7 +21,7 @@ else
 fi
 
 # Archive whole git repo including .git
-tar czf gdc-indigo-visualizations-web.tar.gz $(git ls-tree --name-only HEAD) .git
+tar czf gooddata-indigo-visualizations-web.tar.gz $(git ls-tree --name-only HEAD) .git
 
 # Create RPM
 rpmbuild -bb \
@@ -30,4 +30,4 @@ rpmbuild -bb \
     --define "_sourcedir $PWD" \
     --define "_rpmfilename %{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}.rpm" \
     --define "gdcversion $VERSION" \
-    specs/gdc-indigo-visualizations-web.spec
+    specs/gooddata-indigo-visualizations-web.spec
