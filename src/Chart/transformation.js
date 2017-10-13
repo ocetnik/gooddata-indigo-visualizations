@@ -1,6 +1,5 @@
 /* eslint no-underscore-dangle: 0 */
 import cloneDeep from 'lodash/cloneDeep';
-import filter from 'lodash/filter';
 
 export const DEFAULT_COLOR_PALETTE = [
     'rgb(20,178,226)',
@@ -59,7 +58,7 @@ export function _getLighterColor(color, percent) {
 export function getColorPalette(data, palette = DEFAULT_COLOR_PALETTE) {
     const newPalette = cloneDeep(palette);
 
-    filter(data.headers, header => header.type === 'metric')
+    data.headers.filter(header => (header.type === 'metric'))
         .forEach((metric, idx) => {
             if (metric.id && metric.id.endsWith('_pop')) {
                 const color = _getLighterColor(newPalette[idx % newPalette.length], 0.6);

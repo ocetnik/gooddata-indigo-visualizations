@@ -1,22 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import invariant from 'invariant';
-import { isEqual, isFunction, omitBy, includes } from 'lodash';
+import { isEqual, isFunction, omitBy } from 'lodash';
 import Highcharts from 'highcharts';
 
-import LineFamilyChartTransformation from './Chart/LineFamilyChartTransformation';
-import PieChartTransformation from './Chart/PieChartTransformation';
+import ChartTransformation from './Chart/ChartTransformation';
 import TableTransformation from './Table/TableTransformation';
 import * as VisualizationTypes from './VisualizationTypes';
-
-
-function isLineFamily(visType) {
-    return includes([
-        VisualizationTypes.COLUMN_CHART,
-        VisualizationTypes.LINE_CHART,
-        VisualizationTypes.BAR_CHART
-    ], visType);
-}
 
 export default class Visualization extends Component {
     static propTypes = {
@@ -62,18 +52,7 @@ export default class Visualization extends Component {
 
     render() {
         const visType = this.props.config.type;
-
-        if (isLineFamily(visType)) {
-            return (
-                <LineFamilyChartTransformation {...this.props} />
-            );
-        }
-
-        if (visType === VisualizationTypes.PIE_CHART) {
-            return (
-                <PieChartTransformation {...this.props} />
-            );
-        }
+        const visualizationTypeList = Object.values(VisualizationTypes);
 
         if (visType === VisualizationTypes.TABLE) {
             return (
@@ -81,6 +60,12 @@ export default class Visualization extends Component {
             );
         }
 
-        return invariant(`Unknown visualization type: ${visType}`);
+        if (visualizationTypeList.includes(visType)) {
+            return (
+                <ChartTransformation {...this.props} />
+            );
+        }
+
+        return invariant(visualizationTypeList.includes(visType), `Unknown visualization type: ${visType}. Supported visualization types: ${visualizationTypeList.join(', ')}`);
     }
 }

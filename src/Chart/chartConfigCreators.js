@@ -23,17 +23,9 @@ export function transformConfigToLine(config) {
         commonConfig.colorPalette = config.colors;
     }
 
-    if (!stack) {
-        return {
-            ...commonConfig,
-            color: '/metricGroup',
-            stacking: null
-        };
-    }
-
     return {
         ...commonConfig,
-        color: stack.category.displayForm,
-        stacking: config.type !== 'line' ? 'normal' : null
+        color: stack ? stack.category.displayForm : '/metricGroup',
+        stacking: (stack && config.type !== 'line') ? 'normal' : null
     };
 }

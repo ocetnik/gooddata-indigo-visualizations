@@ -41,6 +41,10 @@
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@gooddata/numberjs/-/numberjs-3.0.0.tgz#9d646f1f9c05614d18e08ac5024b2ba2f7139396"
 
+"@gooddata/typings@0.0.1-vaclavbohac-init-2017-10-06T12-12-51-885Z":
+  version "0.0.1-vaclavbohac-init-2017-10-06T12-12-51-885Z"
+  resolved "https://registry.yarnpkg.com/@gooddata/typings/-/typings-0.0.1-vaclavbohac-init-2017-10-06T12-12-51-885Z.tgz#4814f70329d4c8bf7ff3471f9fb373cbb2b0bc01"
+
 "@hypnosphi/fuse.js@^3.0.9":
   version "3.0.9"
   resolved "https://registry.yarnpkg.com/@hypnosphi/fuse.js/-/fuse.js-3.0.9.tgz#ea99f6121b4a8f065b4c71f85595db2714498807"

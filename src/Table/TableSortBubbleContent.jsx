@@ -1,24 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage, injectIntl } from 'react-intl';
 import cx from 'classnames';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { noop } from 'lodash';
 
-import { ASC, DESC } from './Sort';
+import { ASC, DESC } from './constants/sort';
 
 export class TableSortBubbleContent extends Component {
     static propTypes = {
-        title: PropTypes.string.isRequired,
-        activeSortDir: PropTypes.oneOf([
-            ASC, DESC
-        ]),
+        activeSortDir: PropTypes.oneOf([ASC, DESC]),
+        onClose: PropTypes.func,
         onSortChange: PropTypes.func,
-        onClose: PropTypes.func
+        title: PropTypes.string.isRequired
     };
 
     static defaultProps = {
         activeSortDir: null,
-        onSortChange: () => {},
-        onClose: () => {}
+        onClose: noop,
+        onSortChange: noop
     };
 
     constructor(props) {
@@ -45,17 +44,14 @@ export class TableSortBubbleContent extends Component {
                 'button-sort-asc': dir === ASC,
                 'button-sort-desc': dir === DESC,
                 disabled: isDisabled
-            });
+            }
+        );
 
-        const msg = dir === ASC ? 'visualizations.asc' : 'visualizations.desc';
         const onClick = dir === ASC ? this.sortAsc : this.sortDesc;
+        const msg = dir === ASC ? 'visualizations.asc' : 'visualizations.desc';
 
         return (
-            <button
-                onClick={onClick}
-                disabled={isDisabled}
-                className={buttonClasses}
-            >
+            <button onClick={onClick} disabled={isDisabled} className={buttonClasses}>
                 <FormattedMessage id={msg} />
             </button>
         );
@@ -66,13 +62,8 @@ export class TableSortBubbleContent extends Component {
 
         return (
             <div>
-                <button
-                    className="close-button button-link button-icon-only icon-cross"
-                    onClick={onClose}
-                />
-                <div className="gd-dialog-header gd-heading-3">
-                    {title}
-                </div>
+                <button className="close-button button-link button-icon-only icon-cross" onClick={onClose} />
+                <div className="gd-dialog-header gd-heading-3">{title}</div>
                 <FormattedMessage id="visualizations.sorting" />
                 <div className="buttons-wrap">
                     <div className="buttons">

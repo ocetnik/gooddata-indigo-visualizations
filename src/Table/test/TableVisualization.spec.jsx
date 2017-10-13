@@ -3,68 +3,10 @@ import { mount } from 'enzyme';
 import { Table } from 'fixed-data-table-2';
 
 import TableVisualization, { DEFAULT_FOOTER_ROW_HEIGHT } from '../TableVisualization';
-import { ASC, DESC } from '../Sort';
 import { withIntl } from '../../test/utils';
-
-const FIXTURE = {
-    headers: [
-        {
-            type: 'attrLabel',
-            title: 'Name'
-        }, {
-            id: 'metric-1',
-            type: 'metric',
-            title: '# of Open Opps.',
-            format: '#,##0'
-        }, {
-            id: 'metric-2',
-            type: 'metric',
-            title: '# of Opportunities',
-            format: '[red]#,##0'
-        }
-    ],
-    onlyMetricHeaders: [
-        {
-            id: 'metric-1',
-            type: 'metric',
-            title: '# of Open Opps.',
-            format: '#,##0'
-        }, {
-            id: 'metric-2',
-            type: 'metric',
-            title: '# of Opportunities',
-            format: '[red]#,##0'
-        }
-    ],
-    rawData: [
-        [{ id: '1', name: 'Wile E. Coyote' }, '30', '1324']
-    ],
-    onlyMetricRawData: [
-        ['30', '1324']
-    ],
-    afm: {
-        measures: [
-            {
-                definition: {
-                    baseObject: { id: 'metric-1-uri' }
-                },
-                id: 'metric-1'
-            }
-        ]
-    },
-    aggregations: [
-        {
-            name: 'Sum',
-            values: [null, null, 125]
-        }, {
-            name: 'Avg',
-            values: [null, 45.98, 12.32]
-        }, {
-            name: 'Rollup',
-            values: [null, 12.99, 1.008]
-        }
-    ]
-};
+import { ASC, DESC } from '../constants/sort';
+import { EXECUTION_REQUEST_1A_2M, TABLE_HEADERS_1A_2M, TABLE_ROWS_1A_2M } from '../fixtures/1attribute2measures';
+import { TABLE_HEADERS_2M, TABLE_ROWS_2M } from '../fixtures/2measures';
 
 const WrappedTable = withIntl(TableVisualization);
 
@@ -73,9 +15,9 @@ describe('Table', () => {
         const props = {
             containerWidth: 600,
             containerHeight: 400,
-            rows: FIXTURE.rawData,
-            headers: FIXTURE.headers,
-            afm: FIXTURE.afm,
+            rows: TABLE_ROWS_1A_2M,
+            headers: TABLE_HEADERS_1A_2M,
+            executionRequest: EXECUTION_REQUEST_1A_2M,
             ...customProps
         };
 
@@ -95,7 +37,7 @@ describe('Table', () => {
         expect(wrapper.find(Table).prop('children')).toHaveLength(3);
     });
 
-    it('should align metric columns to the right', () => {
+    it('should align measure columns to the right', () => {
         const wrapper = renderTable();
         const columns = wrapper.find(Table).prop('children');
         expect(columns[0].props.align).toEqual('left');
@@ -113,11 +55,10 @@ describe('Table', () => {
         function renderCell(wrapper, columnKey) {
             const columns = wrapper.find(Table).prop('children');
             const cell = columns[columnKey].props.cell({ rowIndex: 0, columnKey });
-            const span = cell.props.children;
-            return span;
+            return cell.props.children;
         }
 
-        it('should format metrics', () => {
+        it('should format measures', () => {
             const wrapper = renderTable();
             const span = renderCell(wrapper, 2);
             const spanContent = span.props.children;
@@ -139,7 +80,7 @@ describe('Table', () => {
         });
 
         it('should bind onclick when cell drillable', () => {
-            const wrapper = renderTable({ drillableItems: [{ uri: 'metric-1-uri' }] });
+            const wrapper = renderTable({ drillableItems: [{ uri: '/gdc/md/project_id/obj/1st_measure_uri_id' }] });
             const columns = wrapper.find(Table).prop('children');
             const cell = columns[1].props.cell({ rowIndex: 0, columnKey: 1 });
 
@@ -147,7 +88,7 @@ describe('Table', () => {
         });
 
         it('should not bind onclick when cell not drillable', () => {
-            const wrapper = renderTable({ drillableItems: [{ uri: 'metric-x-uri' }] });
+            const wrapper = renderTable({ drillableItems: [{ uri: '/gdc/md/project_id/obj/unknown_measure_uri_id' }] });
             const columns = wrapper.find(Table).prop('children');
             const cell = columns[1].props.cell({ rowIndex: 0, columnKey: 1 });
 
@@ -213,30 +154,43 @@ describe('Table', () => {
     });
 
     describe('table footer', () => {
+        const AGGREGATIONS = [
+            {
+                name: 'Sum',
+                values: [null, null, 125]
+            }, {
+                name: 'Avg',
+                values: [null, 45.98, 12.32]
+            }, {
+                name: 'Rollup',
+                values: [null, 12.99, 1.008]
+            }
+        ];
+
         it('should not render any footer cells when no aggregations are provided', () => {
             const wrapper = renderTable();
 
             expect(wrapper.find('.indigo-table-footer-cell').length).toEqual(0);
         });
 
-        it('should not render any footer cells when aggregations are provided but data contains only metrics', () => {
+        it('should not render any footer cells when aggregations are provided but data contains only measures', () => {
             const wrapper = renderTable({
-                aggregations: FIXTURE.aggregations,
-                headers: FIXTURE.onlyMetricHeaders,
-                rawData: FIXTURE.onlyMetricRawData
+                aggregations: AGGREGATIONS,
+                headers: TABLE_HEADERS_2M,
+                rows: TABLE_ROWS_2M
             });
 
             expect(wrapper.find('.indigo-table-footer-cell').length).toEqual(0);
         });
 
         it('should render footer cells when aggregations are provided', () => {
-            const wrapper = renderTable({ aggregations: FIXTURE.aggregations });
+            const wrapper = renderTable({ aggregations: AGGREGATIONS });
 
             expect(wrapper.find('.indigo-table-footer-cell').length).toEqual(9);
         });
 
         it('should reset footer when component is updated with no aggregations', () => {
-            const wrapper = renderTable({ aggregations: FIXTURE.aggregations });
+            const wrapper = renderTable({ aggregations: AGGREGATIONS });
             const footer = wrapper.find(TableVisualization).instance().footer;
 
             expect(footer.classList.contains('table-footer')).toBeTruthy();
@@ -247,14 +201,14 @@ describe('Table', () => {
         });
 
         it('should update footer height when component is updated with different aggregations', () => {
-            const wrapper = renderTable({ aggregations: FIXTURE.aggregations });
+            const wrapper = renderTable({ aggregations: AGGREGATIONS });
             const footer = wrapper.find(TableVisualization).instance().footer;
 
-            const heightBefore = FIXTURE.aggregations.length * DEFAULT_FOOTER_ROW_HEIGHT;
+            const heightBefore = AGGREGATIONS.length * DEFAULT_FOOTER_ROW_HEIGHT;
 
             expect(footer.style.height).toEqual(`${heightBefore}px`);
 
-            const aggregationsAfter = [...FIXTURE.aggregations, {
+            const aggregationsAfter = [...AGGREGATIONS, {
                 name: 'Other',
                 values: [1, 2, 3]
             }];

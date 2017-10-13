@@ -15,8 +15,8 @@ export class TableControls extends Component {
     };
 
     static defaultProps = {
-        isMoreButtonVisible: false,
         isMoreButtonDisabled: false,
+        isMoreButtonVisible: false,
         isLessButtonVisible: false
     };
 

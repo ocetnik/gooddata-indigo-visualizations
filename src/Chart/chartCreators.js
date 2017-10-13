@@ -164,7 +164,7 @@ export function showInPercent(config, headers) { // TODO export only for test
     return includes(get(propertiesToHeaders(config, headers), 'y.format', ''), '%');
 }
 
-export const unEscapeAngleBrackets = str => str && str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+export const unEscapeAngleBrackets = str => str && str.replace(/&lt;|&#60;/g, '<').replace(/&gt;|&#62;/g, '>');
 
 export function generateTooltipFn(options) {
     const { categoryAxisLabel } = options;

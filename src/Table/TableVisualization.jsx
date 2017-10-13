@@ -1,29 +1,29 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import { Table, Column, Cell } from 'fixed-data-table-2';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { noop, partial, pick, uniqueId, assign, isEqual, debounce } from 'lodash';
-import { numberFormat } from '@gooddata/numberjs';
+import { Cell, Column, Table } from 'fixed-data-table-2';
+import { assign, debounce, isEqual, noop, pick, uniqueId } from 'lodash';
 
 import Bubble from '@gooddata/goodstrap/lib/Bubble/Bubble';
 import BubbleHoverTrigger from '@gooddata/goodstrap/lib/Bubble/BubbleHoverTrigger';
+import { numberFormat } from '@gooddata/numberjs';
+
 import TableSortBubbleContent from './TableSortBubbleContent';
-import { subscribeEvents } from '../utils/common';
-import { cellClick, isDrillable } from '../utils/drilldownEventing';
 import DrillableItem from '../proptypes/DrillableItem';
+import { subscribeEvents } from '../utils/common';
+import { getCellClassNames, getColumnAlign, getStyledLabel } from './utils/cell';
+import { getBackwardCompatibleHeaderForDrilling, getBackwardCompatibleRowForDrilling } from './utils/dataTransformation';
+import { cellClick, isDrillable } from '../utils/drilldownEventing';
+import { getHeaderSortClassName, getNextSortDir } from './utils/sort';
+import {
+    calculateArrowPositions,
+    getHeaderClassNames,
+    getTooltipAlignPoints,
+    getTooltipSortAlignPoints
+} from './utils/header';
 
 import {
-    getNextSortDir,
-    getColumnAlign,
-    getStyledLabel,
-    getCellClassNames,
-    getHeaderClassNames,
-    getHeaderSortClassName,
-    getTooltipSortAlignPoints,
-    getTooltipAlignPoints,
-    calculateArrowPositions,
-    enrichTableDataHeaders,
     isHeaderAtDefaultPosition,
     isHeaderAtEdgePosition,
     getHeaderPositions,
@@ -33,71 +33,80 @@ import {
     updatePosition
 } from './utils';
 
+const FULLSCREEN_TOOLTIP_VIEWPORT_THRESHOLD = 480;
 const MIN_COLUMN_WIDTH = 100;
-export const DEFAULT_ROW_HEIGHT = 30;
+
 export const DEFAULT_HEADER_HEIGHT = 26;
+export const DEFAULT_ROW_HEIGHT = 30;
 export const DEFAULT_FOOTER_ROW_HEIGHT = 30;
 
+const DEBOUNCE_SCROLL_STOP = 500;
 const TOOLTIP_DISPLAY_DELAY = 1000;
 
-const DEBOUNCE_SCROLL_STOP = 500;
-
-export const SCROLL_DEBOUNCE_MILISECONDS = 0;
-export const RESIZE_DEBOUNCE_MILISECONDS = 60;
+export const SCROLL_DEBOUNCE = 0;
+export const RESIZE_DEBOUNCE = 60;
 
 const scrollEvents = [
     {
         name: 'scroll',
-        debounce: SCROLL_DEBOUNCE_MILISECONDS
+        debounce: SCROLL_DEBOUNCE
     }, {
         name: 'goodstrap.scrolled',
-        debounce: SCROLL_DEBOUNCE_MILISECONDS
+        debounce: SCROLL_DEBOUNCE
     }, {
         name: 'resize',
-        debounce: RESIZE_DEBOUNCE_MILISECONDS
+        debounce: RESIZE_DEBOUNCE
     }, {
         name: 'goodstrap.drag',
-        debounce: RESIZE_DEBOUNCE_MILISECONDS
+        debounce: RESIZE_DEBOUNCE
     }
 ];
 
 export default class TableVisualization extends Component {
     static propTypes = {
-        afm: PropTypes.object,
+        afterRender: PropTypes.func,
         aggregations: PropTypes.array,
-        drillableItems: PropTypes.arrayOf(PropTypes.shape(DrillableItem)),
-        onFiredDrillEvent: PropTypes.func,
-        containerWidth: PropTypes.number.isRequired,
         containerHeight: PropTypes.number,
         containerMaxHeight: PropTypes.number,
+        containerWidth: PropTypes.number.isRequired,
+        drillableItems: PropTypes.arrayOf(PropTypes.shape(DrillableItem)),
+        executionRequest: PropTypes.object,
         hasHiddenRows: PropTypes.bool,
-        rows: PropTypes.array.isRequired,
-        headers: PropTypes.array.isRequired,
-        sortInTooltip: PropTypes.bool,
-        sortDir: PropTypes.string,
-        sortBy: PropTypes.number,
+        headers: PropTypes.array,
+        onFiredDrillEvent: PropTypes.func,
         onSortChange: PropTypes.func,
-        stickyHeader: PropTypes.number,
-        afterRender: PropTypes.func
+        rows: PropTypes.array,
+        sortBy: PropTypes.number,
+        sortDir: PropTypes.string,
+        sortInTooltip: PropTypes.bool,
+        stickyHeaderOffset: PropTypes.number
     };
 
     static defaultProps = {
-        afm: {},
+        afterRender: noop,
         aggregations: [],
-        drillableItems: [],
-        onFiredDrillEvent: noop,
-        rows: [],
-        headers: [],
-        onSortChange: noop,
-        sortInTooltip: false,
-        stickyHeader: -1,
         containerHeight: null,
         containerMaxHeight: null,
+        drillableItems: [],
+        executionRequest: {},
         hasHiddenRows: false,
-        sortDir: null,
+        headers: [],
+        onFiredDrillEvent: noop,
+        onSortChange: noop,
+        rows: [],
         sortBy: null,
-        afterRender: () => {}
+        sortDir: null,
+        sortInTooltip: false,
+        stickyHeaderOffset: -1
     };
+
+    static fullscreenTooltipEnabled() {
+        return document.documentElement.clientWidth <= FULLSCREEN_TOOLTIP_VIEWPORT_THRESHOLD;
+    }
+
+    static isSticky(stickyHeaderOffset) {
+        return stickyHeaderOffset >= 0;
+    }
 
     constructor(props) {
         super(props);
@@ -110,23 +119,20 @@ export default class TableVisualization extends Component {
             height: 0
         };
 
-        this.renderTooltipHeader = this.renderTooltipHeader.bind(this);
-        this.renderDefaultHeader = this.renderDefaultHeader.bind(this);
-        this.setTableRef = this.setTableRef.bind(this);
-        this.setTableWrapRef = this.setTableWrapRef.bind(this);
         this.closeBubble = this.closeBubble.bind(this);
+        this.renderDefaultHeader = this.renderDefaultHeader.bind(this);
+        this.renderTooltipHeader = this.renderTooltipHeader.bind(this);
         this.scroll = this.scroll.bind(this);
         this.scrolled = this.scrolled.bind(this);
+        this.setTableRef = this.setTableRef.bind(this);
+        this.setTableWrapRef = this.setTableWrapRef.bind(this);
 
         this.scrollingStopped = debounce(() => this.scroll(true), DEBOUNCE_SCROLL_STOP);
     }
 
     componentDidMount() {
-        const { stickyHeader } = this.props;
-
         this.table = ReactDOM.findDOMNode(this.tableRef); // eslint-disable-line react/no-find-dom-node
         this.tableInnerContainer = this.table.querySelector('.fixedDataTableLayout_rowsContainer');
-
         const tableRows = this.table.querySelectorAll('.fixedDataTableRowLayout_rowWrapper');
 
         this.header = tableRows[0];
@@ -137,8 +143,8 @@ export default class TableVisualization extends Component {
             this.footer.classList.add('table-footer');
         }
 
-        if (this.isSticky(stickyHeader)) {
-            this.setListeners();
+        if (TableVisualization.isSticky(this.props.stickyHeaderOffset)) {
+            this.setListeners('add');
             this.scrolled();
             this.checkTableDimensions();
         }
@@ -146,8 +152,8 @@ export default class TableVisualization extends Component {
 
     componentWillReceiveProps(nextProps) {
         const current = this.props;
-        const currentIsSticky = this.isSticky(current.stickyHeader);
-        const nextIsSticky = this.isSticky(nextProps.stickyHeader);
+        const currentIsSticky = TableVisualization.isSticky(current.stickyHeaderOffset);
+        const nextIsSticky = TableVisualization.isSticky(nextProps.stickyHeaderOffset);
 
         if (currentIsSticky !== nextIsSticky) {
             if (currentIsSticky) {
@@ -160,9 +166,7 @@ export default class TableVisualization extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { stickyHeader, aggregations } = this.props;
-
-        if (!isEqual(prevProps.aggregations, aggregations)) {
+        if (!isEqual(prevProps.aggregations, this.props.aggregations)) {
             const tableRows = this.table.querySelectorAll('.fixedDataTableRowLayout_rowWrapper');
 
             if (this.footer) {
@@ -175,7 +179,7 @@ export default class TableVisualization extends Component {
             }
         }
 
-        if (this.isSticky(stickyHeader)) {
+        if (TableVisualization.isSticky(this.props.stickyHeaderOffset)) {
             this.scroll(true);
             this.checkTableDimensions();
         }
@@ -199,17 +203,36 @@ export default class TableVisualization extends Component {
         this.subscribers = subscribeEvents(this.scrolled, scrollEvents);
     }
 
-    getSortFunc(column, index) {
+    getSortFunc(header, sort) {
         const { onSortChange } = this.props;
-        return partial(onSortChange, column, index);
+
+        const sortItem = header.type === 'attribute' ? {
+            attributeSortItem: {
+                direction: sort.nextDir,
+                attributeIdentifier: header.localIdentifier
+            }
+        } : {
+            measureSortItem: {
+                direction: sort.nextDir,
+                locators: [
+                    {
+                        measureLocatorItem: {
+                            measureIdentifier: header.localIdentifier
+                        }
+                    }
+                ]
+            }
+        };
+
+        return onSortChange(sortItem);
     }
 
-    getSortObj(column, index) {
+    getSortObj(header, index) {
         const { sortBy, sortDir } = this.props;
         const { hintSortBy } = this.state;
 
         const dir = (sortBy === index ? sortDir : null);
-        const nextDir = getNextSortDir(column, dir);
+        const nextDir = getNextSortDir(header, dir);
 
         return {
             dir,
@@ -240,12 +263,12 @@ export default class TableVisualization extends Component {
     }
 
     getContentClasses() {
-        const { stickyHeader } = this.props;
+        const { stickyHeaderOffset } = this.props;
 
         return classNames(
             'indigo-table-component-content',
             {
-                'has-sticky-header': this.isSticky(stickyHeader)
+                'has-sticky-header': TableVisualization.isSticky(stickyHeaderOffset)
             });
     }
 
@@ -258,16 +281,11 @@ export default class TableVisualization extends Component {
         }
     }
 
-    isSticky(stickyHeader) {
-        return stickyHeader >= 0;
-    }
-
     hasFooter() {
         const { aggregations, headers } = this.props;
+        const onlyMeasures = headers.every(header => header.type === 'measure');
 
-        const onlyMetrics = headers.every(column => column.type === 'metric');
-
-        return aggregations.length > 0 && !onlyMetrics;
+        return aggregations.length > 0 && !onlyMeasures;
     }
 
     checkTableDimensions() {
@@ -282,7 +300,7 @@ export default class TableVisualization extends Component {
     }
 
     scrollHeader(isScrollingStopped = false) {
-        const { stickyHeader, sortInTooltip, aggregations, hasHiddenRows } = this.props;
+        const { stickyHeaderOffset, sortInTooltip, aggregations, hasHiddenRows } = this.props;
         const tableBoundingRect = this.tableInnerContainer.getBoundingClientRect();
 
         const isOutOfViewport = tableBoundingRect.bottom < 0;
@@ -295,19 +313,19 @@ export default class TableVisualization extends Component {
         }
 
         const isDefaultPosition = isHeaderAtDefaultPosition(
-            stickyHeader,
+            stickyHeaderOffset,
             tableBoundingRect.top
         );
 
         const isEdgePosition = isHeaderAtEdgePosition(
-            stickyHeader,
+            stickyHeaderOffset,
             hasHiddenRows,
             aggregations,
             tableBoundingRect.bottom
         );
 
         const positions = getHeaderPositions(
-            stickyHeader,
+            stickyHeaderOffset,
             hasHiddenRows,
             aggregations,
             tableBoundingRect.height,
@@ -386,22 +404,27 @@ export default class TableVisualization extends Component {
         return sortBubble.visible && sortBubble.index === index;
     }
 
-    renderTooltipHeader(column, index, columnWidth) {
-        const headerClasses = getHeaderClassNames(column);
+    renderTooltipHeader(header, index, columnWidth) {
+        const headerClasses = getHeaderClassNames(header);
         const bubbleClass = uniqueId('table-header-');
         const cellClasses = classNames(headerClasses, bubbleClass);
 
-        const sort = this.getSortObj(column, index);
+        const sort = this.getSortObj(header, index);
 
-        const columnAlign = getColumnAlign(column);
+        const columnAlign = getColumnAlign(header);
         const sortingModalAlignPoints = getTooltipSortAlignPoints(columnAlign);
 
         const getArrowPositions = () => {
-            return calculateArrowPositions({
-                width: columnWidth,
-                align: columnAlign,
-                index
-            }, this.tableRef.state.scrollX, this.tableWrapRef);
+            return TableVisualization.fullscreenTooltipEnabled() ?
+                calculateArrowPositions(
+                    {
+                        width: columnWidth,
+                        align: columnAlign,
+                        index
+                    },
+                    this.tableRef.state.scrollX,
+                    this.tableWrapRef
+                ) : null;
         };
 
         const showSortBubble = () => {
@@ -421,55 +444,52 @@ export default class TableVisualization extends Component {
             <span>
                 <Cell {...props} className={cellClasses} onClick={showSortBubble}>
                     <span className="gd-table-header-title">
-                        {column.title}
+                        {header.name}
                     </span>
                     <span className={sort.sortDirClass} />
                 </Cell>
                 {this.isBubbleVisible(index) &&
-                    <Bubble
-                        closeOnOutsideClick
-                        alignTo={`.${bubbleClass}`}
-                        className="gd-table-header-bubble bubble-light"
-                        overlayClassName="gd-table-header-bubble-overlay"
-                        alignPoints={sortingModalAlignPoints}
-                        arrowDirections={{
-                            'bl tr': 'top',
-                            'br tl': 'top',
-                            'tl br': 'bottom',
-                            'tr bl': 'bottom'
-                        }}
-                        arrowOffsets={{
-                            'bl tr': [14, 10],
-                            'br tl': [-14, 10],
-                            'tl br': [14, -10],
-                            'tr bl': [-14, -10]
-                        }}
-                        arrowStyle={getArrowPositions}
+                <Bubble
+                    closeOnOutsideClick
+                    alignTo={`.${bubbleClass}`}
+                    className="gd-table-header-bubble bubble-light"
+                    overlayClassName="gd-table-header-bubble-overlay"
+                    alignPoints={sortingModalAlignPoints}
+                    arrowDirections={{
+                        'bl tr': 'top',
+                        'br tl': 'top',
+                        'tl br': 'bottom',
+                        'tr bl': 'bottom'
+                    }}
+                    arrowOffsets={{
+                        'bl tr': [14, 10],
+                        'br tl': [-14, 10],
+                        'tl br': [14, -10],
+                        'tr bl': [-14, -10]
+                    }}
+                    arrowStyle={getArrowPositions}
+                    onClose={this.closeBubble}
+                >
+                    <TableSortBubbleContent
+                        activeSortDir={sort.dir}
+                        title={header.name}
                         onClose={this.closeBubble}
-                    >
-                        <TableSortBubbleContent
-                            activeSortDir={sort.dir}
-                            title={column.title}
-                            onClose={this.closeBubble}
-                            onSortChange={this.getSortFunc(column, index)}
-                        />
-                    </Bubble>
+                        onSortChange={this.getSortFunc(header, sort)}
+                    />
+                </Bubble>
                 }
             </span>
         );
     }
 
-    renderDefaultHeader(column, index) {
-        const headerClasses = getHeaderClassNames(column);
-
-        const sort = this.getSortObj(column, index);
-        const sortFunc = this.getSortFunc(column, index);
-
-        const onClick = e => sortFunc(sort.nextDir, e);
+    renderDefaultHeader(header, index) {
+        const headerClasses = getHeaderClassNames(header);
         const onMouseEnter = this.getMouseOverFunc(index);
         const onMouseLeave = this.getMouseOverFunc(null);
+        const sort = this.getSortObj(header, index);
+        const onClick = () => this.getSortFunc(header, sort);
 
-        const columnAlign = getColumnAlign(column);
+        const columnAlign = getColumnAlign(header);
         const tooltipAlignPoints = getTooltipAlignPoints(columnAlign);
 
         return props => (
@@ -480,42 +500,34 @@ export default class TableVisualization extends Component {
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
             >
-                <BubbleHoverTrigger
-                    className="gd-table-header-title"
-                    showDelay={TOOLTIP_DISPLAY_DELAY}
-                >
-                    {column.title}
+                <BubbleHoverTrigger className="gd-table-header-title" showDelay={TOOLTIP_DISPLAY_DELAY}>
+                    {header.name}
                     <Bubble
                         closeOnOutsideClick
                         className="bubble-light"
                         overlayClassName="gd-table-header-bubble-overlay"
                         alignPoints={tooltipAlignPoints}
                     >
-                        {column.title}
+                        {header.name}
                     </Bubble>
                 </BubbleHoverTrigger>
-
                 <span className={sort.sortDirClass} />
             </Cell>
         );
     }
 
-    renderCell(columns, index) {
-        const { rows, afm, drillableItems, onFiredDrillEvent } = this.props;
-
-        const column = columns[index];
-
-        const drillable = isDrillable(drillableItems, column);
+    renderCell(headers, index) {
+        const { executionRequest, drillableItems, onFiredDrillEvent, rows } = this.props;
+        const header = headers[index];
+        const drillable = isDrillable(drillableItems, header);
 
         return (cellProps) => {
             const { rowIndex, columnKey } = cellProps;
-
             const row = rows[rowIndex];
-            const content = row[columnKey];
+            const cellContent = row[columnKey];
             const classes = getCellClassNames(rowIndex, columnKey, drillable);
-            const drillConfig = { afm, onFiredDrillEvent };
-
-            const { style, label } = getStyledLabel(column, content);
+            const drillConfig = { executionRequest, onFiredDrillEvent };
+            const { style, label } = getStyledLabel(header, cellContent);
 
             const cellPropsDrill = drillable ? assign({}, cellProps, {
                 onClick(e) {
@@ -524,14 +536,13 @@ export default class TableVisualization extends Component {
                         {
                             columnIndex: columnKey,
                             rowIndex,
-                            row,
-                            intersection: [column]
+                            row: getBackwardCompatibleRowForDrilling(row),
+                            intersection: [getBackwardCompatibleHeaderForDrilling(header)]
                         },
                         e.target
                     );
                 }
             }) : cellProps;
-
 
             return (
                 <Cell {...cellPropsDrill}>
@@ -541,14 +552,12 @@ export default class TableVisualization extends Component {
         };
     }
 
-    renderFooter(column, index) {
+    renderFooter(header, index) {
         const { aggregations } = this.props;
 
         if (!this.hasFooter()) return null;
 
-        const style = {
-            height: DEFAULT_FOOTER_ROW_HEIGHT
-        };
+        const style = { height: DEFAULT_FOOTER_ROW_HEIGHT };
         const isFirstColumn = (index === 0);
 
         return (
@@ -558,7 +567,7 @@ export default class TableVisualization extends Component {
 
                     return (
                         <div key={uniqueId('footer-cell-')} className={'indigo-table-footer-cell'} style={style}>
-                            <span>{isFirstColumn ? aggregation.name : numberFormat(value, column.format)}</span>
+                            <span>{isFirstColumn ? aggregation.name : numberFormat(value, header.format)}</span>
                         </div>
                     );
                 })}
@@ -566,43 +575,46 @@ export default class TableVisualization extends Component {
         );
     }
 
-    renderColumns(columns, columnWidth) {
-        const renderHeader =
-            this.props.sortInTooltip ? this.renderTooltipHeader : this.renderDefaultHeader;
+    renderColumns(headers, columnWidth) {
+        const renderHeader = this.props.sortInTooltip ? this.renderTooltipHeader : this.renderDefaultHeader;
 
-        return columns.map((column, index) => {
-            return (
-                <Column
-                    key={`${index}.${column.id}`} // eslint-disable-line react/no-array-index-key
-                    width={columnWidth}
-                    align={getColumnAlign(column)}
-                    columnKey={index}
-                    header={renderHeader(column, index, columnWidth)}
-                    footer={this.renderFooter(column, index)}
-                    cell={this.renderCell(columns, index)}
-                    allowCellsRecycling
-                />
-            );
-        });
+        return headers.map((header, index) => (
+            <Column
+                key={`${index}.${header.localIdentifier}`} // eslint-disable-line react/no-array-index-key
+                width={columnWidth}
+                align={getColumnAlign(header)}
+                columnKey={index}
+                header={renderHeader(header, index, columnWidth)}
+                footer={this.renderFooter(header, index)}
+                cell={this.renderCell(headers, index)}
+                allowCellsRecycling
+            />
+        ));
+    }
+
+    renderStickyTableBackgroundFiller() {
+        return (
+            <div
+                className="indigo-table-background-filler"
+                style={{ ...pick(this.state, 'width', 'height') }}
+            />
+        );
     }
 
     render() {
         const {
-            headers,
-            containerWidth,
+            aggregations,
             containerHeight,
             containerMaxHeight,
-            afm,
-            aggregations,
-            stickyHeader
+            containerWidth,
+            headers,
+            stickyHeaderOffset
         } = this.props;
 
-        const enrichedHeaders = enrichTableDataHeaders(headers, afm);
-
-        const columnWidth = Math.max(containerWidth / enrichedHeaders.length, MIN_COLUMN_WIDTH);
-
-        const footerHeight = DEFAULT_FOOTER_ROW_HEIGHT * aggregations.length;
         const height = containerMaxHeight ? undefined : containerHeight;
+        const footerHeight = DEFAULT_FOOTER_ROW_HEIGHT * aggregations.length;
+        const columnWidth = Math.max(containerWidth / headers.length, MIN_COLUMN_WIDTH);
+        const isSticky = TableVisualization.isSticky(stickyHeaderOffset);
 
         return (
             <div className={this.getComponentClasses()}>
@@ -619,15 +631,10 @@ export default class TableVisualization extends Component {
                         height={height}
                         onScrollStart={this.closeBubble}
                     >
-                        {this.renderColumns(enrichedHeaders, columnWidth)}
+                        {this.renderColumns(headers, columnWidth)}
                     </Table>
                 </div>
-                {this.isSticky(stickyHeader) ? (
-                    <div
-                        className={'indigo-table-background-filler'}
-                        style={{ ...pick(this.state, 'width', 'height') }}
-                    />
-                ) : false}
+                {isSticky ? this.renderStickyTableBackgroundFiller() : false}
             </div>
         );
     }

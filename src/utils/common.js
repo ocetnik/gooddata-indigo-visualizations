@@ -1,10 +1,14 @@
-import { isArray, has } from 'lodash';
+import { isArray, has, setWith, clone } from 'lodash';
 import { Observable } from 'rxjs/Rx';
 
 export function parseValue(value) {
     const parsedValue = parseFloat(value);
     return isNaN(parsedValue) ? null : parsedValue;
 }
+
+export const immutableSet = (dataSet, path, newValue) => setWith({ ...dataSet }, path, newValue, clone);
+
+export const repeatItemsNTimes = (array, n) => Array(n).fill(null).reduce(result => [...result, ...array], []);
 
 export function getMeasureHeader(item, afm = {}) {
     const { id, uri = '', identifier = '' } = item;
