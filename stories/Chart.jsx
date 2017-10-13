@@ -1,10 +1,15 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 
+import Visualization from '../src/Visualization';
 import LineFamilyChartTransformation from '../src/Chart/LineFamilyChartTransformation';
+import ChartTransformation from '../src/Chart/ChartTransformation';
 import { FLUID_LEGEND_THRESHOLD } from '../src/Chart/Legend/Legend';
+
 import * as TestConfig from './test_data/test_config';
 import * as TestData from './test_data/test_data';
+import * as fixtures from './test_data/fixtures';
+
 import IntlWrapper from './utils/IntlWrapper';
 import { wrap, screenshotWrap } from './utils/wrap';
 import { createMock } from './utils/mockGenerator';
@@ -86,7 +91,6 @@ storiesOf('Chart')
                                     responsive: true
                                 }
                             }}
-                            height={300}
                             data={barChartWithPagedLegend.data}
                         />
                     </div>
@@ -152,4 +156,365 @@ storiesOf('Chart')
                 </div>
             </IntlWrapper>
         )
-    ));
+    ))
+    .add('new transformation column chart without attributes', () => {
+        const executionData = fixtures.barChartWithoutAttributes;
+
+        return screenshotWrap(
+            wrap(
+                <ChartTransformation
+                    drillableItems={[
+                        {
+                            uri: executionData.executionResponse.dimensions[1]
+                                .headers[0].measureGroupHeader.items[0].measureHeaderItem.uri
+                        }
+                    ]}
+                    config={{
+                        type: 'column',
+                        legend: {
+                            enabled: true,
+                            position: 'top'
+                        },
+                        legendLayout: 'horizontal',
+                        colorPalette: TestData.lgbtPalette
+                    }}
+                    {...executionData}
+                    onDataTooLarge={f => f}
+                />
+            )
+        );
+    })
+    .add('new transformation column chart with 3 metrics and view by attribute', () => {
+        const executionData = fixtures.barChartWith3MetricsAndViewByAttribute;
+
+        return screenshotWrap(
+            wrap(
+                <ChartTransformation
+                    drillableItems={[
+                        {
+                            uri: executionData.executionResponse.dimensions[1]
+                                .headers[0].measureGroupHeader.items[1].measureHeaderItem.uri
+                        }
+                    ]}
+                    config={{
+                        type: 'column',
+                        legend: {
+                            enabled: true,
+                            position: 'top'
+                        },
+                        legendLayout: 'horizontal',
+                        colorPalette: TestData.lgbtPalette
+                    }}
+                    {...executionData}
+                    onDataTooLarge={f => f}
+                />
+            )
+        );
+    })
+    .add('new transformation column chart with 18 measures and view by attribute', () => {
+        const dataSet = fixtures.barChartWith18MetricsAndViewByAttribute;
+
+        return screenshotWrap(
+            wrap(
+                <ChartTransformation
+                    drillableItems={[
+                        {
+                            uri: dataSet.executionResponse.dimensions[1]
+                                .headers[0].measureGroupHeader.items[1].measureHeaderItem.uri
+                        }
+                    ]}
+                    config={{
+                        type: 'column',
+                        legend: {
+                            enabled: true,
+                            position: 'top'
+                        },
+                        legendLayout: 'horizontal',
+                        colorPalette: TestData.lgbtPalette
+                    }}
+                    {...dataSet}
+                    onDataTooLarge={f => f}
+                />
+            )
+        );
+    })
+    .add('new transformation column chart with view by attribute', () => {
+        const executionData = fixtures.barChartWithViewByAttribute;
+
+        return screenshotWrap(
+            wrap(
+                <ChartTransformation
+                    drillableItems={[
+                        {
+                            uri: executionData.executionResponse.dimensions[0].headers[0].attributeHeader.uri
+                        }
+                    ]}
+                    config={{
+                        type: 'column',
+                        legend: {
+                            enabled: true,
+                            position: 'right'
+                        },
+                        legendLayout: 'horizontal',
+                        colorPalette: TestData.lgbtPalette
+                    }}
+                    {...executionData}
+                    onDataTooLarge={f => f}
+                />
+            )
+        );
+    })
+    .add('new transformation column chart with viewBy and stackBy attribute', () => {
+        const executionData = fixtures.barChartWithStackByAndViewByAttributes;
+
+        return screenshotWrap(
+            wrap(
+                <ChartTransformation
+                    drillableItems={[
+                        {
+                            uri: executionData.executionResult.headerItems[0][0][0].attributeHeaderItem.uri
+                        }
+                    ]}
+                    config={{
+                        type: 'column',
+                        legend: {
+                            enabled: true,
+                            position: 'top'
+                        },
+                        legendLayout: 'vertical',
+                        colorPalette: TestData.lgbtPalette
+                    }}
+                    {...executionData}
+                    onDataTooLarge={f => f}
+                />
+            )
+        );
+    })
+    .add('new transformation column chart with pop measure and view by attribute', () => {
+        const executionData = fixtures.barChartWithPopMeasureAndViewByAttribute;
+
+        return screenshotWrap(
+            wrap(
+                <ChartTransformation
+                    drillableItems={[
+                        {
+                            uri: executionData.executionResult.headerItems[0][0][0].attributeHeaderItem.uri
+                        }
+                    ]}
+                    config={{
+                        type: 'column',
+                        legend: {
+                            enabled: true,
+                            position: 'top'
+                        },
+                        legendLayout: 'vertical',
+                        colorPalette: TestData.lgbtPalette
+                    }}
+                    {...executionData}
+                    onDataTooLarge={f => f}
+                />
+            )
+        );
+    })
+    .add('new transformation bar chart with viewBy and stackBy attribute', () => {
+        const executionData = fixtures.barChartWithStackByAndViewByAttributes;
+        return screenshotWrap(
+            wrap(
+                <ChartTransformation
+                    drillableItems={[
+                        {
+                            uri: executionData.executionResult.headerItems[1][0][0].attributeHeaderItem.uri
+                        }
+                    ]}
+                    config={{
+                        type: 'bar',
+                        legend: {
+                            enabled: true,
+                            position: 'bottom'
+                        },
+                        legendLayout: 'vertical',
+                        colorPalette: TestData.lgbtPalette
+                    }}
+                    {...executionData}
+                    onDataTooLarge={f => f}
+                />
+            )
+        );
+    })
+    .add('new transformation line chart with viewBy and stackBy attribute', () => {
+        const executionData = fixtures.barChartWithStackByAndViewByAttributes;
+
+        return screenshotWrap(
+            wrap(
+                <ChartTransformation
+                    drillableItems={[
+                        {
+                            uri: executionData.executionResult.headerItems[0][0][0].attributeHeaderItem.uri
+                        }
+                    ]}
+                    config={{
+                        type: 'line',
+                        legend: {
+                            enabled: true,
+                            position: 'right'
+                        },
+                        legendLayout: 'horizontal',
+                        colorPalette: TestData.lgbtPalette
+                    }}
+                    {...executionData}
+                    onDataTooLarge={f => f}
+                />
+            )
+        );
+    })
+    .add('new transformation pie chart view viewBy attribute', () => {
+        const executionData = fixtures.barChartWithViewByAttribute;
+
+        return screenshotWrap(
+            wrap(
+                <ChartTransformation
+                    drillableItems={[
+                        {
+                            uri: executionData.executionResult.headerItems[0][0][0].attributeHeaderItem.uri
+                        }
+                    ]}
+                    config={{
+                        type: 'pie',
+                        legend: {
+                            enabled: true,
+                            position: 'left'
+                        },
+                        legendLayout: 'horizontal',
+                        colorPalette: TestData.lgbtPalette
+                    }}
+                    {...executionData}
+                    onDataTooLarge={f => f}
+                />
+            )
+        );
+    })
+    .add('new transformation pie chart view metrics only', () => {
+        const executionData = fixtures.pieChartWithMetricsOnly;
+
+        return screenshotWrap(
+            wrap(
+                <ChartTransformation
+                    drillableItems={[
+                        {
+                            uri: executionData.executionResponse.dimensions[0]
+                                .headers[0].measureGroupHeader.items[1].measureHeaderItem.uri
+                        }
+                    ]}
+                    config={{
+                        type: 'pie',
+                        legend: {
+                            enabled: true,
+                            position: 'left'
+                        },
+                        legendLayout: 'horizontal',
+                        colorPalette: TestData.lgbtPalette
+                    }}
+                    {...executionData}
+                    onDataTooLarge={f => f}
+                />
+            )
+        );
+    })
+    .add('visualization bar chart without attributes', () => {
+        const executionData = fixtures.barChartWithoutAttributes;
+
+        return screenshotWrap(
+            wrap(
+                <Visualization
+                    {...executionData}
+                    config={{
+                        type: 'column'
+                    }}
+                />
+            )
+        );
+    })
+    .add('visualization column chart with 3 metrics and view by attribute', () => {
+        const executionData = fixtures.barChartWith3MetricsAndViewByAttribute;
+
+        return screenshotWrap(
+            wrap(
+                <Visualization
+                    {...executionData}
+                    config={{
+                        type: 'column'
+                    }}
+                />
+            )
+        );
+    })
+    .add('visualization bar chart with 3 metrics and view by attribute', () => {
+        const executionData = fixtures.barChartWith3MetricsAndViewByAttribute;
+
+        return screenshotWrap(
+            wrap(
+                <Visualization
+                    {...executionData}
+                    config={{
+                        type: 'column'
+                    }}
+                />
+            )
+        );
+    })
+    .add('visualization bar chart with view by attribute', () => {
+        const executionData = fixtures.barChartWithViewByAttribute;
+
+        return screenshotWrap(
+            wrap(
+                <Visualization
+                    {...executionData}
+                    config={{
+                        type: 'column'
+                    }}
+                />
+            )
+        );
+    })
+    .add('visualization bar chart with stack by and view by attributes', () => {
+        const executionData = fixtures.barChartWithStackByAndViewByAttributes;
+
+        return screenshotWrap(
+            wrap(
+                <Visualization
+                    {...executionData}
+                    config={{
+                        type: 'column'
+                    }}
+                />
+            )
+        );
+    })
+    .add('visualization bar chart with pop measure and view by attribute', () => {
+        const executionData = fixtures.barChartWithPopMeasureAndViewByAttribute;
+
+        return screenshotWrap(
+            wrap(
+                <Visualization
+                    {...executionData}
+                    config={{
+                        type: 'column'
+                    }}
+                />
+            )
+        );
+    })
+    .add('visualization pie chart with metrics only', () => {
+        const executionData = fixtures.pieChartWithMetricsOnly;
+
+        return screenshotWrap(
+            wrap(
+                <Visualization
+                    {...executionData}
+                    config={{
+                        type: 'pie'
+                    }}
+                />
+            )
+        );
+    });

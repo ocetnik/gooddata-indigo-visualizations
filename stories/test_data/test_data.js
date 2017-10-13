@@ -1139,3 +1139,12 @@ export const afm = {
         id: 'closed.aag81lMifn6q'
     }]
 };
+
+export const lgbtPalette = [
+    '#FF69B4',
+    '#d40606',
+    '#ee9c00',
+    '#e3ff00',
+    '#06bf00',
+    '#001a98'
+];

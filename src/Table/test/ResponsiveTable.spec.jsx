@@ -1,28 +1,12 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { range } from 'lodash';
+import { noop, range } from 'lodash';
 
 import { withIntl } from '../../test/utils';
-
 import ResponsiveTable from '../ResponsiveTable';
 import Table from '../Table';
 
-const HEADERS = [
-    {
-        type: 'attrLabel',
-        title: 'Name'
-    }, {
-        type: 'metric',
-        title: '# of Open Opps.',
-        format: '#,##0'
-    }, {
-        type: 'metric',
-        title: '# of Opportunities',
-        format: '[red]#,##0'
-    }
-];
-
-const DATA_ROW = ['Wile E. Coyote', '30', '1324'];
+import { TABLE_HEADERS_1A_2M, TABLE_ROWS_1A_2M } from '../fixtures/1attribute2measures';
 
 const ROWS_PER_PAGE = 10;
 const WrappedTable = withIntl(ResponsiveTable);
@@ -31,17 +15,17 @@ const getMore = wrapper => wrapper.find('.s-show_more');
 const getLess = wrapper => wrapper.find('.s-show_less');
 
 describe('Responsive Table', () => {
-    function renderTable(data, customProps = {}) {
+    function renderTable(tableData, customProps = {}) {
         const props = {
-            onMore: () => {},
-            onLess: () => {},
+            onMore: noop,
+            onLess: noop,
             ...customProps
         };
         return mount(
             <WrappedTable
                 containerWidth={600}
-                rows={data.rawData}
-                headers={data.headers}
+                headers={tableData.tableHeaders}
+                rows={tableData.tableRows}
                 rowsPerPage={ROWS_PER_PAGE}
                 {...props}
             />
@@ -49,37 +33,53 @@ describe('Responsive Table', () => {
     }
 
     it('should set container width', () => {
-        const wrapper = renderTable({ headers: [], rawData: [] });
+        const wrapper = renderTable({ tableHeaders: [], tableRows: [] });
 
         expect(wrapper.find(Table).prop('containerWidth')).toEqual(600);
     });
 
+    describe('page', () => {
+        it('should set new page when it is sent in props', () => {
+            const wrapper = renderTable({ tableHeaders: [], tableRows: [] });
+            expect(wrapper.find(Table).prop('page')).toEqual(1);
+            wrapper.setProps({ page: 2 });
+            expect(wrapper.find(Table).prop('page')).toEqual(2);
+        });
+
+        it('should not set new page when it isn\'t sent in props', () => {
+            const wrapper = renderTable({ tableHeaders: [], tableRows: [] });
+            expect(wrapper.find(Table).prop('page')).toEqual(1);
+            wrapper.setProps({ foo: 'baz' });
+            expect(wrapper.find(Table).prop('page')).toEqual(1);
+        });
+    });
+
     describe('when data contains less than 1 page of rows', () => {
-        const fixture = {
-            headers: HEADERS,
-            rawData: [DATA_ROW]
+        const tableData = {
+            tableHeaders: TABLE_HEADERS_1A_2M,
+            tableRows: TABLE_ROWS_1A_2M
         };
 
         it('should not show "More" button', () => {
-            const wrapper = renderTable(fixture);
+            const wrapper = renderTable(tableData);
             expect(getMore(wrapper)).toHaveLength(0);
         });
 
         it('should not show "Less" button', () => {
-            const wrapper = renderTable(fixture);
+            const wrapper = renderTable(tableData);
             expect(getLess(wrapper)).toHaveLength(0);
         });
 
         it('should set correct number of rows', () => {
-            const wrapper = renderTable(fixture);
+            const wrapper = renderTable(tableData);
             expect(wrapper.find(Table).prop('rows').length).toEqual(1);
         });
     });
 
     describe('when data contains more than 1 page of rows', () => {
         const fixture = {
-            headers: HEADERS,
-            rawData: range(0, 25).map(() => DATA_ROW)
+            tableHeaders: TABLE_HEADERS_1A_2M,
+            tableRows: range(0, 25).map(() => TABLE_ROWS_1A_2M)
         };
 
         describe('and table is showing first page', () => {

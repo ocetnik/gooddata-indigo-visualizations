@@ -81,7 +81,6 @@ storiesOf('Drilldown')
                 <TableTransformation
                     afm={TestData.afm}
                     drillableItems={TestData.stackedBarDrillableItems}
-                    config={TestConfig.table}
                     data={TestData.stackedBar}
                     width={600}
                     height={400}

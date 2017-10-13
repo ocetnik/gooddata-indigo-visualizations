@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import { TableSortBubbleContent } from '../TableSortBubbleContent';
-import { ASC, DESC } from '../Sort';
+import { ASC, DESC } from '../constants/sort';
 import { withIntl } from '../../test/utils';
 
 describe('TableSortBubbleContent', () => {
