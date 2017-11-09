@@ -1,4 +1,4 @@
-import { get, has, isEqual, isObject, keys, zip } from 'lodash';
+import { difference, get, has, isObject, zip } from 'lodash';
 
 const REQUIRED_ATTRIBUTE_TABLE_HEADER_ELEMENTS = ['uri', 'identifier', 'localIdentifier', 'name'];
 
@@ -20,7 +20,7 @@ function getAttributeAndMeasureResponseDimensions(executionResponse) {
 }
 
 function validateAttributeTableHeaderElements(attributeTableHeader) {
-    if (!isEqual(keys(attributeTableHeader), REQUIRED_ATTRIBUTE_TABLE_HEADER_ELEMENTS)) {
+    if (difference(REQUIRED_ATTRIBUTE_TABLE_HEADER_ELEMENTS, Object.keys(attributeTableHeader)).length > 0) {
         throw new Error(
             'Attribute table header doesn\'t contain all of required elements. ' +
             `Required attribute table header elements are: ${REQUIRED_ATTRIBUTE_TABLE_HEADER_ELEMENTS}.`
@@ -33,7 +33,7 @@ function validateAttributeTableHeaderElements(attributeTableHeader) {
 function validateMeasureTableHeaderElements(measureTableHeader) {
     const requiredMeasureTableHeaderElements = REQUIRED_ATTRIBUTE_TABLE_HEADER_ELEMENTS.concat(['format']);
 
-    if (!isEqual(keys(measureTableHeader), requiredMeasureTableHeaderElements)) {
+    if (difference(requiredMeasureTableHeaderElements, Object.keys(measureTableHeader)).length > 0) {
         throw new Error(
             'Measure table header doesn\'t contain all of required elements. ' +
             `Required measure table header elements are: ${requiredMeasureTableHeaderElements}.`

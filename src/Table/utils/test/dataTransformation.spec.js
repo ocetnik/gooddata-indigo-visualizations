@@ -225,11 +225,26 @@ describe('Table utils - Data transformation', () => {
     describe('Validate table header elements', () => {
         describe('Attribute table header elements', () => {
             const attributeHeader = {
-                uri: '/gdc/md/project_id/obj/1st_attr_df_uri_id',
                 identifier: '1st_attr_df_identifier',
                 localIdentifier: '1st_attr_local_identifier',
-                name: 'Product'
+                name: 'Product',
+                uri: '/gdc/md/project_id/obj/1st_attr_df_uri_id'
             };
+
+            it('should not throw error if attribute header contains all required items', () => {
+                expect(() => {
+                    getHeaders({
+                        dimensions: [
+                            {
+                                headers: [
+                                    { attributeHeader }
+                                ]
+                            },
+                            { headers: [] }
+                        ]
+                    });
+                }).not.toThrow();
+            });
 
             it('should throw error if attribute header doesn\'t contain uri', () => {
                 expect(() => {
@@ -294,12 +309,31 @@ describe('Table utils - Data transformation', () => {
 
         describe('Measure table header elements', () => {
             const measureHeaderItem = {
-                uri: '/gdc/md/project_id/obj/1st_measure_uri_id',
+                format: '$#,##0.00',
                 identifier: '1st_measure_identifier',
                 localIdentifier: '1st_measure_local_identifier',
                 name: 'Lost',
-                format: '$#,##0.00'
+                uri: '/gdc/md/project_id/obj/1st_measure_uri_id'
             };
+
+            it('should not throw error if measure header contains all required items', () => {
+                expect(() => {
+                    getHeaders({
+                        dimensions: [
+                            { headers: [] },
+                            {
+                                headers: [
+                                    {
+                                        measureGroupHeader: {
+                                            items: [{ measureHeaderItem }]
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    });
+                }).not.toThrow();
+            });
 
             it('should throw error if measure header item doesn\'t contain uri', () => {
                 expect(() => {
