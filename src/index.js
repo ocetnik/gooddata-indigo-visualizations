@@ -7,6 +7,8 @@ import TableTransformation from './Table/TableTransformation';
 import ResponsiveTable from './Table/ResponsiveTable';
 import Table from './Table/Table';
 
+import { ExecutionRequestPropTypes, ExecutionResponsePropTypes, ExecutionResultPropTypes } from './proptypes/execution';
+
 export {
     Visualization,
 
@@ -15,5 +17,9 @@ export {
     TableTransformation,
 
     ResponsiveTable,
-    Table
+    Table,
+
+    ExecutionRequestPropTypes,
+    ExecutionResponsePropTypes,
+    ExecutionResultPropTypes
 };
