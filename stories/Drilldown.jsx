@@ -8,6 +8,13 @@ import * as TestData from './test_data/test_data';
 import IntlWrapper from './utils/IntlWrapper';
 import { wrap, screenshotWrap } from './utils/wrap';
 
+import {
+    EXECUTION_REQUEST_2A_1M,
+    EXECUTION_RESPONSE_2A_1M,
+    EXECUTION_RESULT_2A_1M,
+    TABLE_HEADERS_2A_1M
+} from '../src/Table/fixtures/2attributes1measure';
+
 import '../src/styles/charts.scss';
 import '../src/styles/table.scss';
 
@@ -124,11 +131,20 @@ storiesOf('Drilldown')
         screenshotWrap(
             <div>
                 <TableTransformation
-                    afm={TestData.afm}
-                    drillableItems={TestData.stackedBarDrillableItems}
-                    data={TestData.stackedBar}
+                    executionRequest={EXECUTION_REQUEST_2A_1M}
+                    executionResponse={EXECUTION_RESPONSE_2A_1M}
+                    executionResult={EXECUTION_RESULT_2A_1M}
                     width={600}
                     height={400}
+                    drillableItems={[
+                        {
+                            uri: TABLE_HEADERS_2A_1M[2].uri,
+                            identifier: TABLE_HEADERS_2A_1M[2].localIdentifier
+                        }, {
+                            uri: TABLE_HEADERS_2A_1M[0].uri,
+                            identifier: TABLE_HEADERS_2A_1M[0].localIdentifier
+                        }
+                    ]}
                 />
             </div>
         )
