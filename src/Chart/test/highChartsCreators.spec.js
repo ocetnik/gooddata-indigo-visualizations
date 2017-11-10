@@ -1,9 +1,4 @@
-import {
-    getLineChartConfiguration,
-    getBarChartConfiguration,
-    getColumnChartConfiguration,
-    getPieChartConfiguration
-} from '../highChartsCreators';
+import { getHighchartsOptions } from '../highChartsCreators';
 import { BAR_CHART, COLUMN_CHART, LINE_CHART, PIE_CHART } from '../../VisualizationTypes';
 
 const chartOptions = {
@@ -64,7 +59,7 @@ const pieChartOptions = {
 
 describe('highChartCreators', () => {
     describe('Line chart configuration', () => {
-        const config = getLineChartConfiguration({ ...chartOptions, type: LINE_CHART }, {});
+        const config = getHighchartsOptions({ ...chartOptions, type: LINE_CHART }, {});
 
         it('contains styles for drillable', () => {
             expect(config).toHaveProperty('series.0.states.hover.halo.size', 0);
@@ -82,7 +77,7 @@ describe('highChartCreators', () => {
     });
 
     describe('Column chart configuration', () => {
-        const config = getColumnChartConfiguration({ ...chartOptions, type: COLUMN_CHART }, {});
+        const config = getHighchartsOptions({ ...chartOptions, type: COLUMN_CHART }, {});
 
         it('contains styles for drillable and non-drillable', () => {
             expect(config).toHaveProperty('series.0.states.hover.brightness');
@@ -92,7 +87,7 @@ describe('highChartCreators', () => {
     });
 
     describe('Column chart stacked configuration', () => {
-        const config = getColumnChartConfiguration({ ...chartOptions, type: COLUMN_CHART, stacking: true }, {});
+        const config = getHighchartsOptions({ ...chartOptions, type: COLUMN_CHART, stacking: true }, {});
 
         it('contains drilldown label styles', () => {
             expect(config).toHaveProperty('drilldown.activeDataLabelStyle.color');
@@ -100,7 +95,7 @@ describe('highChartCreators', () => {
     });
 
     describe('Bar chart configuration', () => {
-        const config = getBarChartConfiguration({ ...chartOptions, type: BAR_CHART }, {});
+        const config = getHighchartsOptions({ ...chartOptions, type: BAR_CHART }, {});
 
         it('contains styles for drillable and non-drillable', () => {
             expect(config).toHaveProperty('series.0.states.hover.brightness');
@@ -110,7 +105,7 @@ describe('highChartCreators', () => {
     });
 
     describe('Pie chart configuration', () => {
-        const config = getPieChartConfiguration(pieChartOptions, {});
+        const config = getHighchartsOptions(pieChartOptions, {});
 
         it('contains styles for drillable and non-drillable', () => {
             expect(config).toHaveProperty('series.0.data.0.states.hover.brightness');

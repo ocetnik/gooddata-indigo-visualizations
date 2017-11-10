@@ -29,42 +29,6 @@ export function getHighchartsOptions(chartOptions, drillConfig) {
     );
 }
 
-// Deprecated in favour of getHighchartsOptions
-export function getLineChartConfiguration(chartOptions, drillConfig) {
-    return merge({},
-        getCommonConfiguration(chartOptions, drillConfig),
-        getLineConfiguration(),
-        getCustomizedConfiguration(chartOptions)
-    );
-}
-
-// Deprecated in favour of getHighchartsOptions
-export function getColumnChartConfiguration(chartOptions, drillConfig) {
-    return merge({},
-        getCommonConfiguration(chartOptions, drillConfig),
-        getColumnConfiguration(),
-        getCustomizedConfiguration(chartOptions)
-    );
-}
-
-// Deprecated in favour of getHighchartsOptions
-export function getBarChartConfiguration(chartOptions, drillConfig) {
-    return merge({},
-        getCommonConfiguration(chartOptions, drillConfig),
-        getBarConfiguration(),
-        getCustomizedConfiguration(chartOptions)
-    );
-}
-
-// Deprecated in favour of getHighchartsOptions
-export function getPieChartConfiguration(chartOptions, drillConfig) {
-    return merge({},
-        getCommonConfiguration(chartOptions, drillConfig),
-        getPieConfiguration(),
-        getCustomizedConfiguration(chartOptions)
-    );
-}
-
 export function isDataOfReasonableSize(chartData, limits) {
     const seriesLimit = get(limits, 'series', DEFAULT_SERIES_LIMIT);
     const categoriesLimit = get(limits, 'categories', DEFAULT_CATEGORIES_LIMIT);

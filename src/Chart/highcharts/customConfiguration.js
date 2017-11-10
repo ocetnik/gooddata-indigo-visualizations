@@ -8,7 +8,7 @@ import {
 
 import { BAR_CHART, COLUMN_CHART, LINE_CHART, PIE_CHART } from '../../VisualizationTypes';
 import { HOVER_BRIGHTNESS, MINIMUM_HC_SAFE_BRIGHTNESS } from './commonConfiguration';
-import { _getLighterColor } from '../transformation';
+import { _getLighterColor } from '../../utils/color';
 
 const EMPTY_DATA = { categories: [], series: [] };
 

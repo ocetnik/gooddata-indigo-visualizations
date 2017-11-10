@@ -107,7 +107,7 @@ describe('ChartTransformation', () => {
                 }
             };
             mount(createComponent(props));
-            expect(onDataTooLarge).toHaveBeenCalled();
+            expect(onDataTooLarge).toHaveBeenCalledTimes(1);
         });
 
         it('should be invoked if data categories is over limit', () => {
@@ -123,7 +123,7 @@ describe('ChartTransformation', () => {
                 }
             };
             mount(createComponent(props));
-            expect(onDataTooLarge).toHaveBeenCalled();
+            expect(onDataTooLarge).toHaveBeenCalledTimes(1);
         });
 
         it('should be invoked on component mount', () => {
@@ -140,7 +140,7 @@ describe('ChartTransformation', () => {
             };
             const wrapper = shallow(createComponent(props));
             expect(wrapper.find(HighChartRenderer)).toHaveLength(0);
-            expect(onDataTooLarge).toHaveBeenCalled();
+            expect(onDataTooLarge).toHaveBeenCalledTimes(1);
         });
 
         it('should be invoked on props change', () => {
@@ -160,7 +160,7 @@ describe('ChartTransformation', () => {
 
             wrapper.setProps(props);
             expect(wrapper.find(HighChartRenderer)).toHaveLength(0);
-            expect(onDataTooLarge).toHaveBeenCalled();
+            expect(onDataTooLarge).toHaveBeenCalledTimes(1);
 
             wrapper.setProps({
                 ...defaultProps,
@@ -200,10 +200,10 @@ describe('ChartTransformation', () => {
                 ...pieChartPropsWithNegativeValue
             };
             mount(createComponent(props));
-            expect(onNegativeValues).toHaveBeenCalled();
+            expect(onNegativeValues).toHaveBeenCalledTimes(1);
         });
 
-        it('should not be called on other than pie charts', () => {
+        it('should not be invoke on other than pie charts', () => {
             const onNegativeValues = jest.fn();
             const props = {
                 onNegativeValues,
@@ -211,6 +211,23 @@ describe('ChartTransformation', () => {
                 config: {
                     ...defaultProps.config,
                     type: 'column'
+                }
+            };
+            mount(createComponent(props));
+            expect(onNegativeValues).toHaveBeenCalledTimes(0);
+        });
+
+        it('should not be invoked if data is too large as well', () => {
+            const onNegativeValues = jest.fn();
+            const props = {
+                onNegativeValues,
+                ...pieChartPropsWithNegativeValue,
+                config: {
+                    ...defaultProps.config,
+                    type: 'pie',
+                    limits: {
+                        categories: 1
+                    }
                 }
             };
             mount(createComponent(props));
@@ -225,7 +242,7 @@ describe('ChartTransformation', () => {
             };
             const wrapper = shallow(createComponent(props));
             expect(wrapper.find(HighChartRenderer)).toHaveLength(0);
-            expect(onNegativeValues).toHaveBeenCalled();
+            expect(onNegativeValues).toHaveBeenCalledTimes(1);
         });
 
         it('should be invoked on props change', () => {
@@ -239,7 +256,7 @@ describe('ChartTransformation', () => {
 
             wrapper.setProps(props);
             expect(wrapper.find(HighChartRenderer)).toHaveLength(0);
-            expect(onNegativeValues).toHaveBeenCalled();
+            expect(onNegativeValues).toHaveBeenCalledTimes(1);
 
             wrapper.setProps(fixtures.pieChartWithMetricsOnly);
             expect(wrapper.find(HighChartRenderer)).toHaveLength(1);

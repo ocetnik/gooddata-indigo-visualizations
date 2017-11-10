@@ -10,7 +10,7 @@ export const immutableSet = (dataSet, path, newValue) => setWith({ ...dataSet },
 
 export const repeatItemsNTimes = (array, n) => Array(n).fill(null).reduce(result => [...result, ...array], []);
 
-export function getMeasureHeader(item, afm = {}) {
+export function getMeasureHeader(item, afm) {
     const { id, uri = '', identifier = '' } = item;
 
     const header = {
@@ -61,3 +61,5 @@ export function subscribeEvents(func, events) {
             .subscribe(func);
     });
 }
+
+export const unEscapeAngleBrackets = str => str && str.replace(/&lt;|&#60;/g, '<').replace(/&gt;|&#62;/g, '>');

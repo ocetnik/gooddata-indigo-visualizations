@@ -26,7 +26,7 @@ import * as fixtures from '../../../stories/test_data/fixtures';
 
 import {
     DEFAULT_COLOR_PALETTE
-} from '../transformation';
+} from '../../utils/color';
 
 export function mockChartOptions(
     dataSet = fixtures.barChartWithStackByAndViewByAttributes,

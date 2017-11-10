@@ -3,7 +3,7 @@ import invariant from 'invariant';
 
 import { range, get, without } from 'lodash';
 import { parseValue } from '../utils/common';
-import { DEFAULT_COLOR_PALETTE, _getLighterColor } from './transformation';
+import { DEFAULT_COLOR_PALETTE, _getLighterColor } from '../utils/color';
 import { PIE_CHART, CHART_TYPES } from '../VisualizationTypes';
 import { isDataOfReasonableSize } from './highChartsCreators';
 
