@@ -77,7 +77,7 @@ function generateExecutionResult(columns, rows) {
         headerItems: generateAttributeHeaderItems(columns, rows),
         paging: {
             count: [
-                0,
+                1,
                 20
             ],
             offset: [
