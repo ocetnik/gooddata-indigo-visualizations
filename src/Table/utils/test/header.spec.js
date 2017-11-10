@@ -1,6 +1,10 @@
 import {
     calculateArrowPositions,
     getHeaderClassNames,
+    getHeaderOffset,
+    isHeaderAtDefaultPosition,
+    isHeaderAtEdgePosition,
+    getHeaderPositions,
     getTooltipAlignPoints,
     getTooltipSortAlignPoints
 } from '../header';
@@ -57,6 +61,136 @@ describe('Table utils - Header', () => {
             expect(
                 getHeaderClassNames(ATTRIBUTE_HEADER)).toEqual('gd-table-header-ordering s-id-1st_attr_local_identifier'
             );
+        });
+    });
+
+    describe('getHeaderOffset', () => {
+        it('should return proper header offset', () => {
+            const hasHiddenRows = true;
+            expect(getHeaderOffset(hasHiddenRows)).toEqual(71);
+        });
+
+        it('should return zero header offset when table has no hidden rows', () => {
+            const hasHiddenRows = false;
+            expect(getHeaderOffset(hasHiddenRows)).toEqual(56);
+        });
+    });
+
+    describe('isHeaderAtDefaultPosition', () => {
+        it('should return true if header is scrolled below zero sticky header offset', () => {
+            const stickyHeaderOffset = 0;
+            const tableTop = 10;
+            expect(isHeaderAtDefaultPosition(stickyHeaderOffset, tableTop)).toEqual(true);
+        });
+
+        it('should return true if header is scrolled exactly at zero sticky header offset', () => {
+            const stickyHeaderOffset = 0;
+            const tableTop = 0;
+            expect(isHeaderAtDefaultPosition(stickyHeaderOffset, tableTop)).toEqual(true);
+        });
+
+        it('should return true if header is scrolled exactly at sticky header offset', () => {
+            const stickyHeaderOffset = 10;
+            const tableTop = 10;
+            expect(isHeaderAtDefaultPosition(stickyHeaderOffset, tableTop)).toEqual(true);
+        });
+
+        it('should return false if header is scrolled above zero sticky header offset', () => {
+            const stickyHeaderOffset = 0;
+            const tableTop = -10;
+            expect(isHeaderAtDefaultPosition(stickyHeaderOffset, tableTop)).toEqual(false);
+        });
+
+        it('should return false if header is scrolled above sticky header offset', () => {
+            const stickyHeaderOffset = 10;
+            const tableTop = 8;
+            expect(isHeaderAtDefaultPosition(stickyHeaderOffset, tableTop)).toEqual(false);
+        });
+    });
+
+    describe('isHeaderAtEdgePosition', () => {
+        const stickyHeaderOffset = 0;
+        const hasHiddenRows = true;
+        const aggregations = [];
+
+        it('should return true if header is at its edge position', () => {
+            const tableBottom = 50;
+            expect(isHeaderAtEdgePosition(stickyHeaderOffset, hasHiddenRows, aggregations, tableBottom)).toEqual(true);
+        });
+
+        it('should return false if header is not at its edge position', () => {
+            const tableBottom = 500;
+            expect(isHeaderAtEdgePosition(stickyHeaderOffset, hasHiddenRows, aggregations, tableBottom)).toEqual(false);
+        });
+    });
+
+    describe('getHeaderPositions', () => {
+        it('should return proper header positions', () => {
+            const stickyHeaderOffset = 0;
+            let hasHiddenRows = true;
+            let aggregations = [];
+            let tableHeight = 500;
+            let tableTop = 50;
+
+            expect(getHeaderPositions(stickyHeaderOffset, hasHiddenRows, aggregations, tableHeight, tableTop))
+                .toEqual({
+                    absoluteTop: -50,
+                    defaultTop: 0,
+                    edgeTop: 414,
+                    fixedTop: 0
+                });
+
+            hasHiddenRows = true;
+            aggregations = [1, 2, 3];
+            tableHeight = 500;
+            tableTop = 50;
+
+            expect(getHeaderPositions(stickyHeaderOffset, hasHiddenRows, aggregations, tableHeight, tableTop))
+                .toEqual({
+                    absoluteTop: -50,
+                    defaultTop: 0,
+                    edgeTop: 324,
+                    fixedTop: 0
+                });
+
+            hasHiddenRows = false;
+            aggregations = [1, 2, 3];
+            tableHeight = 500;
+            tableTop = 50;
+
+            expect(getHeaderPositions(stickyHeaderOffset, hasHiddenRows, aggregations, tableHeight, tableTop))
+                .toEqual({
+                    absoluteTop: -50,
+                    defaultTop: 0,
+                    edgeTop: 354,
+                    fixedTop: 0
+                });
+
+            hasHiddenRows = true;
+            aggregations = [];
+            tableHeight = 200;
+            tableTop = 100;
+
+            expect(getHeaderPositions(stickyHeaderOffset, hasHiddenRows, aggregations, tableHeight, tableTop))
+                .toEqual({
+                    absoluteTop: -100,
+                    defaultTop: 0,
+                    edgeTop: 114,
+                    fixedTop: 0
+                });
+
+            hasHiddenRows = false;
+            aggregations = [];
+            tableHeight = 200;
+            tableTop = 100;
+
+            expect(getHeaderPositions(stickyHeaderOffset, hasHiddenRows, aggregations, tableHeight, tableTop))
+                .toEqual({
+                    absoluteTop: -100,
+                    defaultTop: 0,
+                    edgeTop: 144,
+                    fixedTop: 0
+                });
         });
     });
 

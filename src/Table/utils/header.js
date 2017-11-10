@@ -2,6 +2,9 @@ import cx from 'classnames';
 import { clamp } from 'lodash';
 import { string } from '@gooddata/js-utils';
 
+import { getFooterHeight } from './footer';
+import { getHiddenRowsOffset } from './row';
+import { DEFAULT_ROW_HEIGHT, DEFAULT_HEADER_HEIGHT } from '../TableVisualization';
 import { ALIGN_LEFT } from '../constants/align';
 
 const HEADER_PADDING = 8;
@@ -34,6 +37,36 @@ export function calculateArrowPositions(column, tableScrollX, tableWrapRef) {
 
 export function getHeaderClassNames(header) {
     return cx('gd-table-header-ordering', getCssClass(header.localIdentifier, 's-id-'));
+}
+
+export function getHeaderOffset(hasHiddenRows) {
+    return DEFAULT_HEADER_HEIGHT + ((hasHiddenRows ? 1.5 : 1) * DEFAULT_ROW_HEIGHT);
+}
+
+export function isHeaderAtDefaultPosition(stickyHeaderOffset, tableTop) {
+    return tableTop >= stickyHeaderOffset;
+}
+
+export function isHeaderAtEdgePosition(stickyHeaderOffset, hasHiddenRows, aggregations, tableBottom) {
+    const footerHeight = getFooterHeight(aggregations);
+    const hiddenRowsOffset = getHiddenRowsOffset(hasHiddenRows);
+    const headerOffset = getHeaderOffset(hasHiddenRows);
+
+    return tableBottom >= stickyHeaderOffset &&
+        tableBottom < (stickyHeaderOffset + headerOffset + footerHeight + hiddenRowsOffset);
+}
+
+export function getHeaderPositions(stickyHeaderOffset, hasHiddenRows, aggregations, tableHeight, tableTop) {
+    const footerHeight = getFooterHeight(aggregations);
+    const hiddenRowsOffset = getHiddenRowsOffset(hasHiddenRows);
+    const headerOffset = getHeaderOffset(hasHiddenRows);
+
+    return {
+        defaultTop: 0,
+        edgeTop: tableHeight - headerOffset - footerHeight - hiddenRowsOffset,
+        fixedTop: stickyHeaderOffset,
+        absoluteTop: stickyHeaderOffset - tableTop
+    };
 }
 
 export const getTooltipAlignPoints = (columnAlign) => {

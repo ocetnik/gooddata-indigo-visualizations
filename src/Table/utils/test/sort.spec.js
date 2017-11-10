@@ -94,9 +94,17 @@ const SORT_ITEM_WITH_UNKNOWN_IDENTIFIER = {
 
 describe('Table utils - Sort', () => {
     describe('getHeaderSortClassName', () => {
-        it('should get header sort class name', () => {
-            expect(getHeaderSortClassName(ASC)).toEqual('gd-table-arrow-up');
-            expect(getHeaderSortClassName(DESC)).toEqual('gd-table-arrow-down');
+        it('should create classes with hinted ASC and current sort DESC', () => {
+            const classes = getHeaderSortClassName(ASC, DESC);
+            expect(classes).toContain('gd-table-arrow-up');
+            expect(classes).toContain('s-sorted-desc');
+        });
+
+        it('should create classes with hinted sort and without current sort', () => {
+            const classes = getHeaderSortClassName(DESC, null);
+            expect(classes).toContain('gd-table-arrow-down');
+            expect(classes).not.toContain('s-sorted-desc');
+            expect(classes).not.toContain('s-sorted-asc');
         });
     });
 

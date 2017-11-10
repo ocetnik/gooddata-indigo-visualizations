@@ -16,22 +16,14 @@ import { getCellClassNames, getColumnAlign, getStyledLabel } from './utils/cell'
 import { getBackwardCompatibleHeaderForDrilling, getBackwardCompatibleRowForDrilling } from './utils/dataTransformation';
 import { cellClick, isDrillable } from '../utils/drilldownEventing';
 import { getHeaderSortClassName, getNextSortDir } from './utils/sort';
+import { getFooterPositions, isFooterAtDefaultPosition, isFooterAtEdgePosition } from './utils/footer';
+import { updatePosition } from './utils/row';
 import {
     calculateArrowPositions,
-    getHeaderClassNames,
+    getHeaderClassNames, getHeaderPositions,
     getTooltipAlignPoints,
-    getTooltipSortAlignPoints
+    getTooltipSortAlignPoints, isHeaderAtDefaultPosition, isHeaderAtEdgePosition
 } from './utils/header';
-
-import {
-    isHeaderAtDefaultPosition,
-    isHeaderAtEdgePosition,
-    getHeaderPositions,
-    isFooterAtDefaultPosition,
-    isFooterAtEdgePosition,
-    getFooterPositions,
-    updatePosition
-} from './utils';
 
 const FULLSCREEN_TOOLTIP_VIEWPORT_THRESHOLD = 480;
 const MIN_COLUMN_WIDTH = 100;
