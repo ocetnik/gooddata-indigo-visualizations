@@ -1,6 +1,4 @@
-import { difference, get, has, isObject, zip } from 'lodash';
-
-const REQUIRED_ATTRIBUTE_TABLE_HEADER_ELEMENTS = ['uri', 'identifier', 'localIdentifier', 'name'];
+import { get, has, isObject, zip } from 'lodash';
 
 function getAttributeAndMeasureResponseDimensions(executionResponse) {
     const dimensions = get(executionResponse, 'dimensions', []);
@@ -19,36 +17,12 @@ function getAttributeAndMeasureResponseDimensions(executionResponse) {
     return { attributeResponseDimension, measureResponseDimension };
 }
 
-function validateAttributeTableHeaderElements(attributeTableHeader) {
-    if (difference(REQUIRED_ATTRIBUTE_TABLE_HEADER_ELEMENTS, Object.keys(attributeTableHeader)).length > 0) {
-        throw new Error(
-            'Attribute table header doesn\'t contain all of required elements. ' +
-            `Required attribute table header elements are: ${REQUIRED_ATTRIBUTE_TABLE_HEADER_ELEMENTS}.`
-        );
-    }
-
-    return attributeTableHeader;
-}
-
-function validateMeasureTableHeaderElements(measureTableHeader) {
-    const requiredMeasureTableHeaderElements = REQUIRED_ATTRIBUTE_TABLE_HEADER_ELEMENTS.concat(['format']);
-
-    if (difference(requiredMeasureTableHeaderElements, Object.keys(measureTableHeader)).length > 0) {
-        throw new Error(
-            'Measure table header doesn\'t contain all of required elements. ' +
-            `Required measure table header elements are: ${requiredMeasureTableHeaderElements}.`
-        );
-    }
-
-    return measureTableHeader;
-}
-
 function getAttributeHeaders(attributeDimension) {
     return get(attributeDimension, 'headers', [])
         .map(
             (attributeHeader) => {
                 return {
-                    ...validateAttributeTableHeaderElements(get(attributeHeader, 'attributeHeader')),
+                    ...get(attributeHeader, 'attributeHeader'),
                     type: 'attribute'
                 };
             }
@@ -62,7 +36,7 @@ function getMeasureHeaders(measureDimension) {
         .map(
             (measureHeader) => {
                 return {
-                    ...validateMeasureTableHeaderElements(get(measureHeader, 'measureHeaderItem')),
+                    ...get(measureHeader, 'measureHeaderItem'),
                     type: 'measure'
                 };
             }
