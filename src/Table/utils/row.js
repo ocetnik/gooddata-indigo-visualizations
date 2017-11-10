@@ -1,6 +1,6 @@
 import { DEFAULT_ROW_HEIGHT } from '../TableVisualization';
 
-function setPosition(element, position = 'absolute', top = 0, sticking = false) {
+function setPosition(element, position, top, sticking = false) {
     const { style, classList } = element;
 
     classList[sticking ? 'add' : 'remove']('sticking');
