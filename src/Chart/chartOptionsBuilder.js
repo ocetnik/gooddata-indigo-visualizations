@@ -63,44 +63,39 @@ export function getColorPalette(
     afm,
     type
 ) {
-    let updatedColorPalette = [...colorPalette]; // clone array
+    let updatedColorPalette = [];
     const isAttributePieChart = type === PIE_CHART && afm.attributes && afm.attributes.length > 0;
-    let itemsCount = measureGroup.items.length;
 
-    if (stackByAttribute) {
-        itemsCount = stackByAttribute.items.length;
-    }
-    if (isAttributePieChart) {
-        itemsCount = viewByAttribute.items.length;
-    }
-    measureGroup.items.forEach((measureItem, measureItemIndex) => {
-        if (isPopMeasure(measureItem, afm)) {
-            const sourceMeasureIdentifier = afm.measures[measureItemIndex].definition.popMeasure.measureIdentifier;
-            const sourceMeasureIndex = afm.measures.findIndex(
-                measure => measure.localIdentifier === sourceMeasureIdentifier
-            );
-            if (sourceMeasureIndex) {
-                // copy sourceMeasure color and lighten it if it exists, then insert it at pop measure position
-                updatedColorPalette = [
-                    ...updatedColorPalette.slice(0, measureItemIndex),
-                    _getLighterColor(normalizeColorToRGB(updatedColorPalette[sourceMeasureIndex]), 0.6),
-                    ...updatedColorPalette.slice(measureItemIndex + 1)
-                ];
+    if (stackByAttribute || isAttributePieChart) {
+        const itemsCount = stackByAttribute ? stackByAttribute.items.length : viewByAttribute.items.length;
+        updatedColorPalette = range(itemsCount)
+            .map(itemIndex => colorPalette[itemIndex % colorPalette.length]);
+    } else {
+        let linkedPopMeasureCounter = 0;
+        measureGroup.items.forEach((measureItem, measureItemIndex) => {
+            // skip linked popMeasures in color palete
+            const colorIndex = (measureItemIndex - linkedPopMeasureCounter) % colorPalette.length;
+            let color = colorPalette[colorIndex];
+
+            // if this is a pop measure and we found it`s original measure
+            if (isPopMeasure(measureItem, afm)) {
+                // find source measure
+                const sourceMeasureIdentifier = afm.measures[measureItemIndex].definition.popMeasure.measureIdentifier;
+                const sourceMeasureIndex = afm.measures.findIndex(
+                    measure => measure.localIdentifier === sourceMeasureIdentifier
+                );
+                if (sourceMeasureIndex > -1) {
+                    linkedPopMeasureCounter += 1;
+                    // copy sourceMeasure color and lighten it if it exists, then insert it at pop measure position
+                    const sourceMeasureColorIndex =
+                        (sourceMeasureIndex - linkedPopMeasureCounter) % colorPalette.length;
+                    const sourceMeasureColor = colorPalette[sourceMeasureColorIndex];
+                    const popMeasureColor = _getLighterColor(normalizeColorToRGB(sourceMeasureColor), 0.6);
+                    color = popMeasureColor;
+                }
             }
-        }
-    });
-
-    const colorCountDifference = itemsCount - updatedColorPalette.length;
-    // copy colors if there are more items then colors in palette
-    if (colorCountDifference > 0) {
-        updatedColorPalette = [
-            ...updatedColorPalette,
-            ...range(colorCountDifference)
-                .map(colorIndex => updatedColorPalette[colorIndex % updatedColorPalette.length])
-        ];
-    // remove extra colors
-    } else if (colorCountDifference < 0) {
-        updatedColorPalette = updatedColorPalette.slice(0, colorCountDifference);
+            updatedColorPalette.push(color);
+        });
     }
     return updatedColorPalette;
 }
@@ -451,7 +446,7 @@ export function getChartOptions(
         : measureGroup.items.map(wrappedMeasure => unwrap(wrappedMeasure).name);
 
     const colorPalette =
-        getColorPalette(config.colorPalette, measureGroup, viewByAttribute, stackByAttribute, afm, type);
+        getColorPalette(config.colors, measureGroup, viewByAttribute, stackByAttribute, afm, type);
 
     const seriesWithoutDrillability = getSeries(
         executionResultData,

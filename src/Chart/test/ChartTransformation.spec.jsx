@@ -28,7 +28,25 @@ describe('ChartTransformation', () => {
     it('should use custom renderer', () => {
         const renderer = jest.fn().mockReturnValue(<div />);
         mount(createComponent({ renderer }));
-        expect(renderer).toHaveBeenCalled();
+        expect(renderer).toHaveBeenCalledTimes(1);
+    });
+
+    it('should use custom color palette', () => {
+        let colorPalette;
+        const customColors = ['#000000', '#ff0000'];
+        const renderer = (params) => {
+            colorPalette = params.chartOptions.colorPalette;
+            return <div />;
+        };
+        mount(createComponent({
+            renderer,
+            ...fixtures.barChartWithStackByAndViewByAttributes,
+            config: {
+                ...defaultProps.config,
+                colors: customColors
+            }
+        }));
+        expect(colorPalette).toEqual(customColors);
     });
 
     describe('Legend config', () => {

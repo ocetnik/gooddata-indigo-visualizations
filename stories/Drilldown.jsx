@@ -1,12 +1,9 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 import { action, decorateAction } from '@storybook/addon-actions';
-import LineFamilyChartTransformation from '../src/Chart/LineFamilyChartTransformation';
-import TableTransformation from '../src/Table/TableTransformation';
-import * as TestConfig from './test_data/test_config';
-import * as TestData from './test_data/test_data';
-import IntlWrapper from './utils/IntlWrapper';
+import Visualization from '../src/Visualization';
 import { wrap, screenshotWrap } from './utils/wrap';
+import * as fixtures from './test_data/fixtures';
 
 import {
     EXECUTION_REQUEST_2A_1M,
@@ -24,113 +21,211 @@ const eventAction = decorateAction([
     }
 ]);
 
+const defaultColumnChartProps = {
+    config: {
+        type: 'column'
+    },
+    onDataTooLarge: f => f
+};
+
 document.addEventListener('drill', eventAction('drill'));
 
 storiesOf('Drilldown')
-    .add('Line chart', () => (
-        screenshotWrap(
+    .add('Line chart drillable by measure', () => {
+        const dataSet = fixtures.barChartWithStackByAndViewByAttributes;
+        return screenshotWrap(
             wrap(
-                <LineFamilyChartTransformation
-                    afm={TestData.afm}
-                    drillableItems={TestData.barChart2SeriesDrillableItems}
+                <Visualization
                     config={{
-                        ...TestConfig.barChart2Series,
+                        type: 'line',
                         legend: {
                             enabled: false
                         }
                     }}
-                    data={TestData.barChart2Series}
-                />
+                    onDataTooLarge={f => f}
+                    drillableItems={[
+                        {
+                            uri: dataSet.executionRequest.afm.measures[0].definition.measure.item.uri
+                        }
+                    ]}
+                    {...dataSet}
+                />,
+                500,
+                '100%'
             )
-        )
-    ))
-    .add('Line chart with onFiredDrillEvent', () => (
-        screenshotWrap(
+        );
+    })
+    .add('Line chart with onFiredDrillEvent', () => {
+        const dataSet = fixtures.barChartWithStackByAndViewByAttributes;
+        return screenshotWrap(
             <div>
                 <p>Line chart with standard onFiredDrillEvent callback</p>
                 {
                     wrap(
-                        <LineFamilyChartTransformation
-                            afm={TestData.afm}
-                            drillableItems={TestData.barChart2SeriesDrillableItems}
+                        <Visualization
                             onFiredDrillEvent={action('onFiredDrillEvent')}
                             config={{
-                                ...TestConfig.barChart2Series,
+                                type: 'line',
                                 legend: {
                                     enabled: false
                                 }
                             }}
-                            data={TestData.barChart2Series}
-                        />
+                            onDataTooLarge={f => f}
+                            drillableItems={[
+                                {
+                                    uri: dataSet.executionRequest.afm.measures[0].definition.measure.item.uri
+                                }
+                            ]}
+                            {...dataSet}
+                        />,
+                        500,
+                        '100%'
                     )
                 }
                 <p>Line chart with onFiredDrillEvent where drillEvent
                     is logged into console and default event is prevented</p>
                 {
                     wrap(
-                        <LineFamilyChartTransformation
-                            afm={TestData.afm}
-                            drillableItems={TestData.barChart2SeriesDrillableItems}
+                        <Visualization
                             onFiredDrillEvent={({ executionContext, drillContext }) => {
                                 // eslint-disable-next-line no-console
                                 console.log('onFiredDrillEvent', { executionContext, drillContext });
                                 return false;
                             }}
                             config={{
-                                ...TestConfig.barChart2Series,
+                                type: 'line',
                                 legend: {
                                     enabled: false
                                 }
                             }}
-                            data={TestData.barChart2Series}
-                        />
+                            onDataTooLarge={f => f}
+                            drillableItems={[
+                                {
+                                    uri: dataSet.executionRequest.afm.measures[0].definition.measure.item.uri
+                                }
+                            ]}
+                            {...dataSet}
+                        />,
+                        500,
+                        '100%'
                     )
                 }
             </div>
-        )
-    ))
-    .add('Bar chart', () => (
-        screenshotWrap(
-            <IntlWrapper>
-                <div style={{ height: 500, width: '100%' }}>
-                    <LineFamilyChartTransformation
-                        afm={TestData.afm}
-                        drillableItems={TestData.metricsOnlyPieChartDrillableItems}
-                        config={{
-                            ...TestConfig.column,
-                            legend: {
-                                enabled: false
-                            }
-                        }}
-                        data={TestData.metricsOnlyPieChart}
-                    />
-                </div>
-            </IntlWrapper>
-        )
-    ))
-    .add('Stacked bar chart', () => (
-        screenshotWrap(
-            <IntlWrapper>
-                <div style={{ height: 500, width: '100%' }}>
-                    <LineFamilyChartTransformation
-                        afm={TestData.afm}
-                        drillableItems={TestData.stackedBarDrillableItems}
-                        config={{
-                            ...TestConfig.stackedBar,
-                            legend: {
-                                enabled: false
-                            }
-                        }}
-                        data={TestData.stackedBar}
-                    />
-                </div>
-            </IntlWrapper>
-        )
-    ))
+        );
+    })
+    .add('Bar chart with view by attribute drillable by measure', () => {
+        const dataSet = fixtures.barChartWithViewByAttribute;
+        return screenshotWrap(
+            wrap(
+                <Visualization
+                    {...defaultColumnChartProps}
+                    drillableItems={[
+                        {
+                            uri: dataSet.executionRequest.afm.measures[0].definition.measure.item.uri
+                        }
+                    ]}
+                    {...dataSet}
+                />,
+                500,
+                '100%'
+            )
+        );
+    })
+    .add('Bar chart with view by attribute drillable by attribute', () => {
+        const dataSet = fixtures.barChartWithViewByAttribute;
+        return screenshotWrap(
+            wrap(
+                <Visualization
+                    {...defaultColumnChartProps}
+                    drillableItems={[
+                        {
+                            uri: dataSet.executionRequest.afm.attributes[0].displayForm.uri
+                        }
+                    ]}
+                    {...dataSet}
+                />,
+                500,
+                '100%'
+            )
+        );
+    })
+    .add('Bar chart with view by attribute drillable by attribute value', () => {
+        const dataSet = fixtures.barChartWithViewByAttribute;
+        return screenshotWrap(
+            wrap(
+                <Visualization
+                    {...defaultColumnChartProps}
+                    drillableItems={[
+                        {
+                            uri: dataSet.executionResult.headerItems[0][0][0].attributeHeaderItem.uri
+                        }
+                    ]}
+                    {...dataSet}
+                />,
+                500,
+                '100%'
+            )
+        );
+    })
+    .add('Stacked bar chart drillable by measure', () => {
+        const dataSet = fixtures.barChartWithStackByAndViewByAttributes;
+        return screenshotWrap(
+            wrap(
+                <Visualization
+                    {...defaultColumnChartProps}
+                    drillableItems={[
+                        {
+                            uri: dataSet.executionRequest.afm.measures[0].definition.measure.item.uri
+                        }
+                    ]}
+                    {...dataSet}
+                />,
+                500,
+                '100%'
+            )
+        );
+    })
+    .add('Stacked bar chart drillable by view by attribute value', () => {
+        const dataSet = fixtures.barChartWithStackByAndViewByAttributes;
+        return screenshotWrap(
+            wrap(
+                <Visualization
+                    {...defaultColumnChartProps}
+                    drillableItems={[
+                        {
+                            uri: dataSet.executionResult.headerItems[0][0][0].attributeHeaderItem.uri
+                        }
+                    ]}
+                    {...dataSet}
+                />,
+                500,
+                '100%'
+            )
+        );
+    })
+    .add('Stacked bar chart drillable by stack by attribute value', () => {
+        const dataSet = fixtures.barChartWithStackByAndViewByAttributes;
+        return screenshotWrap(
+            wrap(
+                <Visualization
+                    {...defaultColumnChartProps}
+                    drillableItems={[
+                        {
+                            uri: dataSet.executionResult.headerItems[1][0][0].attributeHeaderItem.uri
+                        }
+                    ]}
+                    {...dataSet}
+                />,
+                500,
+                '100%'
+            )
+        );
+    })
     .add('Table', () => (
         screenshotWrap(
             <div>
-                <TableTransformation
+                <Visualization
+                    config={{ type: 'table' }}
                     executionRequest={EXECUTION_REQUEST_2A_1M}
                     executionResponse={EXECUTION_RESPONSE_2A_1M}
                     executionResult={EXECUTION_RESULT_2A_1M}

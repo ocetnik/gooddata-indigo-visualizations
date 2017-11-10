@@ -1153,7 +1153,7 @@ describe('chartOptionsBuilder', () => {
             });
 
             it('should assign updated color for pop measure', () => {
-                expect(chartOptions.colorPalette).toEqual(['rgb(153,230,209)', 'rgb(0,193,141)']);
+                expect(chartOptions.colorPalette).toEqual(['rgb(161,224,243)', 'rgb(20,178,226)']);
             });
 
             it('should assign correct tooltip function', () => {
