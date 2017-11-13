@@ -72,7 +72,9 @@ export const barChartWith6PopMeasuresAndViewByAttribute = (() => {
             const postfix = `_${measuresIndex}`;
             popMeasure.localIdentifier += postfix;
             popMeasure.definition.popMeasure.measureIdentifier += postfix;
-            popMeasure.definition.popMeasure.popAttribute += postfix;
+            popMeasure.definition.popMeasure.popAttribute = {
+                uri: popMeasure.definition.popMeasure.popAttribute + postfix
+            };
             popMeasure.alias += postfix;
             const sourceMeasure = cloneDeep(measures[1]);
             sourceMeasure.localIdentifier += postfix;

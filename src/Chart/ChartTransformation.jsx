@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import invariant from 'invariant';
 
+import { ExecutionRequestPropTypes, ExecutionResponsePropTypes, ExecutionResultPropTypes } from './../proptypes/execution';
 import { getChartOptions, validateData } from './chartOptionsBuilder';
 
 import { getHighchartsOptions } from './highChartsCreators';
@@ -38,19 +39,9 @@ export default class ChartTransformation extends Component {
         onNegativeValues: PropTypes.func,
         onFiredDrillEvent: PropTypes.func,
 
-        executionRequest: PropTypes.shape({
-            afm: PropTypes.object.isRequired,
-            resultSpec: PropTypes.object.isRequired
-        }).isRequired,
-
-        executionResponse: PropTypes.shape({
-            dimensions: PropTypes.array.isRequired
-        }).isRequired,
-
-        executionResult: PropTypes.shape({
-            data: PropTypes.array.isRequired,
-            headerItems: PropTypes.array.isRequired
-        }).isRequired
+        executionRequest: ExecutionRequestPropTypes.isRequired,
+        executionResponse: ExecutionResponsePropTypes.isRequired,
+        executionResult: ExecutionResultPropTypes.isRequired
     };
 
     static defaultProps = {

@@ -23,7 +23,8 @@ function getChart({
     minHeight,
     minWidth,
     chartHeight,
-    chartWidth
+    chartWidth,
+    key
 }) {
     return wrap(<ChartTransformation
         config={{
@@ -39,7 +40,7 @@ function getChart({
         width={chartWidth}
         {...dataSet}
         onDataTooLarge={f => f}
-    />, height, width, minHeight, minWidth);
+    />, height, width, minHeight, minWidth, key);
 }
 
 storiesOf('ChartTransformation')
@@ -178,7 +179,6 @@ storiesOf('ChartTransformation')
     })
     .add('Column chart with 6 pop measures and view by attribute', () => {
         const dataSet = fixtures.barChartWith6PopMeasuresAndViewByAttribute;
-
         return screenshotWrap(
             wrap(
                 <ChartTransformation
@@ -395,22 +395,26 @@ storiesOf('ChartTransformation')
                 getChart({
                     dataSet: fixtures.barChartWith3MetricsAndViewByAttribute,
                     legendPosition: 'top',
-                    width: '100%'
+                    width: '100%',
+                    key: 'top'
                 }),
                 getChart({
                     dataSet: fixtures.barChartWith3MetricsAndViewByAttribute,
                     legendPosition: 'bottom',
-                    width: '100%'
+                    width: '100%',
+                    key: 'bottom'
                 }),
                 getChart({
                     dataSet: fixtures.barChartWith3MetricsAndViewByAttribute,
                     legendPosition: 'left',
-                    width: '100%'
+                    width: '100%',
+                    key: 'left'
                 }),
                 getChart({
                     dataSet: fixtures.barChartWith3MetricsAndViewByAttribute,
                     legendPosition: 'right',
-                    width: '100%'
+                    width: '100%',
+                    key: 'right'
                 })
             ]
         )

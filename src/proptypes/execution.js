@@ -240,11 +240,16 @@ export const ExecutionResponsePropTypes = PropTypes.shape({
 });
 
 export const ExecutionResultPropTypes = PropTypes.shape({
-    attributeHeaderItems: PropTypes.arrayOf(
+    headerItems: PropTypes.arrayOf(
         PropTypes.arrayOf(
-            PropTypes.arrayOf(
-                PropTypes.shape(attributeHeaderItemPropTypes)
-            )
+            PropTypes.oneOfType([
+                PropTypes.arrayOf(
+                    PropTypes.shape(attributeHeaderItemPropTypes)
+                ),
+                PropTypes.arrayOf(
+                    PropTypes.shape(measureGroupHeaderPropTypes)
+                )
+            ])
         )
     ),
     data: PropTypes.oneOfType([
