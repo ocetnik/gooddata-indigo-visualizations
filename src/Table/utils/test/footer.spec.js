@@ -106,7 +106,7 @@ describe('Table utils - Footer', () => {
             expect(getFooterPositions(hasHiddenRows, aggregations, tableHeight, tableBottom, windowHeight))
                 .toEqual({
                     absoluteTop: 400,
-                    defaultTop: 0,
+                    defaultTop: -0,
                     edgeTop: -154,
                     fixedTop: 200
                 });

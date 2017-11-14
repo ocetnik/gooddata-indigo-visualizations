@@ -29,7 +29,7 @@ export function getFooterPositions(hasHiddenRows, aggregations, tableHeight, tab
     const footerHeightTranslate = tableHeight - footerHeight;
 
     return {
-        defaultTop: hiddenRowsOffset === 0 ? 0 : -hiddenRowsOffset,
+        defaultTop: -hiddenRowsOffset,
         edgeTop: headerOffset - footerHeightTranslate,
         fixedTop: windowHeight - footerHeightTranslate - footerHeight,
         absoluteTop: windowHeight - tableBottom
