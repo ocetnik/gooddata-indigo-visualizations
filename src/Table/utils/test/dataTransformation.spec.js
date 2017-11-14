@@ -228,13 +228,13 @@ describe('Table utils - Data transformation', () => {
         it('should not throw error if number of table columns is equal zero', () => {
             expect(() => {
                 validateTableProportions(TABLE_HEADERS_1A_2M, []);
-            }).not.toThrow(errorMessage);
+            }).not.toThrow();
         });
 
         it('should not throw error if number of table columns is equal to number of table headers', () => {
             expect(() => {
                 validateTableProportions(TABLE_HEADERS_1A_2M, TABLE_ROWS_1A_2M);
-            }).not.toThrow(errorMessage);
+            }).not.toThrow();
         });
 
         it('should throw error if number of table columns is not equal to number of table headers', () => {

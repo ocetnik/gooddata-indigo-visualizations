@@ -23,8 +23,8 @@ export default class Table extends PureComponent {
                     <div className="viz-table-wrap" style={{ height: '100%', width: '100%' }}>
                         <TableVisualization
                             {...this.props}
-                            containerHeight={containerHeight || dimensions.height}
-                            containerWidth={containerWidth || dimensions.width}
+                            containerHeight={containerHeight === null ? dimensions.height : containerHeight}
+                            containerWidth={containerWidth === null ? dimensions.width : containerWidth}
                         />
                     </div>
                 )}

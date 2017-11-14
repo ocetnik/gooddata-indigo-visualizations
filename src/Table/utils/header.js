@@ -14,10 +14,6 @@ const isLeftAligned = columnAlign => columnAlign === ALIGN_LEFT;
 const getPoints = (x, y = -HEADER_PADDING) => ({ x, y }); // y has always offset
 const simplifyText = string.simplifyText;
 
-function getCssClass(value, prefix) {
-    return prefix + simplifyText(value);
-}
-
 export function calculateArrowPositions(column, tableScrollX, tableWrapRef) {
     const tableWrapRect = tableWrapRef.getBoundingClientRect();
 
@@ -36,7 +32,7 @@ export function calculateArrowPositions(column, tableScrollX, tableWrapRef) {
 }
 
 export function getHeaderClassNames(header) {
-    return cx('gd-table-header-ordering', getCssClass(header.localIdentifier, 's-id-'));
+    return cx('gd-table-header-ordering', `s-id-${simplifyText(header.localIdentifier)}`);
 }
 
 export function getHeaderOffset(hasHiddenRows) {
@@ -70,15 +66,17 @@ export function getHeaderPositions(stickyHeaderOffset, hasHiddenRows, aggregatio
 }
 
 export const getTooltipAlignPoints = (columnAlign) => {
-    return isLeftAligned(columnAlign) ? [
-        { align: 'bl tl', offset: getPoints(HEADER_PADDING, 0) },
-        { align: 'bl tc', offset: getPoints(HEADER_PADDING, 0) },
-        { align: 'bl tr', offset: getPoints(HEADER_PADDING, 0) }
-    ] : [
-        { align: 'br tr', offset: getPoints(-HEADER_PADDING, 0) },
-        { align: 'br tc', offset: getPoints(-HEADER_PADDING, 0) },
-        { align: 'br tl', offset: getPoints(-HEADER_PADDING, 0) }
-    ];
+    return isLeftAligned(columnAlign)
+        ? [
+            { align: 'bl tl', offset: getPoints(HEADER_PADDING, 0) },
+            { align: 'bl tc', offset: getPoints(HEADER_PADDING, 0) },
+            { align: 'bl tr', offset: getPoints(HEADER_PADDING, 0) }
+        ]
+        : [
+            { align: 'br tr', offset: getPoints(-HEADER_PADDING, 0) },
+            { align: 'br tc', offset: getPoints(-HEADER_PADDING, 0) },
+            { align: 'br tl', offset: getPoints(-HEADER_PADDING, 0) }
+        ];
 };
 
 export function getTooltipSortAlignPoints(columnAlign) {
@@ -87,23 +85,25 @@ export function getTooltipSortAlignPoints(columnAlign) {
     // header cell is not fully visible (is scrolled)
 
     // last align point is used when header cell is not fully visible (scroll)
-    return isLeftAligned(columnAlign) ? [
-        { align: 'bl tl', offset: getPoints(HEADER_PADDING) },
-        { align: 'bl tc', offset: getPoints(HEADER_PADDING) },
-        { align: 'bl tr', offset: getPoints(HEADER_PADDING) },
-        { align: 'br tl', offset: getPoints(-HEADER_PADDING) },
-        { align: 'tl bl', offset: getPoints(HEADER_PADDING, HEADER_PADDING) },
-        { align: 'tl bc', offset: getPoints(HEADER_PADDING, HEADER_PADDING) },
-        { align: 'tl br', offset: getPoints(HEADER_PADDING, HEADER_PADDING) },
-        { align: 'tr bl', offset: getPoints(-HEADER_PADDING, HEADER_PADDING) }
-    ] : [
-        { align: 'br tr', offset: getPoints(-HEADER_PADDING) },
-        { align: 'br tc', offset: getPoints(-HEADER_PADDING) },
-        { align: 'br tl', offset: getPoints(-HEADER_PADDING) },
-        { align: 'bl tr', offset: getPoints(HEADER_PADDING) },
-        { align: 'tr br', offset: getPoints(-HEADER_PADDING, HEADER_PADDING) },
-        { align: 'tr bc', offset: getPoints(-HEADER_PADDING, HEADER_PADDING) },
-        { align: 'tr bl', offset: getPoints(-HEADER_PADDING, HEADER_PADDING) },
-        { align: 'tl br', offset: getPoints(HEADER_PADDING, HEADER_PADDING) }
-    ];
+    return isLeftAligned(columnAlign)
+        ? [
+            { align: 'bl tl', offset: getPoints(HEADER_PADDING) },
+            { align: 'bl tc', offset: getPoints(HEADER_PADDING) },
+            { align: 'bl tr', offset: getPoints(HEADER_PADDING) },
+            { align: 'br tl', offset: getPoints(-HEADER_PADDING) },
+            { align: 'tl bl', offset: getPoints(HEADER_PADDING, HEADER_PADDING) },
+            { align: 'tl bc', offset: getPoints(HEADER_PADDING, HEADER_PADDING) },
+            { align: 'tl br', offset: getPoints(HEADER_PADDING, HEADER_PADDING) },
+            { align: 'tr bl', offset: getPoints(-HEADER_PADDING, HEADER_PADDING) }
+        ]
+        : [
+            { align: 'br tr', offset: getPoints(-HEADER_PADDING) },
+            { align: 'br tc', offset: getPoints(-HEADER_PADDING) },
+            { align: 'br tl', offset: getPoints(-HEADER_PADDING) },
+            { align: 'bl tr', offset: getPoints(HEADER_PADDING) },
+            { align: 'tr br', offset: getPoints(-HEADER_PADDING, HEADER_PADDING) },
+            { align: 'tr bc', offset: getPoints(-HEADER_PADDING, HEADER_PADDING) },
+            { align: 'tr bl', offset: getPoints(-HEADER_PADDING, HEADER_PADDING) },
+            { align: 'tl br', offset: getPoints(HEADER_PADDING, HEADER_PADDING) }
+        ];
 }

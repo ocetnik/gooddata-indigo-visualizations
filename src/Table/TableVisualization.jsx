@@ -11,6 +11,7 @@ import { numberFormat } from '@gooddata/numberjs';
 
 import TableSortBubbleContent from './TableSortBubbleContent';
 import DrillableItem from '../proptypes/DrillableItem';
+import { ExecutionRequestPropTypes } from '../proptypes/execution';
 import { subscribeEvents } from '../utils/common';
 import { getCellClassNames, getColumnAlign, getStyledLabel } from './utils/cell';
 import { getBackwardCompatibleHeaderForDrilling, getBackwardCompatibleRowForDrilling } from './utils/dataTransformation';
@@ -62,7 +63,7 @@ export default class TableVisualization extends Component {
         containerMaxHeight: PropTypes.number,
         containerWidth: PropTypes.number.isRequired,
         drillableItems: PropTypes.arrayOf(PropTypes.shape(DrillableItem)),
-        executionRequest: PropTypes.object,
+        executionRequest: ExecutionRequestPropTypes.isRequired,
         hasHiddenRows: PropTypes.bool,
         headers: PropTypes.array,
         onFiredDrillEvent: PropTypes.func,
@@ -80,7 +81,6 @@ export default class TableVisualization extends Component {
         containerHeight: null,
         containerMaxHeight: null,
         drillableItems: [],
-        executionRequest: {},
         hasHiddenRows: false,
         headers: [],
         onFiredDrillEvent: noop,
@@ -198,23 +198,25 @@ export default class TableVisualization extends Component {
     getSortFunc(header, sort) {
         const { onSortChange } = this.props;
 
-        const sortItem = header.type === 'attribute' ? {
-            attributeSortItem: {
-                direction: sort.nextDir,
-                attributeIdentifier: header.localIdentifier
+        const sortItem = header.type === 'attribute'
+            ? {
+                attributeSortItem: {
+                    direction: sort.nextDir,
+                    attributeIdentifier: header.localIdentifier
+                }
             }
-        } : {
-            measureSortItem: {
-                direction: sort.nextDir,
-                locators: [
-                    {
-                        measureLocatorItem: {
-                            measureIdentifier: header.localIdentifier
+            : {
+                measureSortItem: {
+                    direction: sort.nextDir,
+                    locators: [
+                        {
+                            measureLocatorItem: {
+                                measureIdentifier: header.localIdentifier
+                            }
                         }
-                    }
-                ]
-            }
-        };
+                    ]
+                }
+            };
 
         return onSortChange(sortItem);
     }
@@ -407,8 +409,8 @@ export default class TableVisualization extends Component {
         const sortingModalAlignPoints = getTooltipSortAlignPoints(columnAlign);
 
         const getArrowPositions = () => {
-            return TableVisualization.fullscreenTooltipEnabled() ?
-                calculateArrowPositions(
+            return TableVisualization.fullscreenTooltipEnabled()
+                ? calculateArrowPositions(
                     {
                         width: columnWidth,
                         align: columnAlign,
@@ -416,7 +418,8 @@ export default class TableVisualization extends Component {
                     },
                     this.tableRef.state.scrollX,
                     this.tableWrapRef
-                ) : null;
+                )
+                : null;
         };
 
         const showSortBubble = () => {
@@ -603,7 +606,7 @@ export default class TableVisualization extends Component {
             stickyHeaderOffset
         } = this.props;
 
-        const height = containerMaxHeight ? undefined : containerHeight;
+        const height = containerMaxHeight !== null ? undefined : containerHeight;
         const footerHeight = DEFAULT_FOOTER_ROW_HEIGHT * aggregations.length;
         const columnWidth = Math.max(containerWidth / headers.length, MIN_COLUMN_WIDTH);
         const isSticky = TableVisualization.isSticky(stickyHeaderOffset);
