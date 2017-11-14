@@ -194,7 +194,6 @@ describe('ChartTransformation', () => {
 
         it('should be invoked if pie chart data contains a negative value', () => {
             const onNegativeValues = jest.fn();
-            // const onNegativeValues = console.log.bind(this, 'onNegativeValues!!!');
             const props = {
                 onNegativeValues,
                 ...pieChartPropsWithNegativeValue
@@ -261,7 +260,5 @@ describe('ChartTransformation', () => {
             wrapper.setProps(fixtures.pieChartWithMetricsOnly);
             expect(wrapper.find(HighChartRenderer)).toHaveLength(1);
         });
-
-        // TODO: ignore hasNegativeValue if validation already fails on dataTooLarge
     });
 });

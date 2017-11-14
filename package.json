@@ -11,7 +11,7 @@
     "debugTest": "node debug ./node_modules/.bin/jest --runInBand",
     "build": "grunt prepublish",
     "prepublish": "npm run build",
-    "storybook": "start-storybook -c .storybook -p 9001",
+    "storybook": "start-storybook -p 9001 -c .storybook",
     "eslint": "./node_modules/eslint/bin/eslint.js --ext .js,.jsx src/ stories/",
     "eslint-ci": "./node_modules/eslint/bin/eslint.js -f checkstyle -o ./ci/results/eslint-results.xml --ext .js,.jsx src/ stories/",
     "validate": "yarn eslint && grunt stylelint",

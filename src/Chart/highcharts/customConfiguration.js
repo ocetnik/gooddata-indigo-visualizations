@@ -8,7 +8,7 @@ import {
 
 import { BAR_CHART, COLUMN_CHART, LINE_CHART, PIE_CHART } from '../../VisualizationTypes';
 import { HOVER_BRIGHTNESS, MINIMUM_HC_SAFE_BRIGHTNESS } from './commonConfiguration';
-import { _getLighterColor } from '../../utils/color';
+import { getLighterColor } from '../../utils/color';
 
 const EMPTY_DATA = { categories: [], series: [] };
 
@@ -360,7 +360,7 @@ function getHoverStyles(chartOptions, config) {
                 const series = cloneDeep(seriesOrig);
 
                 if (series.isDrillable) {
-                    set(series, 'marker.states.hover.fillColor', _getLighterColor(series.color, HOVER_BRIGHTNESS));
+                    set(series, 'marker.states.hover.fillColor', getLighterColor(series.color, HOVER_BRIGHTNESS));
                     set(series, 'cursor', 'pointer');
                 } else {
                     set(series, 'states.hover.halo.size', 0);

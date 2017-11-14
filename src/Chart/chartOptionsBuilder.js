@@ -2,8 +2,8 @@ import { colors2Object, numberFormat } from '@gooddata/numberjs';
 import invariant from 'invariant';
 
 import { range, get, without } from 'lodash';
-import { parseValue } from '../utils/common';
-import { DEFAULT_COLOR_PALETTE, _getLighterColor } from '../utils/color';
+import { parseValue, getAttributeElementIdFromAttributeElementUri } from '../utils/common';
+import { DEFAULT_COLOR_PALETTE, getLighterColor } from '../utils/color';
 import { PIE_CHART, CHART_TYPES } from '../VisualizationTypes';
 import { isDataOfReasonableSize } from './highChartsCreators';
 
@@ -90,7 +90,7 @@ export function getColorPalette(
                     const sourceMeasureColorIndex =
                         (sourceMeasureIndex - linkedPopMeasureCounter) % colorPalette.length;
                     const sourceMeasureColor = colorPalette[sourceMeasureColorIndex];
-                    const popMeasureColor = _getLighterColor(normalizeColorToRGB(sourceMeasureColor), 0.6);
+                    const popMeasureColor = getLighterColor(normalizeColorToRGB(sourceMeasureColor), 0.6);
                     color = popMeasureColor;
                 }
             }
@@ -289,10 +289,13 @@ export function getDrillContext(stackByItem, viewByItem, measure) {
         uri, // header attribute value or measure uri
         identifier = '', // header attribute value or measure identifier
         name, // header attribute value or measure text label
+        localIdentifier,
         attribute // attribute header if available
     }) => {
         return {
-            id: uri, // identifier of attribute value
+            id: attribute
+                ? getAttributeElementIdFromAttributeElementUri(uri)
+                : localIdentifier, // attribute value id or measure localIndentifier
             // TODO: get formatted measure value
             value: name, // text label of attribute value or formatted measure value
             identifier: attribute ? attribute.identifier : identifier, // identifier of attribute or measure

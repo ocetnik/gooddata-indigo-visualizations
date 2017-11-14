@@ -1,7 +1,8 @@
 import {
     parseValue,
-    getMeasureHeader,
-    getAttributeHeader
+    immutableSet,
+    repeatItemsNTimes,
+    getAttributeElementIdFromAttributeElementUri
 } from '../common';
 
 describe('Common utils', () => {
@@ -17,129 +18,28 @@ describe('Common utils', () => {
         });
     });
 
-    describe('getMeasureHeader', () => {
-        const emptyAfm = {
-            measures: [],
-            attributes: []
+    describe('immutableSet', () => {
+        const data = {
+            array: [
+                {
+                    modified: [1],
+                    untouched: {}
+                },
+                { untouched: 3 }
+            ]
         };
+        const path = 'array[0].modified[1]';
+        const newValue = 4;
 
-        const afm = {
-            measures: [{
-                id: 'measureId_1',
-                definition: {
-                    baseObject: {
-                        id: 'measureUri_1'
-                    }
-                }
-            }, {
-                id: 'measureId_2',
-                definition: {
-                    baseObject: {
-                        lookupId: 'measureId_1'
-                    }
-                }
-            }, {
-                id: 'measureId_3',
-                definition: {
-                    baseObject: {
-                        lookupId: 'measureId_X'
-                    }
-                }
-            }, {
-                id: 'measureId_4',
-                definition: {
-                    baseObject: {
-                        lookupId: 'measureId_2'
-                    }
-                }
-            }]
-        };
-
-        it('should create header from measure with URI, which is available within measure', () => {
-            const measure = {
-                id: 'measureId_1',
-                uri: 'measureUri_1'
-            };
-
-            expect(getMeasureHeader(measure, afm)).toEqual({ identifier: '', uri: measure.uri });
+        const updated = immutableSet(data, path, newValue);
+        it('should set values deep in the object hierarchy', () => {
+            expect(updated.array[0].modified[2]).toEqual(4);
         });
-
-        it('should create header from measure with identifier, which is available within measure', () => {
-            const measure = {
-                id: 'measureId_1',
-                identifier: 'measureIdentifier_1'
-            };
-
-            expect(getMeasureHeader(measure, afm)).toEqual({ identifier: measure.identifier, uri: '' });
+        it('should clone objects that have been updated', () => {
+            expect(updated.array[0].modified).not.toBe(data.array[0].modified);
         });
-
-        it('should create header from measure with both URI and identifier available within measure', () => {
-            const measure = {
-                id: 'measureId_1',
-                identifier: 'measureIdentifier_1',
-                uri: 'measureUri_1'
-            };
-
-            expect(getMeasureHeader(measure, afm)).toEqual({ identifier: measure.identifier, uri: measure.uri });
-        });
-
-        it('should create empty header, when AFM is not provided', () => {
-            const measure = {
-                id: 'measureId_1'
-            };
-
-            expect(getMeasureHeader(measure, emptyAfm)).toEqual({ identifier: '', uri: '' });
-        });
-
-        it('should create empty header, when measure is not found withing AFM', () => {
-            const measure = {
-                id: 'measureId_X'
-            };
-
-            expect(getMeasureHeader(measure, emptyAfm)).toEqual({ identifier: '', uri: '' });
-        });
-
-        it('should create header containing URI, if measure is found within AFM', () => {
-            const measure = {
-                id: 'measureId_1'
-            };
-
-            expect(getMeasureHeader(measure, afm)).toEqual({ identifier: '', uri: 'measureUri_1' });
-        });
-
-        it('should create header containing URI, if measure is found within AFM through lookupId', () => {
-            const measure = {
-                id: 'measureId_2'
-            };
-
-            expect(getMeasureHeader(measure, afm)).toEqual({ identifier: '', uri: 'measureUri_1' });
-        });
-
-        it('should create header containing URI, if measure is recursively found within AFM through lookupId', () => {
-            const measure = {
-                id: 'measureId_4'
-            };
-
-            expect(getMeasureHeader(measure, afm)).toEqual({ identifier: '', uri: 'measureUri_1' });
-        });
-
-        it('should create empty header, when measure is found withing AFM, but parent measure is not found via lookupId', () => {
-            const measure = {
-                id: 'measureId_3'
-            };
-
-            expect(getMeasureHeader(measure, afm)).toEqual({ identifier: '', uri: '' });
-        });
-    });
-
-    describe('getAttributeHeader', () => {
-        it('should create header from attribute', () => {
-            const attribute = {
-                id: 'attributeId_1',
-                uri: 'attributeUri_1'
-            };
-
-            expect(getAttributeHeader(attribute)).toEqual({ identifier: attribute.id, uri: attribute.uri });
+        it('should not clone objects that have NOT been updated', () => {
+            expect(updated.array[1]).toBe(data.array[1]);
         });
     });
 });

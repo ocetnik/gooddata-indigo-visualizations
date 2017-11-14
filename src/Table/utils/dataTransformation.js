@@ -1,4 +1,5 @@
 import { get, has, isObject, zip } from 'lodash';
+import { getAttributeElementIdFromAttributeElementUri } from '../../utils/common';
 
 function getAttributeHeaders(attributeDimension) {
     return attributeDimension.headers
@@ -85,11 +86,6 @@ export function getBackwardCompatibleHeaderForDrilling(header) {
         title: header.name,
         format: header.format
     };
-}
-
-function getAttributeElementIdFromAttributeElementUri(attributeElementUri) {
-    const match = '/elements?id=';
-    return attributeElementUri.slice(attributeElementUri.lastIndexOf(match) + match.length);
 }
 
 export function getBackwardCompatibleRowForDrilling(row) {

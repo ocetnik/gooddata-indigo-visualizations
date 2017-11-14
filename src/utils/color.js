@@ -1,4 +1,3 @@
-/* eslint no-underscore-dangle: 0 */
 export const DEFAULT_COLOR_PALETTE = [
     'rgb(20,178,226)',
     'rgb(0,193,141)',
@@ -40,7 +39,7 @@ function formatColor(red, green, blue) {
  * Source:
  *     http://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
  */
-export function _getLighterColor(color, percent) {
+export function getLighterColor(color, percent) {
     const f = color.split(',');
     const R = parseInt(f[0].slice(4), 10);
     const G = parseInt(f[1], 10);

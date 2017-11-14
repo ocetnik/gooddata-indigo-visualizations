@@ -4,11 +4,8 @@ import invariant from 'invariant';
 
 import { ExecutionRequestPropTypes, ExecutionResponsePropTypes, ExecutionResultPropTypes } from './../proptypes/execution';
 import { getChartOptions, validateData } from './chartOptionsBuilder';
-
 import { getHighchartsOptions } from './highChartsCreators';
-
 import getLegend from './Legend/legendBuilder';
-
 import HighChartRenderer from './HighChartRenderer';
 import DrillableItem from '../proptypes/DrillableItem';
 
@@ -34,7 +31,7 @@ export default class ChartTransformation extends Component {
         width: PropTypes.number,
 
         afterRender: PropTypes.func,
-        renderer: PropTypes.func.isRequired,
+        renderer: PropTypes.func,
         onDataTooLarge: PropTypes.func.isRequired,
         onNegativeValues: PropTypes.func,
         onFiredDrillEvent: PropTypes.func,
@@ -49,7 +46,6 @@ export default class ChartTransformation extends Component {
         drillableItems: [],
         renderer: renderHighCharts,
         afterRender: () => {},
-        onDataTooLarge: null,
         onNegativeValues: null,
         onFiredDrillEvent: () => {},
         limits: {},

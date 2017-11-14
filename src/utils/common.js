@@ -1,4 +1,4 @@
-import { isArray, has, setWith, clone } from 'lodash';
+import { setWith, clone } from 'lodash';
 import { Observable } from 'rxjs/Rx';
 
 export function parseValue(value) {
@@ -8,44 +8,7 @@ export function parseValue(value) {
 
 export const immutableSet = (dataSet, path, newValue) => setWith({ ...dataSet }, path, newValue, clone);
 
-export const repeatItemsNTimes = (array, n) => Array(n).fill(null).reduce(result => [...result, ...array], []);
-
-export function getMeasureHeader(item, afm) {
-    const { id, uri = '', identifier = '' } = item;
-
-    const header = {
-        identifier: '',
-        uri: ''
-    };
-
-    if (uri.length || identifier.length) {
-        header.identifier = identifier;
-        header.uri = uri;
-
-        return header;
-    }
-
-
-    if (isArray(afm.measures)) {
-        const afmMeasure = afm.measures.find(measure => measure.id === id);
-
-        if (has(afmMeasure, ['definition', 'baseObject', 'lookupId'])) {
-            const lookupId = afmMeasure.definition.baseObject.lookupId;
-            return getMeasureHeader({ id: lookupId }, afm);
-        }
-
-        if (has(afmMeasure, ['definition', 'baseObject', 'id'])) {
-            header.uri = afmMeasure.definition.baseObject.id;
-        }
-    }
-
-    return header;
-}
-
-export const getAttributeHeader = header => ({
-    identifier: header.id,
-    uri: header.uri
-});
+export const repeatItemsNTimes = (array, n) => new Array(n).fill(null).reduce(result => [...result, ...array], []);
 
 export function subscribeEvents(func, events) {
     return events.map((event) => {
@@ -63,3 +26,8 @@ export function subscribeEvents(func, events) {
 }
 
 export const unEscapeAngleBrackets = str => str && str.replace(/&lt;|&#60;/g, '<').replace(/&gt;|&#62;/g, '>');
+
+export function getAttributeElementIdFromAttributeElementUri(attributeElementUri) {
+    const match = '/elements?id=';
+    return attributeElementUri.slice(attributeElementUri.lastIndexOf(match) + match.length);
+}

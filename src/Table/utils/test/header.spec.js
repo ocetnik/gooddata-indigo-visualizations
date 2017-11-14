@@ -59,8 +59,8 @@ describe('Table utils - Header', () => {
     describe('getHeaderClassNames', () => {
         it('should get header class names', () => {
             expect(
-                getHeaderClassNames(ATTRIBUTE_HEADER)).toEqual('gd-table-header-ordering s-id-1st_attr_local_identifier'
-            );
+                getHeaderClassNames(ATTRIBUTE_HEADER)
+            ).toEqual('gd-table-header-ordering s-id-1st_attr_local_identifier');
         });
     });
 

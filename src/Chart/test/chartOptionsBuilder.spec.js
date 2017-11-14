@@ -611,19 +611,19 @@ describe('chartOptionsBuilder', () => {
             const drillContext = getDrillContext(stackByItem, viewByItem, measure);
             expect(drillContext).toEqual([
                 {
-                    id: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1024/elements?id=1225',
+                    id: '1225',
                     identifier: 'label.owner.region',
                     uri: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1024',
                     value: 'East Coast'
                 },
                 {
-                    id: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1027/elements?id=1226',
+                    id: '1226',
                     identifier: 'label.owner.department',
                     uri: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1027',
                     value: 'Direct Sales'
                 },
                 {
-                    id: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1279',
+                    id: 'amountMetric',
                     identifier: 'ah1EuQxwaCqs',
                     uri: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1279',
                     value: 'Amount'
@@ -642,7 +642,7 @@ describe('chartOptionsBuilder', () => {
             const drillContext = getDrillContext(stackByItem, viewByItem, measure);
             expect(drillContext).toEqual([
                 {
-                    id: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1283',
+                    id: 'lostMetric',
                     identifier: 'af2Ewj9Re2vK',
                     uri: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1283',
                     value: 'Lost'
@@ -730,13 +730,13 @@ describe('chartOptionsBuilder', () => {
                     ).toEqual([
                         [
                             {
-                                id: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1283',
+                                id: 'lostMetric',
                                 identifier: 'af2Ewj9Re2vK',
                                 uri: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1283',
                                 value: 'Lost'
                             },
                             {
-                                id: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/158/elements?id=2008',
+                                id: '2008',
                                 identifier: 'created.aag81lMifn6q',
                                 uri: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/158',
                                 value: '2008'
@@ -745,13 +745,13 @@ describe('chartOptionsBuilder', () => {
                         undefined,
                         [
                             {
-                                id: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1285',
+                                id: 'expectedMetric',
                                 identifier: 'alUEwmBtbwSh',
                                 uri: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1285',
                                 value: 'Expected'
                             },
                             {
-                                id: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/158/elements?id=2008',
+                                id: '2008',
                                 identifier: 'created.aag81lMifn6q',
                                 uri: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/158',
                                 value: '2008'
