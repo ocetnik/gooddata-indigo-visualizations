@@ -623,6 +623,7 @@ describe('chartOptionsBuilder', () => {
                     value: 'Direct Sales'
                 },
                 {
+                    format: '#,##0.00',
                     id: 'amountMetric',
                     identifier: 'ah1EuQxwaCqs',
                     uri: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1279',
@@ -642,6 +643,7 @@ describe('chartOptionsBuilder', () => {
             const drillContext = getDrillContext(stackByItem, viewByItem, measure);
             expect(drillContext).toEqual([
                 {
+                    format: '#,##0.00',
                     id: 'lostMetric',
                     identifier: 'af2Ewj9Re2vK',
                     uri: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1283',
@@ -730,6 +732,7 @@ describe('chartOptionsBuilder', () => {
                     ).toEqual([
                         [
                             {
+                                format: '#,##0.00',
                                 id: 'lostMetric',
                                 identifier: 'af2Ewj9Re2vK',
                                 uri: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1283',
@@ -745,6 +748,7 @@ describe('chartOptionsBuilder', () => {
                         undefined,
                         [
                             {
+                                format: '#,##0.00',
                                 id: 'expectedMetric',
                                 identifier: 'alUEwmBtbwSh',
                                 uri: '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1285',

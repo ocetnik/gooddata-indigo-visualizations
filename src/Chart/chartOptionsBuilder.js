@@ -2,7 +2,7 @@ import { colors2Object, numberFormat } from '@gooddata/numberjs';
 import invariant from 'invariant';
 
 import { range, get, without } from 'lodash';
-import { parseValue, getAttributeElementIdFromAttributeElementUri } from '../utils/common';
+import { parseValue, getAttributeElementIdFromAttributeElementUri, unEscapeAngleBrackets } from '../utils/common';
 import { DEFAULT_COLOR_PALETTE, getLighterColor } from '../utils/color';
 import { PIE_CHART, CHART_TYPES } from '../VisualizationTypes';
 import { isDataOfReasonableSize } from './highChartsCreators';
@@ -197,8 +197,6 @@ export function getSeries(
     });
 }
 
-export const unEscapeAngleBrackets = str => str && str.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-
 export const customEscape = str => str && unEscapeAngleBrackets(str).replace(/\W/gim, (char) => {
     if (char === '<') {
         return '&lt;';
@@ -289,6 +287,7 @@ export function getDrillContext(stackByItem, viewByItem, measure) {
         uri, // header attribute value or measure uri
         identifier = '', // header attribute value or measure identifier
         name, // header attribute value or measure text label
+        format, // measure format
         localIdentifier,
         attribute // attribute header if available
     }) => {
@@ -296,31 +295,14 @@ export function getDrillContext(stackByItem, viewByItem, measure) {
             id: attribute
                 ? getAttributeElementIdFromAttributeElementUri(uri)
                 : localIdentifier, // attribute value id or measure localIndentifier
-            // TODO: get formatted measure value
+            ...(attribute ? {} : {
+                format
+            }),
             value: name, // text label of attribute value or formatted measure value
             identifier: attribute ? attribute.identifier : identifier, // identifier of attribute or measure
             uri: attribute ? attribute.uri : uri // uri of attribute or measure
         };
     });
-    /*
-        old drillable items sample
-        [
-            // attribute
-            {
-                id: "2012"
-                identifier: "closed.aag81lMifn6q"
-                uri: "/gdc/md/tgqkx9leq2tntui4j6fp08tk6epftziu/obj/324"
-                value: "2012"
-            },
-            // measure
-            {
-                id: "aaYh6Voua2yj"
-                identifier: ""
-                uri: "/gdc/md/tgqkx9leq2tntui4j6fp08tk6epftziu/obj/13465"
-                value: "aaa <b># of Open Opps.</b>"
-            }
-        ]
-    */
 }
 
 export function getDrillableSeries(
@@ -372,7 +354,6 @@ export function getDrillableSeries(
                 stackByAttribute,
                 stackByItem
             ], null);
-            // drillableHooks.map(hook => (console.log(hook)));
 
             const drilldown = drillableItems.some(drillableItem => (
                 drillableHooks.some(drillableHook =>
