@@ -2,6 +2,7 @@ import {
     parseValue,
     immutableSet,
     repeatItemsNTimes,
+    unEscapeAngleBrackets,
     getAttributeElementIdFromAttributeElementUri
 } from '../common';
 
@@ -33,13 +34,40 @@ describe('Common utils', () => {
 
         const updated = immutableSet(data, path, newValue);
         it('should set values deep in the object hierarchy', () => {
-            expect(updated.array[0].modified[2]).toEqual(4);
+            expect(updated.array[0].modified[1]).toEqual(4);
         });
         it('should clone objects that have been updated', () => {
             expect(updated.array[0].modified).not.toBe(data.array[0].modified);
         });
         it('should not clone objects that have NOT been updated', () => {
             expect(updated.array[1]).toBe(data.array[1]);
+        });
+    });
+
+    describe('repeatItemsNTimes', () => {
+        const array = [1, 2, 3];
+        const n = 3;
+
+        const repeatedArray = repeatItemsNTimes(array, n);
+        it('should return a new array with original items repeated N times', () => {
+            expect(repeatedArray).toEqual([1, 2, 3, 1, 2, 3, 1, 2, 3]);
+        });
+    });
+
+    describe('getAttributeElementIdFromAttributeElementUri', () => {
+        const uri = '/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1024/elements?id=1225';
+
+        it('should return id from attribute value uri', () => {
+            expect(getAttributeElementIdFromAttributeElementUri(uri)).toEqual('1225');
+        });
+    });
+
+    describe('unEscapeAngleBrackets', () => {
+        const string = 'abc&lt;&#60;&gt;&#62;def';
+        const expectedString = 'abc<<>>def';
+
+        it('should return id from attribute value uri', () => {
+            expect(unEscapeAngleBrackets(string)).toEqual(expectedString);
         });
     });
 });
