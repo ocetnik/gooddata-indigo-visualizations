@@ -136,7 +136,7 @@ export default class TableVisualization extends Component {
         }
 
         if (TableVisualization.isSticky(this.props.stickyHeaderOffset)) {
-            this.setListeners('add');
+            this.setListeners();
             this.scrolled();
             this.checkTableDimensions();
         }

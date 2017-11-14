@@ -184,7 +184,7 @@ storiesOf('Table')
                     config={{
                         onMore: action('More clicked'),
                         onLess: action('Less clicked'),
-                        stickyHeader: 0
+                        stickyHeaderOffset: 0
                     }}
                     executionRequest={EXECUTION_REQUEST_2A_1M}
                     executionResponse={EXECUTION_RESPONSE_2A_1M}
