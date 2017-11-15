@@ -606,7 +606,7 @@ export default class TableVisualization extends Component {
             stickyHeaderOffset
         } = this.props;
 
-        const height = containerMaxHeight !== null ? undefined : containerHeight;
+        const height = containerMaxHeight ? undefined : containerHeight;
         const footerHeight = DEFAULT_FOOTER_ROW_HEIGHT * aggregations.length;
         const columnWidth = Math.max(containerWidth / headers.length, MIN_COLUMN_WIDTH);
         const isSticky = TableVisualization.isSticky(stickyHeaderOffset);
