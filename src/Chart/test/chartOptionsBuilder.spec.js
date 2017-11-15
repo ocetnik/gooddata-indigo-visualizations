@@ -15,14 +15,17 @@ import {
     getDrillableSeries,
     customEscape,
     generateTooltipFn,
-    getChartOptions,
-    PIE_CHART_LIMIT,
-    VIEW_BY_DIMENSION_INDEX,
-    STACK_BY_DIMENSION_INDEX
+    getChartOptions
 } from '../chartOptionsBuilder';
 import { DEFAULT_CATEGORIES_LIMIT } from '../highcharts/commonConfiguration';
 
 import * as fixtures from '../../../stories/test_data/fixtures';
+
+import {
+    PIE_CHART_LIMIT,
+    VIEW_BY_DIMENSION_INDEX,
+    STACK_BY_DIMENSION_INDEX
+} from '../constants';
 
 import {
     DEFAULT_COLOR_PALETTE
@@ -219,7 +222,7 @@ describe('chartOptionsBuilder', () => {
             const measureItem = fixtures
                 .barChartWithPopMeasureAndViewByAttribute
                 .executionResponse
-                .dimensions[1]
+                .dimensions[STACK_BY_DIMENSION_INDEX]
                 .headers[0]
                 .measureGroupHeader
                 .items[0];
@@ -233,7 +236,7 @@ describe('chartOptionsBuilder', () => {
             const measureItem = fixtures
                 .barChartWithPopMeasureAndViewByAttribute
                 .executionResponse
-                .dimensions[1]
+                .dimensions[STACK_BY_DIMENSION_INDEX]
                 .headers[0]
                 .measureGroupHeader
                 .items[1];
@@ -250,7 +253,8 @@ describe('chartOptionsBuilder', () => {
             const mockCallback = jest.fn();
             mockCallback.mockReturnValue(null);
             const sampleDimensions = fixtures.barChartWithStackByAndViewByAttributes.executionResponse.dimensions;
-            const headerCount = sampleDimensions[0].headers.length + sampleDimensions[1].headers.length;
+            const headerCount = sampleDimensions[VIEW_BY_DIMENSION_INDEX].headers.length
+                + sampleDimensions[STACK_BY_DIMENSION_INDEX].headers.length;
             const returnValue = findInDimensionHeaders(sampleDimensions, mockCallback);
             expect(returnValue).toBeNull();
             expect(mockCallback).toHaveBeenCalledTimes(headerCount);
@@ -269,17 +273,17 @@ describe('chartOptionsBuilder', () => {
         it('should return the measure group header', () => {
             const sampleDimensions = fixtures.barChartWithStackByAndViewByAttributes.executionResponse.dimensions;
             const returnValue = findMeasureGroupInDimensions(sampleDimensions);
-            const expectedValue = sampleDimensions[0].headers[1].measureGroupHeader;
+            const expectedValue = sampleDimensions[VIEW_BY_DIMENSION_INDEX].headers[1].measureGroupHeader;
             expect(returnValue).toBe(expectedValue);
         });
         it('should throw an error if measureGroup is not the last header on it\'s dimension', () => {
             const sampleDimensions = fixtures.barChartWithStackByAndViewByAttributes.executionResponse.dimensions;
             const invalidDimensions = [
                 {
-                    ...sampleDimensions[0],
+                    ...sampleDimensions[VIEW_BY_DIMENSION_INDEX],
                     headers: [
-                        ...sampleDimensions[0].headers,
-                        ...sampleDimensions[1].headers
+                        ...sampleDimensions[VIEW_BY_DIMENSION_INDEX].headers,
+                        ...sampleDimensions[STACK_BY_DIMENSION_INDEX].headers
                     ]
                 }
             ];
@@ -903,7 +907,7 @@ describe('chartOptionsBuilder', () => {
 
     describe('getChartOptions', () => {
         const dataSet = fixtures.barChartWith3MetricsAndViewByAttribute;
-        const dataSetWithoutMeasureGroup = immutableSet(dataSet, 'executionResponse.dimensions[1].headers', []);
+        const dataSetWithoutMeasureGroup = immutableSet(dataSet, `executionResponse.dimensions[${STACK_BY_DIMENSION_INDEX}].headers`, []);
         const chartOptionsWithCustomOptions = mockChartOptions(dataSet, {
             xLabel: 'xLabel',
             yLabel: 'yLabel',
@@ -921,7 +925,7 @@ describe('chartOptionsBuilder', () => {
         });
 
         it('should assign showInPercent true only if at least one measure`s format includes a "%" sign', () => {
-            const dataSetWithPercentFormat = immutableSet(dataSet, 'executionResponse.dimensions[1].headers[0].measureGroupHeader.items[0].measureHeaderItem.format', '0.00 %');
+            const dataSetWithPercentFormat = immutableSet(dataSet, `executionResponse.dimensions[${STACK_BY_DIMENSION_INDEX}].headers[0].measureGroupHeader.items[0].measureHeaderItem.format`, '0.00 %');
             const chartOptions = mockChartOptions(dataSetWithPercentFormat);
             expect(mockChartOptions(dataSet).showInPercent).toBe(false); // false by default
             expect(chartOptions.showInPercent).toBe(true); // true if format includes %

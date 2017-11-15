@@ -2,9 +2,7 @@ import React from 'react';
 import { storiesOf } from '@storybook/react';
 
 import Visualization from '../src/Visualization';
-
 import * as fixtures from './test_data/fixtures';
-
 import { wrap, screenshotWrap } from './utils/wrap';
 
 import '../src/styles/charts.scss';

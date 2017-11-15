@@ -5,6 +5,18 @@
                 "headers": [
                     {
                         "attributeHeader": {
+                            "name": "Region",
+                            "localIdentifier": "regionAttribute",
+                            "uri": "/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1024",
+                            "identifier": "label.owner.region"
+                        }
+                    }
+                ]
+            },
+            {
+                "headers": [
+                    {
+                        "attributeHeader": {
                             "name": "Department",
                             "localIdentifier": "departmentAttribute",
                             "uri": "/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1027",
@@ -24,18 +36,6 @@
                                     }
                                 }
                             ]
-                        }
-                    }
-                ]
-            },
-            {
-                "headers": [
-                    {
-                        "attributeHeader": {
-                            "name": "Region",
-                            "localIdentifier": "regionAttribute",
-                            "uri": "/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1024",
-                            "identifier": "label.owner.region"
                         }
                     }
                 ]

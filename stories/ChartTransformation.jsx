@@ -4,6 +4,7 @@ import { storiesOf } from '@storybook/react';
 import ChartTransformation from '../src/Chart/ChartTransformation';
 import { FLUID_LEGEND_THRESHOLD } from '../src/Chart/Legend/Legend';
 import { immutableSet } from '../src/utils/common';
+import { VIEW_BY_DIMENSION_INDEX, STACK_BY_DIMENSION_INDEX } from '../src/Chart/constants';
 
 import * as fixtures from './test_data/fixtures';
 
@@ -52,7 +53,7 @@ storiesOf('ChartTransformation')
                 <ChartTransformation
                     drillableItems={[
                         {
-                            uri: dataSet.executionResponse.dimensions[1]
+                            uri: dataSet.executionResponse.dimensions[STACK_BY_DIMENSION_INDEX]
                                 .headers[0].measureGroupHeader.items[0].measureHeaderItem.uri
                         }
                     ]}
@@ -79,7 +80,7 @@ storiesOf('ChartTransformation')
                 <ChartTransformation
                     drillableItems={[
                         {
-                            uri: dataSet.executionResponse.dimensions[1]
+                            uri: dataSet.executionResponse.dimensions[STACK_BY_DIMENSION_INDEX]
                                 .headers[0].measureGroupHeader.items[1].measureHeaderItem.uri
                         }
                     ]}
@@ -100,13 +101,12 @@ storiesOf('ChartTransformation')
     })
     .add('Column chart with 18 measures and view by attribute', () => {
         const dataSet = fixtures.barChartWith18MetricsAndViewByAttribute;
-
         return screenshotWrap(
             wrap(
                 <ChartTransformation
                     drillableItems={[
                         {
-                            uri: dataSet.executionResponse.dimensions[1]
+                            uri: dataSet.executionResponse.dimensions[STACK_BY_DIMENSION_INDEX]
                                 .headers[0].measureGroupHeader.items[1].measureHeaderItem.uri
                         }
                     ]}
@@ -127,13 +127,13 @@ storiesOf('ChartTransformation')
     })
     .add('Column chart with view by attribute', () => {
         const dataSet = fixtures.barChartWithViewByAttribute;
-
         return screenshotWrap(
             wrap(
                 <ChartTransformation
                     drillableItems={[
                         {
-                            uri: dataSet.executionResponse.dimensions[0].headers[0].attributeHeader.uri
+                            uri: dataSet.executionResponse
+                                .dimensions[VIEW_BY_DIMENSION_INDEX].headers[0].attributeHeader.uri
                         }
                     ]}
                     config={{
@@ -159,7 +159,8 @@ storiesOf('ChartTransformation')
                 <ChartTransformation
                     drillableItems={[
                         {
-                            uri: dataSet.executionResult.headerItems[0][0][0].attributeHeaderItem.uri
+                            uri: dataSet.executionResult
+                                .headerItems[VIEW_BY_DIMENSION_INDEX][0][0].attributeHeaderItem.uri
                         }
                     ]}
                     config={{
@@ -179,12 +180,14 @@ storiesOf('ChartTransformation')
     })
     .add('Column chart with 6 pop measures and view by attribute', () => {
         const dataSet = fixtures.barChartWith6PopMeasuresAndViewByAttribute;
+
         return screenshotWrap(
             wrap(
                 <ChartTransformation
                     drillableItems={[
                         {
-                            uri: dataSet.executionResult.headerItems[0][0][0].attributeHeaderItem.uri
+                            uri: dataSet.executionResult
+                                .headerItems[VIEW_BY_DIMENSION_INDEX][0][0].attributeHeaderItem.uri
                         }
                     ]}
                     config={{
@@ -204,12 +207,14 @@ storiesOf('ChartTransformation')
     })
     .add('Bar chart with viewBy and stackBy attribute', () => {
         const dataSet = fixtures.barChartWithStackByAndViewByAttributes;
+
         return screenshotWrap(
             wrap(
                 <ChartTransformation
                     drillableItems={[
                         {
-                            uri: dataSet.executionResult.headerItems[1][0][0].attributeHeaderItem.uri
+                            uri: dataSet.executionResult
+                                .headerItems[STACK_BY_DIMENSION_INDEX][0][0].attributeHeaderItem.uri
                         }
                     ]}
                     config={{
@@ -235,7 +240,8 @@ storiesOf('ChartTransformation')
                 <ChartTransformation
                     drillableItems={[
                         {
-                            uri: dataSet.executionResult.headerItems[0][0][0].attributeHeaderItem.uri
+                            uri: dataSet.executionResult
+                                .headerItems[VIEW_BY_DIMENSION_INDEX][0][0].attributeHeaderItem.uri
                         }
                     ]}
                     config={{
@@ -261,7 +267,8 @@ storiesOf('ChartTransformation')
                 <ChartTransformation
                     drillableItems={[
                         {
-                            uri: dataSet.executionResult.headerItems[0][0][0].attributeHeaderItem.uri
+                            uri: dataSet.executionResult
+                                .headerItems[VIEW_BY_DIMENSION_INDEX][0][0].attributeHeaderItem.uri
                         }
                     ]}
                     config={{
@@ -279,7 +286,7 @@ storiesOf('ChartTransformation')
             )
         );
     })
-    .add('Pie chart view metrics only', () => {
+    .add('Pie chart with measures only', () => {
         const dataSet = fixtures.pieChartWithMetricsOnly;
 
         return screenshotWrap(
@@ -287,7 +294,7 @@ storiesOf('ChartTransformation')
                 <ChartTransformation
                     drillableItems={[
                         {
-                            uri: dataSet.executionResponse.dimensions[0]
+                            uri: dataSet.executionResponse.dimensions[VIEW_BY_DIMENSION_INDEX]
                                 .headers[0].measureGroupHeader.items[1].measureHeaderItem.uri
                         }
                     ]}
@@ -314,7 +321,8 @@ storiesOf('ChartTransformation')
                 <ChartTransformation
                     drillableItems={[
                         {
-                            uri: dataSet.executionResult.headerItems[0][0][0].attributeHeaderItem.uri
+                            uri: dataSet.executionResult
+                                .headerItems[VIEW_BY_DIMENSION_INDEX][0][0].attributeHeaderItem.uri
                         }
                     ]}
                     config={{

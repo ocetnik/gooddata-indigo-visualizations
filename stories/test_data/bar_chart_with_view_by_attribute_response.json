@@ -4,18 +4,6 @@
             {
                 "headers": [
                     {
-                        "attributeHeader": {
-                            "name": "Department",
-                            "localIdentifier": "departmentAttribute",
-                            "uri": "/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1027",
-                            "identifier": "label.owner.department"
-                        }
-                    }
-                ]
-            },
-            {
-                "headers": [
-                    {
                         "measureGroupHeader": {
                             "items": [
                                 {
@@ -28,6 +16,18 @@
                                     }
                                 }
                             ]
+                        }
+                    }
+                ]
+            },
+            {
+                "headers": [
+                    {
+                        "attributeHeader": {
+                            "name": "Department",
+                            "localIdentifier": "departmentAttribute",
+                            "uri": "/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1027",
+                            "identifier": "label.owner.department"
                         }
                     }
                 ]

@@ -8,6 +8,8 @@
         ],
         "headerItems": [
             [
+            ],
+            [
                 [
                     {
                         "attributeHeaderItem": {
@@ -22,8 +24,6 @@
                         }
                     }
                 ]
-            ],
-            [
             ]
         ],
         "paging": {

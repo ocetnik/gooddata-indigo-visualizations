@@ -2,9 +2,6 @@
     "executionResponse": {
         "dimensions": [
             {
-                "headers": []
-            },
-            {
                 "headers": [
                     {
                         "measureGroupHeader": {
@@ -22,6 +19,9 @@
                         }
                     }
                 ]
+            },
+            {
+                "headers": []
             }
         ],
         "links": {

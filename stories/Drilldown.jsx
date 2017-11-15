@@ -4,6 +4,7 @@ import { action, decorateAction } from '@storybook/addon-actions';
 import Visualization from '../src/Visualization';
 import { wrap, screenshotWrap } from './utils/wrap';
 import * as fixtures from './test_data/fixtures';
+import { VIEW_BY_DIMENSION_INDEX, STACK_BY_DIMENSION_INDEX } from '../src/Chart/constants';
 
 import {
     EXECUTION_REQUEST_2A_1M,
@@ -157,7 +158,8 @@ storiesOf('Drilldown')
                     {...defaultColumnChartProps}
                     drillableItems={[
                         {
-                            uri: dataSet.executionResult.headerItems[0][0][0].attributeHeaderItem.uri
+                            uri: dataSet.executionResult
+                                .headerItems[VIEW_BY_DIMENSION_INDEX][0][0].attributeHeaderItem.uri
                         }
                     ]}
                     {...dataSet}
@@ -193,7 +195,8 @@ storiesOf('Drilldown')
                     {...defaultColumnChartProps}
                     drillableItems={[
                         {
-                            uri: dataSet.executionResult.headerItems[0][0][0].attributeHeaderItem.uri
+                            uri: dataSet.executionResult
+                                .headerItems[VIEW_BY_DIMENSION_INDEX][0][0].attributeHeaderItem.uri
                         }
                     ]}
                     {...dataSet}
@@ -211,7 +214,8 @@ storiesOf('Drilldown')
                     {...defaultColumnChartProps}
                     drillableItems={[
                         {
-                            uri: dataSet.executionResult.headerItems[1][0][0].attributeHeaderItem.uri
+                            uri: dataSet.executionResult
+                                .headerItems[STACK_BY_DIMENSION_INDEX][0][0].attributeHeaderItem.uri
                         }
                     ]}
                     {...dataSet}

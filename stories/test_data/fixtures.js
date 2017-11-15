@@ -1,5 +1,6 @@
 import { range, cloneDeep } from 'lodash';
 import { immutableSet, repeatItemsNTimes } from '../../src/utils/common';
+import { STACK_BY_DIMENSION_INDEX } from '../../src/Chart/constants';
 
 export const barChartWithoutAttributes = {
     executionRequest: require('../test_data/bar_chart_without_attributes_request.json').execution,
@@ -45,9 +46,9 @@ export function barChartWithNTimes3MetricsAndViewByAttribute(n = 1) {
         repeatItemsNTimes(barChartWith3MetricsAndViewByAttribute.executionRequest.afm.measures, n));
     dataSet = immutableSet(
         dataSet,
-        'executionResponse.dimensions[1].headers[0].measureGroupHeader.items',
+        `executionResponse.dimensions[${STACK_BY_DIMENSION_INDEX}].headers[0].measureGroupHeader.items`,
         repeatItemsNTimes(dataSet.executionResponse
-            .dimensions[1].headers[0].measureGroupHeader.items, n)
+            .dimensions[STACK_BY_DIMENSION_INDEX].headers[0].measureGroupHeader.items, n)
     );
     dataSet = immutableSet(
         dataSet,
@@ -84,9 +85,9 @@ export const barChartWith6PopMeasuresAndViewByAttribute = (() => {
         }, []));
     dataSet = immutableSet(
         dataSet,
-        'executionResponse.dimensions[1].headers[0].measureGroupHeader.items',
+        `executionResponse.dimensions[${STACK_BY_DIMENSION_INDEX}].headers[0].measureGroupHeader.items`,
         repeatItemsNTimes(
-            dataSet.executionResponse.dimensions[1].headers[0].measureGroupHeader.items, n)
+            dataSet.executionResponse.dimensions[STACK_BY_DIMENSION_INDEX].headers[0].measureGroupHeader.items, n)
             .map((headerItem, headerItemIndex) => {
                 const postfix = `_${Math.floor(headerItemIndex / 2)}`;
                 return {

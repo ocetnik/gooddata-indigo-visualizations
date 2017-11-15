@@ -34,6 +34,8 @@
         },
         "headerItems": [
             [
+            ],
+            [
                 [
                     {
                         "attributeHeaderItem": {
@@ -72,8 +74,6 @@
                         }
                     }
                 ]
-            ],
-            [
             ]
         ]
     }

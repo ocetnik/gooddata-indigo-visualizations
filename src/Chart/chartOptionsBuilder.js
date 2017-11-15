@@ -6,13 +6,9 @@ import { parseValue, getAttributeElementIdFromAttributeElementUri, unEscapeAngle
 import { DEFAULT_COLOR_PALETTE, getLighterColor } from '../utils/color';
 import { PIE_CHART, CHART_TYPES } from '../VisualizationTypes';
 import { isDataOfReasonableSize } from './highChartsCreators';
+import { VIEW_BY_DIMENSION_INDEX, STACK_BY_DIMENSION_INDEX, PIE_CHART_LIMIT } from './constants';
 
 import { DEFAULT_CATEGORIES_LIMIT } from './highcharts/commonConfiguration';
-
-export const PIE_CHART_LIMIT = 20;
-
-export const VIEW_BY_DIMENSION_INDEX = 0;
-export const STACK_BY_DIMENSION_INDEX = 1;
 
 export function unwrap(wrappedObject) {
     return wrappedObject[Object.keys(wrappedObject)[0]];
@@ -184,9 +180,7 @@ export function getSeries(
         } else if (type === PIE_CHART && !viewByAttribute) {
             // Pie charts with measures only have a single series which name would is ambiguous
             seriesItemConfig.name = measureGroup.items.map((wrappedMeasure) => {
-                const measureType = Object.keys(wrappedMeasure)[0];
-                const measure = wrappedMeasure[measureType];
-                return measure.name;
+                return unwrap(wrappedMeasure).name;
             }).join(', ');
         } else {
             // otherwise seriesName is a measure name of index seriesIndex

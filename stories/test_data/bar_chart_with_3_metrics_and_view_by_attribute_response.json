@@ -4,18 +4,6 @@
             {
                 "headers": [
                     {
-                        "attributeHeader": {
-                            "name": "Year (Created)",
-                            "localIdentifier": "yearCreatedAttribute",
-                            "uri": "/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/158",
-                            "identifier": "created.aag81lMifn6q"
-                        }
-                    }
-                ]
-            },
-            {
-                "headers": [
-                    {
                         "measureGroupHeader": {
                             "items": [
                                 {
@@ -46,6 +34,18 @@
                                     }
                                 }
                             ]
+                        }
+                    }
+                ]
+            },
+            {
+                "headers": [
+                    {
+                        "attributeHeader": {
+                            "name": "Year (Created)",
+                            "localIdentifier": "yearCreatedAttribute",
+                            "uri": "/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/158",
+                            "identifier": "created.aag81lMifn6q"
                         }
                     }
                 ]
