@@ -30,10 +30,10 @@ export const EXECUTION_REQUEST_2A_1M = {
     resultSpec: {
         dimensions: [
             {
-                itemIdentifiers: ['owner_name', 'stage_name']
+                itemIdentifiers: ['measureGroup']
             },
             {
-                itemIdentifiers: ['measureGroup']
+                itemIdentifiers: ['owner_name', 'stage_name']
             }
         ]
     }
@@ -41,6 +41,25 @@ export const EXECUTION_REQUEST_2A_1M = {
 
 export const EXECUTION_RESPONSE_2A_1M = {
     dimensions: [
+        {
+            headers: [
+                {
+                    measureGroupHeader: {
+                        items: [
+                            {
+                                measureHeaderItem: {
+                                    uri: '/gdc/md/tgqkx9leq2tntui4j6fp08tk6epftziu/obj/13465',
+                                    identifier: 'aaYh6Voua2yj',
+                                    localIdentifier: 'num_of_open_opps',
+                                    name: '# of Open Opps.',
+                                    format: '#,##0'
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
         {
             headers: [
                 {
@@ -60,25 +79,6 @@ export const EXECUTION_RESPONSE_2A_1M = {
                     }
                 }
             ]
-        },
-        {
-            headers: [
-                {
-                    measureGroupHeader: {
-                        items: [
-                            {
-                                measureHeaderItem: {
-                                    uri: '/gdc/md/tgqkx9leq2tntui4j6fp08tk6epftziu/obj/13465',
-                                    identifier: 'aaYh6Voua2yj',
-                                    localIdentifier: 'num_of_open_opps',
-                                    name: '# of Open Opps.',
-                                    format: '#,##0'
-                                }
-                            }
-                        ]
-                    }
-                }
-            ]
         }
     ],
     links: {
@@ -91,6 +91,16 @@ export const EXECUTION_RESULT_2A_1M = {
         ['13', '11', '3', '2', '2', '2', '8', '11', '7', '1', '2', '8', '11', '9', '1', '3', '3', '11', '9', '4', '3', '1', '2', '5', '12', '6', '2', '5', '6', '11', '10', '1', '3', '4', '13', '5', '7', '1', '1', '2', '9', '7', '5', '2', '4', '4', '5', '8', '9', '2', '2', '6', '7', '9', '5', '1', '1', '3', '11', '11', '7', '2', '6', '5', '7', '8', '9', '1', '2', '3', '8', '5', '9', '3', '1', '4']
     ],
     headerItems: [
+        [
+            [
+                {
+                    measureHeaderItem: {
+                        name: '# of Open Opps.',
+                        order: 0
+                    }
+                }
+            ]
+        ],
         [
             [
                 {
@@ -1008,8 +1018,7 @@ export const EXECUTION_RESULT_2A_1M = {
                     }
                 }
             ]
-        ],
-        [] // empty array => there are no attributes in second dimension
+        ]
     ],
     paging: {
         count: [

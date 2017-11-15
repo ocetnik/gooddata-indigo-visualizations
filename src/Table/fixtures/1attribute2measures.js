@@ -36,10 +36,10 @@ export const EXECUTION_REQUEST_1A_2M = {
     resultSpec: {
         dimensions: [
             {
-                itemIdentifiers: ['1st_attr_local_identifier']
+                itemIdentifiers: ['measureGroup']
             },
             {
-                itemIdentifiers: ['measureGroup']
+                itemIdentifiers: ['1st_attr_local_identifier']
             }
         ]
     }
@@ -47,18 +47,6 @@ export const EXECUTION_REQUEST_1A_2M = {
 
 export const EXECUTION_RESPONSE_1A_2M = {
     dimensions: [
-        {
-            headers: [
-                {
-                    attributeHeader: {
-                        uri: '/gdc/md/project_id/obj/1st_attr_df_uri_id',
-                        identifier: '1st_attr_df_identifier',
-                        localIdentifier: '1st_attr_local_identifier',
-                        name: 'Name'
-                    }
-                }
-            ]
-        },
         {
             headers: [
                 {
@@ -86,6 +74,18 @@ export const EXECUTION_RESPONSE_1A_2M = {
                     }
                 }
             ]
+        },
+        {
+            headers: [
+                {
+                    attributeHeader: {
+                        uri: '/gdc/md/project_id/obj/1st_attr_df_uri_id',
+                        identifier: '1st_attr_df_identifier',
+                        localIdentifier: '1st_attr_local_identifier',
+                        name: 'Name'
+                    }
+                }
+            ]
         }
     ],
     links: {
@@ -106,14 +106,29 @@ export const EXECUTION_RESULT_1A_2M = {
         [
             [
                 {
+                    measureHeaderItem: {
+                        name: '# of Open Opps.',
+                        order: 0
+                    }
+                },
+                {
+                    measureHeaderItem: {
+                        name: '# of Opportunities',
+                        order: 1
+                    }
+                }
+            ]
+        ],
+        [
+            [
+                {
                     attributeHeaderItem: {
                         uri: '/gdc/md/project_id/obj/1st_attr_df_uri_id/elements?id=1',
                         name: 'Wile E. Coyote'
                     }
                 }
             ]
-        ],
-        [] // empty array => there are no attributes in second dimension
+        ]
     ],
     paging: {
         count: [

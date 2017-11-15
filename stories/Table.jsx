@@ -39,8 +39,9 @@ function generateAttributeHeaders(columns) {
     });
 }
 
-function generateAttributeHeaderItems(columns, rows) {
+function generateHeaderItems(columns, rows) {
     return [
+        [], // empty array => empty 0-th dimension
         range(columns).map((columnNumber) => {
             return range(rows).map((rowNumber) => {
                 return {
@@ -50,8 +51,7 @@ function generateAttributeHeaderItems(columns, rows) {
                     }
                 };
             });
-        }),
-        [] // empty array => there are no attributes in second dimension
+        })
     ];
 }
 
@@ -59,10 +59,10 @@ function generateExecutionResponse(columns, rows) {
     return {
         dimensions: [
             {
-                headers: generateAttributeHeaders(columns, rows)
+                headers: [] // empty array => empty 0-th dimension
             },
             {
-                headers: []
+                headers: generateAttributeHeaders(columns, rows)
             }
         ],
         links: {
@@ -74,7 +74,7 @@ function generateExecutionResponse(columns, rows) {
 function generateExecutionResult(columns, rows) {
     return {
         data: [],
-        headerItems: generateAttributeHeaderItems(columns, rows),
+        headerItems: generateHeaderItems(columns, rows),
         paging: {
             count: [
                 1,

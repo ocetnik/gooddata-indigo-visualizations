@@ -33,19 +33,19 @@ export function getHeaders(executionResponse) {
         throw new Error('Number of dimensions must be equal two');
     }
 
-    // attributes are always returned (and requested) in first dimension
-    const attributeHeaders = getAttributeHeaders(dimensions[0]);
+    // measures are always returned (and requested) in 0-th dimension
+    const measureHeaders = getMeasureHeaders(dimensions[0]);
 
-    // measures are always returned (and requested) in second dimension
-    const measureHeaders = getMeasureHeaders(dimensions[1]);
+    // attributes are always returned (and requested) in 1-st dimension
+    const attributeHeaders = getAttributeHeaders(dimensions[1]);
 
     return [...attributeHeaders, ...measureHeaders];
 }
 
 export function getRows(executionResult) {
     // two dimensional headerItems array are always returned (and requested)
-    // attributes are always returned (and requested) in first dimension
-    const attributeValues = executionResult.headerItems[0]
+    // attributes are always returned (and requested) in 1-st dimension
+    const attributeValues = executionResult.headerItems[1]
         .filter( // filter only arrays which contains only attribute header items
             headerItem => headerItem.every(item => has(item, 'attributeHeaderItem'))
         )

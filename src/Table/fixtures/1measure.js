@@ -16,10 +16,10 @@ export const EXECUTION_REQUEST_1M = {
     resultSpec: {
         dimensions: [
             {
-                itemIdentifiers: []
+                itemIdentifiers: ['measureGroup']
             },
             {
-                itemIdentifiers: ['measureGroup']
+                itemIdentifiers: []
             }
         ]
     }
@@ -27,9 +27,6 @@ export const EXECUTION_REQUEST_1M = {
 
 export const EXECUTION_RESPONSE_1M = {
     dimensions: [
-        {
-            headers: []
-        },
         {
             headers: [
                 {
@@ -48,6 +45,9 @@ export const EXECUTION_RESPONSE_1M = {
                     }
                 }
             ]
+        },
+        {
+            headers: [] // empty array => empty 1-st dimension
         }
     ],
     links: {
@@ -62,8 +62,17 @@ export const EXECUTION_RESULT_1M = {
         ]
     ],
     headerItems: [
-        [], // empty array => there are no attributes in first dimension
-        [] // empty array => there are no attributes in second dimension
+        [
+            [
+                {
+                    measureHeaderItem: {
+                        name: 'Lost',
+                        order: 0
+                    }
+                }
+            ]
+        ],
+        [] // empty array => empty 1-st dimension
     ],
     paging: {
         count: [

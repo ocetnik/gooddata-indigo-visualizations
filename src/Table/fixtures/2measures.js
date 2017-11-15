@@ -26,10 +26,10 @@ export const EXECUTION_REQUEST_2M = {
     resultSpec: {
         dimensions: [
             {
-                itemIdentifiers: []
+                itemIdentifiers: ['measureGroup']
             },
             {
-                itemIdentifiers: ['measureGroup']
+                itemIdentifiers: []
             }
         ]
     }
@@ -37,9 +37,6 @@ export const EXECUTION_REQUEST_2M = {
 
 export const EXECUTION_RESPONSE_2M = {
     dimensions: [
-        {
-            headers: []
-        },
         {
             headers: [
                 {
@@ -67,6 +64,9 @@ export const EXECUTION_RESPONSE_2M = {
                     }
                 }
             ]
+        },
+        {
+            headers: [] // empty array => empty 1-st dimension
         }
     ],
     links: {
@@ -84,8 +84,23 @@ export const EXECUTION_RESULT_2M = {
         ]
     ],
     headerItems: [
-        [], // empty array => there are no attributes in first dimension
-        [] // empty array => there are no attributes in second dimension
+        [
+            [
+                {
+                    measureHeaderItem: {
+                        name: 'Lost',
+                        order: 0
+                    }
+                },
+                {
+                    measureHeaderItem: {
+                        name: 'Won',
+                        order: 1
+                    }
+                }
+            ]
+        ],
+        [] // empty array => empty 1-st dimension
     ],
     paging: {
         count: [

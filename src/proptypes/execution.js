@@ -191,14 +191,14 @@ const totalHeaderItemPropTypes = {
     }).isRequired
 };
 
-const measureGroupHeaderPropTypes = {
+const responseMeasureGroupHeaderPropTypes = {
     measureGroupHeader: PropTypes.shape({
         items: PropTypes.arrayOf(PropTypes.shape(measureHeaderItemPropTypes)).isRequired,
         totalItems: PropTypes.arrayOf(totalHeaderItemPropTypes)
     }).isRequired
 };
 
-const attributeHeaderPropTypes = {
+const responseAttributeHeaderPropTypes = {
     attributeHeader: PropTypes.shape({
         uri: PropTypes.string.isRequired,
         identifier: PropTypes.string.isRequired,
@@ -208,19 +208,26 @@ const attributeHeaderPropTypes = {
     }).isRequired
 };
 
-const headerPropTypes = PropTypes.oneOfType([
-    PropTypes.shape(measureGroupHeaderPropTypes),
-    PropTypes.shape(attributeHeaderPropTypes)
+const responseHeaderPropTypes = PropTypes.oneOfType([
+    PropTypes.shape(responseMeasureGroupHeaderPropTypes),
+    PropTypes.shape(responseAttributeHeaderPropTypes)
 ]);
 
-const resultDimensionPropTypes = {
-    headers: PropTypes.arrayOf(headerPropTypes).isRequired
+const responseDimensionPropTypes = {
+    headers: PropTypes.arrayOf(responseHeaderPropTypes).isRequired
 };
 
-const attributeHeaderItemPropTypes = {
+const resultAttributeHeaderItemPropTypes = {
     attributeHeaderItem: PropTypes.shape({
         uri: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired
+    }).isRequired
+};
+
+const resultMeasureHeaderItemPropTypes = {
+    measureHeaderItem: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        order: PropTypes.number.isRequired
     }).isRequired
 };
 
@@ -236,7 +243,7 @@ export const ExecutionRequestPropTypes = PropTypes.shape({
 
 export const ExecutionResponsePropTypes = PropTypes.shape({
     links: PropTypes.shape({ executionResult: PropTypes.string.isRequired }).isRequired,
-    dimensions: PropTypes.arrayOf(PropTypes.shape(resultDimensionPropTypes)).isRequired
+    dimensions: PropTypes.arrayOf(PropTypes.shape(responseDimensionPropTypes)).isRequired
 });
 
 export const ExecutionResultPropTypes = PropTypes.shape({
@@ -244,10 +251,10 @@ export const ExecutionResultPropTypes = PropTypes.shape({
         PropTypes.arrayOf(
             PropTypes.oneOfType([
                 PropTypes.arrayOf(
-                    PropTypes.shape(attributeHeaderItemPropTypes)
+                    PropTypes.shape(resultAttributeHeaderItemPropTypes)
                 ),
                 PropTypes.arrayOf(
-                    PropTypes.shape(measureGroupHeaderPropTypes)
+                    PropTypes.shape(resultMeasureHeaderItemPropTypes)
                 )
             ])
         )

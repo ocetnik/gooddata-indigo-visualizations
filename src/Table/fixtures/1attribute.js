@@ -12,10 +12,10 @@ export const EXECUTION_REQUEST_1A = {
     resultSpec: {
         dimensions: [
             {
-                itemIdentifiers: ['1st_attr_local_identifier']
+                itemIdentifiers: []
             },
             {
-                itemIdentifiers: []
+                itemIdentifiers: ['1st_attr_local_identifier']
             }
         ]
     }
@@ -23,6 +23,9 @@ export const EXECUTION_REQUEST_1A = {
 
 export const EXECUTION_RESPONSE_1A = {
     dimensions: [
+        {
+            headers: [] // empty array => empty 0-th dimension
+        },
         {
             headers: [
                 {
@@ -34,9 +37,6 @@ export const EXECUTION_RESPONSE_1A = {
                     }
                 }
             ]
-        },
-        {
-            headers: []
         }
     ],
     links: {
@@ -47,6 +47,7 @@ export const EXECUTION_RESPONSE_1A = {
 export const EXECUTION_RESULT_1A = {
     data: [],
     headerItems: [
+        [], // empty array => empty 0-th dimension
         [
             [
                 {
@@ -62,8 +63,7 @@ export const EXECUTION_RESULT_1A = {
                     }
                 }
             ]
-        ],
-        [] // empty array => there are no attributes in second dimension
+        ]
     ],
     paging: {
         count: [

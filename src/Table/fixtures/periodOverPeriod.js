@@ -37,10 +37,10 @@ export const EXECUTION_REQUEST_POP = {
     resultSpec: {
         dimensions: [
             {
-                itemIdentifiers: ['date_attr_local_identifier']
+                itemIdentifiers: ['measureGroup']
             },
             {
-                itemIdentifiers: ['measureGroup']
+                itemIdentifiers: ['date_attr_local_identifier']
             }
         ]
     }
@@ -48,18 +48,6 @@ export const EXECUTION_REQUEST_POP = {
 
 export const EXECUTION_RESPONSE_POP = {
     dimensions: [
-        {
-            headers: [
-                {
-                    attributeHeader: {
-                        uri: '/gdc/md/project_id/obj/date_attr_df_uri_id',
-                        identifier: 'date_attr_df_identifier',
-                        localIdentifier: 'date_attr_local_identifier',
-                        name: 'Year (Created)'
-                    }
-                }
-            ]
-        },
         {
             headers: [
                 {
@@ -84,6 +72,18 @@ export const EXECUTION_RESPONSE_POP = {
                                 }
                             }
                         ]
+                    }
+                }
+            ]
+        },
+        {
+            headers: [
+                {
+                    attributeHeader: {
+                        uri: '/gdc/md/project_id/obj/date_attr_df_uri_id',
+                        identifier: 'date_attr_df_identifier',
+                        localIdentifier: 'date_attr_local_identifier',
+                        name: 'Year (Created)'
                     }
                 }
             ]
@@ -113,6 +113,22 @@ export const EXECUTION_RESULT_POP = {
         [
             [
                 {
+                    measureHeaderItem: {
+                        name: 'Close [BOP] - Previous year',
+                        order: 0
+                    }
+                },
+                {
+                    measureHeaderItem: {
+                        name: 'Close [BOP]',
+                        order: 1
+                    }
+                }
+            ]
+        ],
+        [
+            [
+                {
                     attributeHeaderItem: {
                         name: '2008',
                         uri: '/gdc/md/project_id/obj/date_attr_df_uri_id/elements?id=2008'
@@ -137,8 +153,7 @@ export const EXECUTION_RESULT_POP = {
                     }
                 }
             ]
-        ],
-        [] // empty array => there are no attributes in second dimension
+        ]
     ],
     paging: {
         count: [
