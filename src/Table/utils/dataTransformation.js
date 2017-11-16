@@ -1,37 +1,32 @@
+import invariant from 'invariant';
 import { get, has, isObject, zip } from 'lodash';
 import { getAttributeElementIdFromAttributeElementUri } from '../../utils/common';
 
 function getAttributeHeaders(attributeDimension) {
     return attributeDimension.headers
-        .map(
-            (attributeHeader) => {
-                return {
-                    ...attributeHeader.attributeHeader,
-                    type: 'attribute'
-                };
-            }
-        );
+        .map((attributeHeader) => {
+            return {
+                ...attributeHeader.attributeHeader,
+                type: 'attribute'
+            };
+        });
 }
 
 function getMeasureHeaders(measureDimension) {
     return get(measureDimension.headers[0], ['measureGroupHeader', 'items'], [])
-        .map(
-            (measureHeader) => {
-                return {
-                    ...measureHeader.measureHeaderItem,
-                    type: 'measure'
-                };
-            }
-        );
+        .map((measureHeader) => {
+            return {
+                ...measureHeader.measureHeaderItem,
+                type: 'measure'
+            };
+        });
 }
 
 export function getHeaders(executionResponse) {
     const dimensions = get(executionResponse, 'dimensions', []);
 
     // two dimensions must be always returned (and requested)
-    if (dimensions.length !== 2) {
-        throw new Error('Number of dimensions must be equal two');
-    }
+    invariant(dimensions.length === 2, 'Number of dimensions must be equal two');
 
     // measures are always returned (and requested) in 0-th dimension
     const measureHeaders = getMeasureHeaders(dimensions[0]);
@@ -62,9 +57,10 @@ export function getRows(executionResult) {
 }
 
 export function validateTableProportions(headers, rows) {
-    if (rows.length > 0 && headers.length !== rows[0].length) {
-        throw new Error('Number of table columns must be equal to number of table headers');
-    }
+    invariant(
+        rows.length === 0 || headers.length === rows[0].length,
+        'Number of table columns must be equal to number of table headers'
+    );
 }
 
 export function getBackwardCompatibleHeaderForDrilling(header) {

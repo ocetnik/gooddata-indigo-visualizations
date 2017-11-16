@@ -1,4 +1,5 @@
 import cx from 'classnames';
+import invariant from 'invariant';
 import { first, get, has } from 'lodash';
 
 import { ASC, DESC } from '../constants/sort';
@@ -8,9 +9,7 @@ function getSortBy(tableHeaders, sortItemLocalIdentifier) {
         tableHeader => tableHeader.localIdentifier === sortItemLocalIdentifier
     );
 
-    if (sortByColumnIndex === -1) {
-        throw new Error(`Cannot find sort identifier ${sortItemLocalIdentifier} in table headers`);
-    }
+    invariant(sortByColumnIndex >= 0, `Cannot find sort identifier ${sortItemLocalIdentifier} in table headers`);
 
     return sortByColumnIndex;
 }
@@ -18,9 +17,7 @@ function getSortBy(tableHeaders, sortItemLocalIdentifier) {
 function getSortItemAttributeIdentifier(sortItem) {
     const sortItemAttributeIdentifier = get(sortItem, ['attributeSortItem', 'attributeIdentifier']);
 
-    if (!sortItemAttributeIdentifier) {
-        throw new Error('Attribute sort item doesn\'t contain attribute identifier');
-    }
+    invariant(sortItemAttributeIdentifier, 'Attribute sort item doesn\'t contain attribute identifier');
 
     return sortItemAttributeIdentifier;
 }
@@ -28,20 +25,14 @@ function getSortItemAttributeIdentifier(sortItem) {
 function getSortItemMeasureIdentifier(sortItem) {
     const locators = get(sortItem, ['measureSortItem', 'locators']);
 
-    if (!locators) {
-        throw new Error('Measure sort item doesn\'t contain locators');
-    }
+    invariant(locators, 'Measure sort item doesn\'t contain locators');
 
-    if (locators.length > 1) {
-        throw new Error('Measure sort item couldn\'t contain more than one locator');
-    }
+    invariant(locators.length <= 1, 'Measure sort item couldn\'t contain more than one locator');
 
     const firstLocator = first(locators);
     const sortItemMeasureIdentifier = get(firstLocator, ['measureLocatorItem', 'measureIdentifier']);
 
-    if (!sortItemMeasureIdentifier) {
-        throw new Error('Measure sort item doesn\'t contain measure identifier');
-    }
+    invariant(sortItemMeasureIdentifier, 'Measure sort item doesn\'t contain measure identifier');
 
     return sortItemMeasureIdentifier;
 }
@@ -70,9 +61,7 @@ export function getSortItem(executionRequest) {
         return null;
     }
 
-    if (sorts.length > 1) {
-        throw new Error('Table allows only one sort');
-    }
+    invariant(sorts.length === 1, 'Table allows only one sort');
 
     return sorts[0];
 }
@@ -87,9 +76,7 @@ export function getSortInfo(sortItem, tableHeaders) {
         const sortBy = getSortBy(tableHeaders, sortItemIdentifier);
         const sortDir = get(sortItem, ['attributeSortItem', 'direction']);
 
-        if (!sortDir) {
-            throw new Error('Attribute sort item doesn\'t contain direction');
-        }
+        invariant(sortDir, 'Attribute sort item doesn\'t contain direction');
 
         return { sortBy, sortDir };
     }
@@ -99,9 +86,7 @@ export function getSortInfo(sortItem, tableHeaders) {
         const sortBy = getSortBy(tableHeaders, sortItemIdentifier);
         const sortDir = get(sortItem, ['measureSortItem', 'direction']);
 
-        if (!sortDir) {
-            throw new Error('Measure sort item doesn\'t contain direction');
-        }
+        invariant(sortDir, 'Measure sort item doesn\'t contain direction');
 
         return { sortBy, sortDir };
     }
