@@ -3,7 +3,6 @@ import * as fixtures from '../../../../stories/test_data/fixtures';
 import getLegend, {
     shouldBeLegendEnabled,
     getLegendItems,
-    onLegendItemClick,
     DEFAULT_LEGEND_CONFIG
 } from '../legendBuilder';
 
@@ -63,56 +62,6 @@ describe('getLegendItems', () => {
     });
 });
 
-describe('onLegendItemClick', () => {
-    const type = 'column';
-    function getChartRef(setVisible = jest.fn(), hide = jest.fn()) {
-        return {
-            chart: {
-                series: [
-                    {
-                        data: [{
-                            setVisible
-                        }],
-                        setVisible,
-                        points: [
-                            {
-                                dataLabel: {
-                                    hide
-                                }
-                            }
-                        ]
-                    }
-                ]
-            }
-        };
-    }
-    const item = { legendIndex: 0 };
-    const isEnabled = true;
-
-    it('should call setVisible on target series in usecase of general charts', () => {
-        const setVisible = jest.fn();
-        const chartRef = getChartRef(setVisible);
-        onLegendItemClick(type, chartRef, item, isEnabled);
-        expect(setVisible).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call setVisible on target series in usecase of pie charts', () => {
-        const setVisible = jest.fn();
-        const chartRef = getChartRef(setVisible);
-        onLegendItemClick('pie', chartRef, item, isEnabled);
-        expect(setVisible).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call hide on target series in usecase of general charts only if item is not enabled', () => {
-        const hide = jest.fn();
-        const chartRef = getChartRef(undefined, hide);
-        onLegendItemClick(type, chartRef, item, isEnabled);
-        expect(hide).toHaveBeenCalledTimes(0);
-        onLegendItemClick(type, chartRef, item, false);
-        expect(hide).toHaveBeenCalledTimes(1);
-    });
-});
-
 describe('getLegend', () => {
     const chartOptions = mockChartOptions(fixtures.barChartWith3MetricsAndViewByAttribute);
     const legend = getLegend({}, chartOptions);
@@ -124,10 +73,6 @@ describe('getLegend', () => {
 
     it('should assign enabled: true for multi metric graph', () => {
         expect(legend.enabled).toBe(true);
-    });
-
-    it('should assign onItemClick', () => {
-        expect(legend.onItemClick).toBeDefined();
     });
 
     it('should assign default position', () => {

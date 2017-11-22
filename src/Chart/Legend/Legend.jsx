@@ -7,7 +7,6 @@ import cx from 'classnames';
 import FluidLegend from './FluidLegend';
 import StaticLegend from './StaticLegend';
 
-
 export const FLUID_LEGEND_THRESHOLD = 768;
 
 export default class Legend extends PureComponent {
@@ -22,12 +21,14 @@ export default class Legend extends PureComponent {
             documentElement: PropTypes.shape({
                 clientWidth: PropTypes.number.isRequired
             })
-        })
+        }),
+        legendItemsEnabled: PropTypes.arrayOf(PropTypes.bool)
     };
 
     static defaultProps = {
         responsive: false,
         documentObj: document,
+        legendItemsEnabled: [],
         height: 0
     };
 
@@ -35,8 +36,7 @@ export default class Legend extends PureComponent {
         super(props);
 
         this.state = {
-            showFluid: this.shouldShowFluid(),
-            disabledSeries: []
+            showFluid: this.shouldShowFluid()
         };
 
         this.onItemClick = this.onItemClick.bind(this);
@@ -59,31 +59,20 @@ export default class Legend extends PureComponent {
     }
 
     onItemClick(item) {
-        const { disabledSeries } = this.state;
-        const idx = disabledSeries.indexOf(item.legendIndex);
-        const isDisabled = idx >= 0;
-        if (isDisabled) {
-            this.setState({
-                disabledSeries: disabledSeries.filter(s => s !== item.legendIndex)
-            });
-        } else {
-            this.setState({
-                disabledSeries: [...disabledSeries, item.legendIndex]
-            });
-        }
-        this.props.onItemClick(item, isDisabled);
+        this.props.onItemClick(item);
     }
 
     getSeries() {
-        const { series } = this.props;
-        const { disabledSeries } = this.state;
+        const { series, legendItemsEnabled } = this.props;
 
-        return series.map((s) => {
+        const seriesWithVisibility = series.map((seriesItem) => {
+            const isVisible = legendItemsEnabled[seriesItem.legendIndex];
             return {
-                ...s,
-                isVisible: disabledSeries.indexOf(s.legendIndex) < 0
+                ...seriesItem,
+                isVisible
             };
         });
+        return seriesWithVisibility;
     }
 
     shouldShowFluid() {

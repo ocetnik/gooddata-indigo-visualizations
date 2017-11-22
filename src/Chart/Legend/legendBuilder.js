@@ -25,19 +25,6 @@ export function getLegendItems(chartOptions) {
     return legendDataSource.map(legendDataSourceItem => pick(legendDataSourceItem, ['name', 'color', 'legendIndex']));
 }
 
-export function onLegendItemClick(type, chartRef, item, isEnabled) {
-    const clickTarget = type === PIE_CHART
-        ? chartRef.chart.series[0].data[item.legendIndex]
-        : chartRef.chart.series[item.legendIndex];
-
-    clickTarget.setVisible();
-
-    if (!isEnabled && clickTarget.points) {
-        clickTarget.points.filter(point => point.dataLabel)
-            .map(({ dataLabel }) => dataLabel.hide());
-    }
-}
-
 export default function getLegend(legendConfig = {}, chartOptions) {
     const baseConfig = {
         ...DEFAULT_LEGEND_CONFIG,
@@ -46,7 +33,6 @@ export default function getLegend(legendConfig = {}, chartOptions) {
     return {
         ...baseConfig,
         enabled: baseConfig.enabled && shouldBeLegendEnabled(chartOptions),
-        onItemClick: partial(onLegendItemClick, chartOptions.type),
         items: getLegendItems(chartOptions)
     };
 }

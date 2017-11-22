@@ -20,6 +20,12 @@ export const barChartWithViewByAttribute = {
     executionResult: require('../test_data/bar_chart_with_view_by_attribute_result.json').executionResult
 };
 
+export const barChartWithManyViewByAttributeValues = {
+    executionRequest: require('../test_data/bar_chart_with_many_view_by_attribute_values_request.json').execution,
+    executionResponse: require('../test_data/bar_chart_with_many_view_by_attribute_values_response.json').executionResponse,
+    executionResult: require('../test_data/bar_chart_with_many_view_by_attribute_values_result.json').executionResult
+};
+
 export const barChartWithStackByAndViewByAttributes = {
     executionRequest: require('../test_data/bar_chart_with_stack_by_and_view_by_attributes_request.json').execution,
     executionResponse: require('../test_data/bar_chart_with_stack_by_and_view_by_attributes_response.json').executionResponse,
@@ -117,14 +123,13 @@ export const lgbtPalette = [
 
 export default {
     barChartWithoutAttributes,
-    barChartWithNTimes3MetricsAndViewByAttribute,
     barChartWith3MetricsAndViewByAttribute,
     barChartWith18MetricsAndViewByAttribute,
     barChartWith60MetricsAndViewByAttribute,
     barChartWithViewByAttribute,
+    barChartWithManyViewByAttributeValues,
     barChartWithStackByAndViewByAttributes,
     barChartWithPopMeasureAndViewByAttribute,
     barChartWith6PopMeasuresAndViewByAttribute,
-    pieChartWithMetricsOnly,
-    lgbtPalette
+    pieChartWithMetricsOnly
 };

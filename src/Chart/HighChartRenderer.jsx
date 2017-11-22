@@ -2,9 +2,10 @@ import Highcharts from 'highcharts';
 import drillmodule from 'highcharts/modules/drilldown';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, get, set, isEqual } from 'lodash';
 import cx from 'classnames';
 
+import { PIE_CHART } from '../VisualizationTypes';
 import Chart from './Chart';
 import Legend from './Legend/Legend';
 import { initChartPlugins } from './highcharts/chartPlugins';
@@ -14,6 +15,14 @@ const CHART_TEXT_PADDING = 50;
 
 drillmodule(Highcharts);
 initChartPlugins(Highcharts, CHART_TEXT_PADDING);
+
+export function renderChart(props) {
+    return <Chart {...props} />;
+}
+
+export function renderLegend(props) {
+    return <Legend {...props} />;
+}
 
 export default class HighChartRenderer extends PureComponent {
     static propTypes = {
@@ -29,9 +38,10 @@ export default class HighChartRenderer extends PureComponent {
                 legendIndex: PropTypes.number.isRequired,
                 name: PropTypes.string.isRequired,
                 color: PropTypes.string.isRequired
-            })).isRequired,
-            onItemClick: PropTypes.func.isRequired
-        })
+            })).isRequired
+        }),
+        chartRenderer: PropTypes.func,
+        legendRenderer: PropTypes.func
     };
 
     static defaultProps = {
@@ -41,14 +51,22 @@ export default class HighChartRenderer extends PureComponent {
             enabled: true,
             responsive: false,
             position: RIGHT
-        }
+        },
+        chartRenderer: renderChart,
+        legendRenderer: renderLegend
     };
 
     constructor(props) {
         super(props);
-
+        this.state = {
+            legendItemsEnabled: []
+        };
         this.setChartRef = this.setChartRef.bind(this);
         this.onLegendItemClick = this.onLegendItemClick.bind(this);
+    }
+
+    componentWillMount() {
+        this.resetLegendState(this.props);
     }
 
     componentDidMount() {
@@ -65,8 +83,23 @@ export default class HighChartRenderer extends PureComponent {
         }, 0);
     }
 
-    onLegendItemClick(item, isDisabled) {
-        return this.props.legend.onItemClick(this.chartRef, item, isDisabled);
+    componentWillReceiveProps(nextProps) {
+        const thisLegendItems = get(this.props, 'legend.items', []);
+        const nextLegendItems = get(nextProps, 'legend.items', []);
+        const hasLegendChanged = !isEqual(thisLegendItems, nextLegendItems);
+        if (hasLegendChanged) {
+            this.resetLegendState(nextProps);
+        }
+    }
+
+    onLegendItemClick(item) {
+        this.setState({
+            legendItemsEnabled: set(
+                [...this.state.legendItemsEnabled],
+                item.legendIndex,
+                !this.state.legendItemsEnabled[item.legendIndex]
+            )
+        });
     }
 
     setChartRef(chartRef) {
@@ -83,7 +116,14 @@ export default class HighChartRenderer extends PureComponent {
         return 'row';
     }
 
-    createChartConfig(chartConfig) {
+    resetLegendState(props) {
+        const legendItemsCount = get(props, 'legend.items.length', 0);
+        this.setState({
+            legendItemsEnabled: new Array(legendItemsCount).fill(true)
+        });
+    }
+
+    createChartConfig(chartConfig, legendItemsEnabled) {
         const config = cloneDeep(chartConfig);
 
         config.yAxis.title.style = {
@@ -98,11 +138,22 @@ export default class HighChartRenderer extends PureComponent {
             config.chart.height = this.props.height;
         }
 
+        // render chart with disabled visibility based on legendItemsEnabled
+        const itemsPath = config.chart.type === PIE_CHART ? 'series[0].data' : 'series';
+        set(config, itemsPath, get(config, itemsPath).map((item, itemIndex) => {
+            const visible = legendItemsEnabled[itemIndex] !== undefined
+                ? legendItemsEnabled[itemIndex]
+                : true;
+            return {
+                ...item,
+                visible
+            };
+        }));
         return config;
     }
 
     renderLegend() {
-        const { chartOptions, legend, height } = this.props;
+        const { chartOptions, legend, height, legendRenderer } = this.props;
         const { items } = legend;
 
         if (!legend.enabled) {
@@ -115,24 +166,22 @@ export default class HighChartRenderer extends PureComponent {
             chartType: chartOptions.type,
             series: items,
             onItemClick: this.onLegendItemClick,
+            legendItemsEnabled: this.state.legendItemsEnabled,
             height
         };
 
-        return (
-            <Legend {...legendProps} />
-        );
+        return legendRenderer(legendProps);
     }
 
     renderHighcharts() {
         const style = { flex: '1 1 auto', position: 'relative' };
-        return (
-            <Chart
-                domProps={{ className: 'viz-react-highchart-wrap', style }}
-                ref={this.setChartRef}
-                config={this.createChartConfig(this.props.hcOptions)}
-                callback={this.props.afterRender}
-            />
-        );
+        const chartProps = {
+            domProps: { className: 'viz-react-highchart-wrap', style },
+            ref: this.setChartRef,
+            config: this.createChartConfig(this.props.hcOptions, this.state.legendItemsEnabled),
+            callback: this.props.afterRender
+        };
+        return this.props.chartRenderer(chartProps);
     }
 
     render() {

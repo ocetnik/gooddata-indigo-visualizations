@@ -6,7 +6,7 @@ import { FLUID_LEGEND_THRESHOLD } from '../src/Chart/Legend/Legend';
 import { immutableSet } from '../src/utils/common';
 import { VIEW_BY_DIMENSION_INDEX, STACK_BY_DIMENSION_INDEX } from '../src/Chart/constants';
 
-import * as fixtures from './test_data/fixtures';
+import fixtureDataSets, * as fixtures from './test_data/fixtures';
 
 import { wrap, screenshotWrap } from './utils/wrap';
 
@@ -42,6 +42,56 @@ function getChart({
         {...dataSet}
         onDataTooLarge={f => f}
     />, height, width, minHeight, minWidth, key);
+}
+
+class DynamicChart extends React.Component {
+    constructor(props) {
+        super(props);
+        this.fixtures = {
+            ...fixtureDataSets,
+            updatedBarChartWith3MetricsAndViewByAttribute: (dataSet => immutableSet(
+                dataSet,
+                'executionResult.data[1]',
+                dataSet.executionResult.data[1].map(pointValue => pointValue * 2)
+            ))(fixtures.barChartWith3MetricsAndViewByAttribute)
+        };
+
+        this.state = {
+            dataSet: this.fixtures.barChartWith3MetricsAndViewByAttribute
+        };
+        this.setDataSet = this.setDataSet.bind(this);
+    }
+
+    setDataSet(dataSetName) {
+        this.setState({
+            dataSet: this.fixtures[dataSetName]
+        });
+    }
+
+    render() {
+        const dataSet = this.state.dataSet;
+        return (<div>
+            <div>
+                {wrap(<ChartTransformation
+                    config={{
+                        type: 'column',
+                        legend: {
+                            enabled: true,
+                            position: 'top'
+                        }
+                    }}
+                    {...dataSet}
+                    onDataTooLarge={f => f}
+                />, 600)}
+            </div>
+            <br />
+            <div>
+                { Object.keys(this.fixtures).map(dataSetName => (
+                    <button onClick={() => this.setDataSet(dataSetName)} >{dataSetName}</button>
+                )) }
+            </div>
+        </div>);
+    }
 }
 
 storiesOf('ChartTransformation')
@@ -436,4 +486,7 @@ storiesOf('ChartTransformation')
                 width: '100%'
             })
         )
+    ))
+    .add('Dynamic Chart test', () => (
+        <DynamicChart />
     ));
