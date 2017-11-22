@@ -2,6 +2,12 @@ import { range, cloneDeep } from 'lodash';
 import { immutableSet, repeatItemsNTimes } from '../../src/utils/common';
 import { STACK_BY_DIMENSION_INDEX } from '../../src/Chart/constants';
 
+export const barChartWithSingleMeasureAndNoAttributes = {
+    executionRequest: require('../test_data/bar_chart_with_single_measure_and_no_attributes_request.json').execution,
+    executionResponse: require('../test_data/bar_chart_with_single_measure_and_no_attributes_response.json').executionResponse,
+    executionResult: require('../test_data/bar_chart_with_single_measure_and_no_attributes_result.json').executionResult
+};
+
 export const barChartWithoutAttributes = {
     executionRequest: require('../test_data/bar_chart_without_attributes_request.json').execution,
     executionResponse: require('../test_data/bar_chart_without_attributes_response.json').executionResponse,
@@ -20,10 +26,22 @@ export const barChartWithViewByAttribute = {
     executionResult: require('../test_data/bar_chart_with_view_by_attribute_result.json').executionResult
 };
 
+export const barChartWithManyViewByAttributeValues = {
+    executionRequest: require('../test_data/bar_chart_with_many_view_by_attribute_values_request.json').execution,
+    executionResponse: require('../test_data/bar_chart_with_many_view_by_attribute_values_response.json').executionResponse,
+    executionResult: require('../test_data/bar_chart_with_many_view_by_attribute_values_result.json').executionResult
+};
+
 export const barChartWithStackByAndViewByAttributes = {
     executionRequest: require('../test_data/bar_chart_with_stack_by_and_view_by_attributes_request.json').execution,
     executionResponse: require('../test_data/bar_chart_with_stack_by_and_view_by_attributes_response.json').executionResponse,
     executionResult: require('../test_data/bar_chart_with_stack_by_and_view_by_attributes_result.json').executionResult
+};
+
+export const barChartWithStackByAndOnlyOneStack = {
+    executionRequest: require('../test_data/bar_chart_with_stack_by_and_only_one_stack_request.json').execution,
+    executionResponse: require('../test_data/bar_chart_with_stack_by_and_only_one_stack_response.json').executionResponse,
+    executionResult: require('../test_data/bar_chart_with_stack_by_and_only_one_stack_result.json').executionResult
 };
 
 export const barChartWithPopMeasureAndViewByAttribute = {
@@ -106,7 +124,7 @@ export const barChartWith6PopMeasuresAndViewByAttribute = (() => {
     return dataSet;
 })();
 
-export const lgbtPalette = [
+export const customPalette = [
     '#FF69B4',
     '#d40606',
     '#ee9c00',
@@ -116,15 +134,15 @@ export const lgbtPalette = [
 ];
 
 export default {
+    barChartWithSingleMeasureAndNoAttributes,
     barChartWithoutAttributes,
-    barChartWithNTimes3MetricsAndViewByAttribute,
     barChartWith3MetricsAndViewByAttribute,
     barChartWith18MetricsAndViewByAttribute,
     barChartWith60MetricsAndViewByAttribute,
     barChartWithViewByAttribute,
+    barChartWithManyViewByAttributeValues,
     barChartWithStackByAndViewByAttributes,
     barChartWithPopMeasureAndViewByAttribute,
     barChartWith6PopMeasuresAndViewByAttribute,
-    pieChartWithMetricsOnly,
-    lgbtPalette
+    pieChartWithMetricsOnly
 };

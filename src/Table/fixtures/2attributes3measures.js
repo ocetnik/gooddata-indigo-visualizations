@@ -2,13 +2,13 @@ export const EXECUTION_REQUEST_2A_3M = {
     afm: {
         attributes: [
             {
-                localIdentifier: '1st_attr_local_identifier',
+                localIdentifier: '1st_attr_df_local_identifier',
                 displayForm: {
                     uri: '/gdc/md/project_id/obj/1st_attr_df_uri_id'
                 }
             },
             {
-                localIdentifier: '2nd_attr_local_identifier',
+                localIdentifier: '2nd_attr_df_local_identifier',
                 displayForm: {
                     identifier: '2nd_attr_df_identifier'
                 }
@@ -50,10 +50,10 @@ export const EXECUTION_REQUEST_2A_3M = {
     resultSpec: {
         dimensions: [
             {
-                itemIdentifiers: ['measureGroup']
+                itemIdentifiers: ['1st_attr_df_local_identifier', '2nd_attr_df_local_identifier']
             },
             {
-                itemIdentifiers: ['1st_attr_local_identifier', '2nd_attr_local_identifier']
+                itemIdentifiers: ['measureGroup']
             }
         ]
     }
@@ -61,6 +61,36 @@ export const EXECUTION_REQUEST_2A_3M = {
 
 export const EXECUTION_RESPONSE_2A_3M = {
     dimensions: [
+        {
+            headers: [
+                {
+                    attributeHeader: {
+                        uri: '/gdc/md/project_id/obj/1st_attr_df_uri_id',
+                        identifier: '1st_attr_df_identifier',
+                        localIdentifier: '1st_attr_df_local_identifier',
+                        name: 'Product Name',
+                        formOf: {
+                            name: 'Product',
+                            uri: '/gdc/md/project_id/obj/1st_attr_uri_id',
+                            identifier: '1st_attr_local_identifier'
+                        }
+                    }
+                },
+                {
+                    attributeHeader: {
+                        uri: '/gdc/md/project_id/obj/2nd_attr_df_uri_id',
+                        identifier: '2nd_attr_df_identifier',
+                        localIdentifier: '2nd_attr_df_local_identifier',
+                        name: 'Region Area',
+                        formOf: {
+                            name: 'Region',
+                            uri: '/gdc/md/project_id/obj/2nd_attr_uri_id',
+                            identifier: '2nd_attr_local_identifier'
+                        }
+                    }
+                }
+            ]
+        },
         {
             headers: [
                 {
@@ -97,26 +127,6 @@ export const EXECUTION_RESPONSE_2A_3M = {
                     }
                 }
             ]
-        },
-        {
-            headers: [
-                {
-                    attributeHeader: {
-                        uri: '/gdc/md/project_id/obj/1st_attr_df_uri_id',
-                        identifier: '1st_attr_df_identifier',
-                        localIdentifier: '1st_attr_local_identifier',
-                        name: 'Product'
-                    }
-                },
-                {
-                    attributeHeader: {
-                        uri: '/gdc/md/project_id/obj/2nd_attr_df_uri_id',
-                        identifier: '2nd_attr_df_identifier',
-                        localIdentifier: '2nd_attr_local_identifier',
-                        name: 'Region'
-                    }
-                }
-            ]
         }
     ],
     links: {
@@ -128,48 +138,26 @@ export const EXECUTION_RESULT_2A_3M = {
     data: [
         [
             '1953605.55',
-            '10711626.9',
-            '2167802.76',
-            '7557512.72'
-        ],
-        [
             '2115472',
-            '7122497.87',
-            '2307461.24',
-            '6550145.82'
-
+            '285287.96'
         ],
         [
-            '285287.96',
-            '1146695.28',
-            '767583.753',
+            '10711626.9',
+            '7122497.87',
+            '1146695.28'
+        ],
+        [
+            '2167802.76',
+            '2307461.24',
+            '767583.753'
+        ],
+        [
+            '7557512.72',
+            '6550145.82',
             '700102.675'
-
         ]
     ],
     headerItems: [
-        [
-            [
-                {
-                    measureHeaderItem: {
-                        name: 'Lost',
-                        order: 0
-                    }
-                },
-                {
-                    measureHeaderItem: {
-                        name: 'Won',
-                        order: 1
-                    }
-                },
-                {
-                    measureHeaderItem: {
-                        name: 'Expected',
-                        order: 2
-                    }
-                }
-            ]
-        ],
         [
             [
                 {
@@ -223,20 +211,42 @@ export const EXECUTION_RESULT_2A_3M = {
                     }
                 }
             ]
+        ],
+        [
+            [
+                {
+                    measureHeaderItem: {
+                        name: 'Lost',
+                        order: 0
+                    }
+                },
+                {
+                    measureHeaderItem: {
+                        name: 'Won',
+                        order: 1
+                    }
+                },
+                {
+                    measureHeaderItem: {
+                        name: 'Expected',
+                        order: 2
+                    }
+                }
+            ]
         ]
     ],
     paging: {
         count: [
-            3,
-            4
+            4,
+            3
         ],
         offset: [
             0,
             0
         ],
         total: [
-            3,
-            4
+            4,
+            3
         ]
     }
 };
@@ -246,14 +256,14 @@ export const TABLE_HEADERS_2A_3M = [
         type: 'attribute',
         uri: '/gdc/md/project_id/obj/1st_attr_df_uri_id',
         identifier: '1st_attr_df_identifier',
-        localIdentifier: '1st_attr_local_identifier',
+        localIdentifier: '1st_attr_df_local_identifier',
         name: 'Product'
     },
     {
         type: 'attribute',
         uri: '/gdc/md/project_id/obj/2nd_attr_df_uri_id',
         identifier: '2nd_attr_df_identifier',
-        localIdentifier: '2nd_attr_local_identifier',
+        localIdentifier: '2nd_attr_df_local_identifier',
         name: 'Region'
     },
     {

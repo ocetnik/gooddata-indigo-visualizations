@@ -179,8 +179,8 @@ describe('Table utils - Data transformation', () => {
 
             const extendedHeaderItemsWithMeasureGroupHeaderItems = set(
                 EXECUTION_RESULT_1A,
-                'headerItems[0]',
-                EXECUTION_RESULT_1A.headerItems[0].concat([measureGroupHeaderItems])
+                'headerItems[1]',
+                EXECUTION_RESULT_1A.headerItems[1].concat([measureGroupHeaderItems])
             );
 
             const rows = getRows(extendedHeaderItemsWithMeasureGroupHeaderItems);
@@ -248,8 +248,8 @@ describe('Table utils - Data transformation', () => {
         it('should get backward compatible header for attribute', () => {
             expect(getBackwardCompatibleHeaderForDrilling(TABLE_HEADERS_1A[0])).toEqual({
                 type: 'attrLabel',
-                id: '1st_attr_local_identifier',
-                identifier: '1st_attr_local_identifier',
+                id: '1st_attr_df_local_identifier',
+                identifier: '1st_attr_df_local_identifier',
                 uri: '/gdc/md/project_id/obj/1st_attr_df_uri_id',
                 title: 'Product'
             });

@@ -1,12 +1,13 @@
 import invariant from 'invariant';
-import { get, has, isObject, zip } from 'lodash';
+import { get, has, isObject, omit, zip } from 'lodash';
 import { getAttributeElementIdFromAttributeElementUri } from '../../utils/common';
 
 function getAttributeHeaders(attributeDimension) {
     return attributeDimension.headers
         .map((attributeHeader) => {
             return {
-                ...attributeHeader.attributeHeader,
+                ...omit(attributeHeader.attributeHeader, 'formOf'),
+                name: attributeHeader.attributeHeader.formOf.name,
                 type: 'attribute'
             };
         });
@@ -28,19 +29,19 @@ export function getHeaders(executionResponse) {
     // two dimensions must be always returned (and requested)
     invariant(dimensions.length === 2, 'Number of dimensions must be equal two');
 
-    // measures are always returned (and requested) in 0-th dimension
-    const measureHeaders = getMeasureHeaders(dimensions[0]);
+    // attributes are always returned (and requested) in 0-th dimension
+    const attributeHeaders = getAttributeHeaders(dimensions[0]);
 
-    // attributes are always returned (and requested) in 1-st dimension
-    const attributeHeaders = getAttributeHeaders(dimensions[1]);
+    // measures are always returned (and requested) in 1-st dimension
+    const measureHeaders = getMeasureHeaders(dimensions[1]);
 
     return [...attributeHeaders, ...measureHeaders];
 }
 
 export function getRows(executionResult) {
     // two dimensional headerItems array are always returned (and requested)
-    // attributes are always returned (and requested) in 1-st dimension
-    const attributeValues = executionResult.headerItems[1]
+    // attributes are always returned (and requested) in 0-th dimension
+    const attributeValues = executionResult.headerItems[0]
         .filter( // filter only arrays which contains only attribute header items
             headerItem => headerItem.every(item => has(item, 'attributeHeaderItem'))
         )
@@ -53,7 +54,19 @@ export function getRows(executionResult) {
 
     const measureValues = get(executionResult, 'data');
 
-    return zip(...attributeValues, ...measureValues);
+    const attributeRows = zip(...attributeValues);
+
+    if (measureValues.length === 0) {
+        return attributeRows;
+    }
+
+    if (attributeRows.length === 0) {
+        return measureValues;
+    }
+
+    return measureValues.map((measureValue, index) => {
+        return [...attributeRows[index], ...measureValue];
+    });
 }
 
 export function validateTableProportions(headers, rows) {

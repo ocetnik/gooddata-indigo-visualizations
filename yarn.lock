@@ -41,9 +41,9 @@
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@gooddata/numberjs/-/numberjs-3.0.0.tgz#9d646f1f9c05614d18e08ac5024b2ba2f7139396"
 
-"@gooddata/typings@0.0.1-vaclavbohac-init-2017-10-06T12-12-51-885Z":
-  version "0.0.1-vaclavbohac-init-2017-10-06T12-12-51-885Z"
-  resolved "https://registry.yarnpkg.com/@gooddata/typings/-/typings-0.0.1-vaclavbohac-init-2017-10-06T12-12-51-885Z.tgz#4814f70329d4c8bf7ff3471f9fb373cbb2b0bc01"
+"@gooddata/typings@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@gooddata/typings/-/typings-0.0.3.tgz#e65a1d0f4188d110631f15698a9cda400862b0eb"
 
 "@hypnosphi/fuse.js@^3.0.9":
   version "3.0.9"
@@ -4160,7 +4160,7 @@ hawk@~6.0.2:
     sntp "2.x.x"
 
 highcharts@4.2.5:
-  version v4.2.5
+  version "4.2.5"
   resolved "https://registry.yarnpkg.com/highcharts/-/highcharts-4.2.5.tgz#f18bbda5ca326fdff7d816c94814fe8509cec969"
 
 hmac-drbg@^1.0.0:

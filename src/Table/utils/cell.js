@@ -12,7 +12,8 @@ export function getCellClassNames(rowIndex, columnKey, isDrillable) {
         {
             'gd-cell-drillable': isDrillable
         },
-        `s-cell-${rowIndex}-${columnKey}`
+        `s-cell-${rowIndex}-${columnKey}`,
+        's-table-cell'
     );
 }
 

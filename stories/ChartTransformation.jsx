@@ -1,12 +1,13 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 
 import ChartTransformation from '../src/Chart/ChartTransformation';
 import { FLUID_LEGEND_THRESHOLD } from '../src/Chart/Legend/Legend';
 import { immutableSet } from '../src/utils/common';
 import { VIEW_BY_DIMENSION_INDEX, STACK_BY_DIMENSION_INDEX } from '../src/Chart/constants';
 
-import * as fixtures from './test_data/fixtures';
+import fixtureDataSets, * as fixtures from './test_data/fixtures';
 
 import { wrap, screenshotWrap } from './utils/wrap';
 
@@ -44,7 +45,131 @@ function getChart({
     />, height, width, minHeight, minWidth, key);
 }
 
+class DynamicChart extends React.Component {
+    constructor(props) {
+        super(props);
+        this.fixtures = {
+            ...fixtureDataSets,
+            updatedBarChartWith3MetricsAndViewByAttribute: (dataSet => immutableSet(
+                dataSet,
+                'executionResult.data[1]',
+                dataSet.executionResult.data[1].map(pointValue => pointValue * 2)
+            ))(fixtures.barChartWith3MetricsAndViewByAttribute)
+        };
+
+        this.legendOptions = {
+            'no legend': { enabled: false },
+            'legend top': { enabled: true, position: 'top' },
+            'legend right': { enabled: true, position: 'right' },
+            'legend bottom': { enabled: true, position: 'bottom' },
+            'legend left': { enabled: true, position: 'left' }
+        };
+
+        this.chartTypes = [
+            'column',
+            'bar',
+            'line',
+            'pie'
+        ];
+
+        this.state = {
+            chartType: 'column',
+            dataSet: this.fixtures.barChartWith3MetricsAndViewByAttribute,
+            legendOption: this.legendOptions['legend top']
+        };
+    }
+
+    setDataSet(dataSetName) {
+        this.setState({
+            dataSet: this.fixtures[dataSetName]
+        });
+    }
+
+    setLegend(legendOption) {
+        this.setState({
+            legendOption: this.legendOptions[legendOption]
+        });
+    }
+
+    setChartType(chartType) {
+        this.setState({
+            chartType
+        });
+    }
+
+    render() {
+        const { dataSet, legendOption, chartType } = this.state;
+        return (<div>
+            <div>
+                {screenshotWrap(wrap(<ChartTransformation
+                    config={{
+                        type: chartType,
+                        legend: legendOption
+                    }}
+                    {...dataSet}
+                    onDataTooLarge={action('Data too large')}
+                    onNegativeValues={action('Negative values in pie chart')}
+                />, 600))}
+            </div>
+            <br />
+            <div>
+                { Object.keys(this.fixtures).map(dataSetName => (
+                    <button key={dataSetName} onClick={() => this.setDataSet(dataSetName)} >{dataSetName}</button>
+                )) }
+            </div>
+            <div>
+                { Object.keys(this.legendOptions).map(legendOptionsItem => (
+                    <button key={legendOptionsItem} onClick={() => this.setLegend(legendOptionsItem)} >
+                        {legendOptionsItem}
+                    </button>
+                )) }
+            </div>
+            <div>
+                { this.chartTypes.map(chartTypeOption => (
+                    <button key={chartTypeOption} onClick={() => this.setChartType(chartTypeOption)} >
+                        {chartTypeOption}
+                    </button>
+                )) }
+            </div>
+        </div>);
+    }
+}
+
 storiesOf('ChartTransformation')
+    .add('Column chart with one measure and no attributes', () => {
+        const dataSet = {
+            ...fixtures.barChartWithSingleMeasureAndNoAttributes
+        };
+
+        return screenshotWrap(
+            wrap(
+                <ChartTransformation
+                    drillableItems={[
+                        {
+                            uri: dataSet.executionResponse.dimensions[STACK_BY_DIMENSION_INDEX]
+                                .headers[0].measureGroupHeader.items[0].measureHeaderItem.uri
+                        }
+                    ]}
+                    config={{
+                        type: 'column',
+                        legend: {
+                            enabled: true,
+                            position: 'top'
+                        },
+                        legendLayout: 'horizontal',
+                        colors: fixtures.customPalette
+                    }}
+                    {...dataSet}
+                    onDataTooLarge={() => {
+                        throw new Error('Data too large');
+                    }}
+                    onNegativeValues={() => {
+                        throw new Error('Negative values in pie chart');
+                    }}
+                />
+            )
+        );
+    })
     .add('Column chart without attributes', () => {
         const dataSet = fixtures.barChartWithoutAttributes;
 
@@ -64,7 +189,7 @@ storiesOf('ChartTransformation')
                             position: 'top'
                         },
                         legendLayout: 'horizontal',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -91,7 +216,7 @@ storiesOf('ChartTransformation')
                             position: 'top'
                         },
                         legendLayout: 'horizontal',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -117,7 +242,7 @@ storiesOf('ChartTransformation')
                             position: 'top'
                         },
                         legendLayout: 'horizontal',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -143,7 +268,7 @@ storiesOf('ChartTransformation')
                             position: 'right'
                         },
                         legendLayout: 'horizontal',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -170,7 +295,34 @@ storiesOf('ChartTransformation')
                             position: 'top'
                         },
                         legendLayout: 'vertical',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
+                    }}
+                    {...dataSet}
+                    onDataTooLarge={f => f}
+                />
+            )
+        );
+    })
+    .add('Column chart with viewBy and stackBy attribute but only one stack item', () => {
+        const dataSet = fixtures.barChartWithStackByAndOnlyOneStack;
+
+        return screenshotWrap(
+            wrap(
+                <ChartTransformation
+                    drillableItems={[
+                        {
+                            uri: dataSet.executionResult
+                                .headerItems[VIEW_BY_DIMENSION_INDEX][0][0].attributeHeaderItem.uri
+                        }
+                    ]}
+                    config={{
+                        type: 'column',
+                        legend: {
+                            enabled: true,
+                            position: 'top'
+                        },
+                        legendLayout: 'vertical',
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -197,7 +349,7 @@ storiesOf('ChartTransformation')
                             position: 'top'
                         },
                         legendLayout: 'vertical',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -224,7 +376,7 @@ storiesOf('ChartTransformation')
                             position: 'bottom'
                         },
                         legendLayout: 'vertical',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -251,7 +403,7 @@ storiesOf('ChartTransformation')
                             position: 'right'
                         },
                         legendLayout: 'horizontal',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -278,7 +430,7 @@ storiesOf('ChartTransformation')
                             position: 'left'
                         },
                         legendLayout: 'horizontal',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -305,7 +457,7 @@ storiesOf('ChartTransformation')
                             position: 'left'
                         },
                         legendLayout: 'horizontal',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -332,7 +484,7 @@ storiesOf('ChartTransformation')
                             position: 'left'
                         },
                         legendLayout: 'horizontal',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -436,4 +588,7 @@ storiesOf('ChartTransformation')
                 width: '100%'
             })
         )
+    ))
+    .add('Dynamic Chart test', () => (
+        <DynamicChart />
     ));

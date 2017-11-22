@@ -30,10 +30,10 @@ export const EXECUTION_REQUEST_2A_1M = {
     resultSpec: {
         dimensions: [
             {
-                itemIdentifiers: ['measureGroup']
+                itemIdentifiers: ['owner_name', 'stage_name']
             },
             {
-                itemIdentifiers: ['owner_name', 'stage_name']
+                itemIdentifiers: ['measureGroup']
             }
         ]
     }
@@ -41,6 +41,36 @@ export const EXECUTION_REQUEST_2A_1M = {
 
 export const EXECUTION_RESPONSE_2A_1M = {
     dimensions: [
+        {
+            headers: [
+                {
+                    attributeHeader: {
+                        uri: '/gdc/md/tgqkx9leq2tntui4j6fp08tk6epftziu/obj/1028',
+                        identifier: 'label.owner.id.name',
+                        localIdentifier: 'owner_name',
+                        name: 'Owner Name DF Title',
+                        formOf: {
+                            name: 'Sales Rep (element 1, element 2, element 3, element 4, element 5, element 6, element 7, element 8, element 9, element 10, element 11)',
+                            uri: '/gdc/md/tgqkx9leq2tntui4j6fp08tk6epftziu/obj/12345',
+                            identifier: 'owner_name_attr_local_identifier'
+                        }
+                    }
+                },
+                {
+                    attributeHeader: {
+                        uri: '/gdc/md/tgqkx9leq2tntui4j6fp08tk6epftziu/obj/1805',
+                        identifier: 'label.stage.name.stagename',
+                        localIdentifier: 'stage_name',
+                        name: 'Stage Name DF Title',
+                        formOf: {
+                            name: 'Stage Name',
+                            uri: '/gdc/md/tgqkx9leq2tntui4j6fp08tk6epftziu/obj/67890',
+                            identifier: 'stage_name_attr_local_identifier'
+                        }
+                    }
+                }
+            ]
+        },
         {
             headers: [
                 {
@@ -59,26 +89,6 @@ export const EXECUTION_RESPONSE_2A_1M = {
                     }
                 }
             ]
-        },
-        {
-            headers: [
-                {
-                    attributeHeader: {
-                        uri: '/gdc/md/tgqkx9leq2tntui4j6fp08tk6epftziu/obj/1028',
-                        identifier: 'label.owner.id.name',
-                        localIdentifier: 'owner_name',
-                        name: 'Sales Rep (element 1, element 2, element 3, element 4, element 5, element 6, element 7, element 8, element 9, element 10, element 11)'
-                    }
-                },
-                {
-                    attributeHeader: {
-                        uri: '/gdc/md/tgqkx9leq2tntui4j6fp08tk6epftziu/obj/1805',
-                        identifier: 'label.stage.name.stagename',
-                        localIdentifier: 'stage_name',
-                        name: 'Stage Name'
-                    }
-                }
-            ]
         }
     ],
     links: {
@@ -88,19 +98,84 @@ export const EXECUTION_RESPONSE_2A_1M = {
 
 export const EXECUTION_RESULT_2A_1M = {
     data: [
-        ['13', '11', '3', '2', '2', '2', '8', '11', '7', '1', '2', '8', '11', '9', '1', '3', '3', '11', '9', '4', '3', '1', '2', '5', '12', '6', '2', '5', '6', '11', '10', '1', '3', '4', '13', '5', '7', '1', '1', '2', '9', '7', '5', '2', '4', '4', '5', '8', '9', '2', '2', '6', '7', '9', '5', '1', '1', '3', '11', '11', '7', '2', '6', '5', '7', '8', '9', '1', '2', '3', '8', '5', '9', '3', '1', '4']
+        ['13'],
+        ['11'],
+        ['3'],
+        ['2'],
+        ['2'],
+        ['2'],
+        ['8'],
+        ['11'],
+        ['7'],
+        ['1'],
+        ['2'],
+        ['8'],
+        ['11'],
+        ['9'],
+        ['1'],
+        ['3'],
+        ['3'],
+        ['11'],
+        ['9'],
+        ['4'],
+        ['3'],
+        ['1'],
+        ['2'],
+        ['5'],
+        ['12'],
+        ['6'],
+        ['2'],
+        ['5'],
+        ['6'],
+        ['11'],
+        ['10'],
+        ['1'],
+        ['3'],
+        ['4'],
+        ['13'],
+        ['5'],
+        ['7'],
+        ['1'],
+        ['1'],
+        ['2'],
+        ['9'],
+        ['7'],
+        ['5'],
+        ['2'],
+        ['4'],
+        ['4'],
+        ['5'],
+        ['8'],
+        ['9'],
+        ['2'],
+        ['2'],
+        ['6'],
+        ['7'],
+        ['9'],
+        ['5'],
+        ['1'],
+        ['1'],
+        ['3'],
+        ['11'],
+        ['11'],
+        ['7'],
+        ['2'],
+        ['6'],
+        ['5'],
+        ['7'],
+        ['8'],
+        ['9'],
+        ['1'],
+        ['2'],
+        ['3'],
+        ['8'],
+        ['5'],
+        ['9'],
+        ['3'],
+        ['1'],
+        ['4']
     ],
     headerItems: [
-        [
-            [
-                {
-                    measureHeaderItem: {
-                        name: '# of Open Opps.',
-                        order: 0
-                    }
-                }
-            ]
-        ],
         [
             [
                 {
@@ -1018,20 +1093,30 @@ export const EXECUTION_RESULT_2A_1M = {
                     }
                 }
             ]
+        ],
+        [
+            [
+                {
+                    measureHeaderItem: {
+                        name: '# of Open Opps.',
+                        order: 0
+                    }
+                }
+            ]
         ]
     ],
     paging: {
         count: [
-            1,
-            76
+            76,
+            1
         ],
         offset: [
             0,
             0
         ],
         total: [
-            1,
-            76
+            76,
+            1
         ]
     }
 };

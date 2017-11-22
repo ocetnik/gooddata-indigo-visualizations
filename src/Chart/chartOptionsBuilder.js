@@ -1,8 +1,8 @@
 import { colors2Object, numberFormat } from '@gooddata/numberjs';
 import invariant from 'invariant';
 
-import { range, get, without } from 'lodash';
-import { parseValue, getAttributeElementIdFromAttributeElementUri, unEscapeAngleBrackets } from '../utils/common';
+import { range, get, without, escape, unescape } from 'lodash';
+import { parseValue, getAttributeElementIdFromAttributeElementUri } from '../utils/common';
 import { DEFAULT_COLOR_PALETTE, getLighterColor } from '../utils/color';
 import { PIE_CHART, CHART_TYPES } from '../VisualizationTypes';
 import { isDataOfReasonableSize } from './highChartsCreators';
@@ -191,21 +191,7 @@ export function getSeries(
     });
 }
 
-export const customEscape = str => str && unEscapeAngleBrackets(str).replace(/\W/gim, (char) => {
-    if (char === '<') {
-        return '&lt;';
-    }
-    if (char === '>') {
-        return '&gt;';
-    }
-    if (char === '"') {
-        return '&quot;';
-    }
-    if (char === '&') {
-        return '&amp;';
-    }
-    return `&#${char.charCodeAt(0)};`;
-});
+export const customEscape = str => str && escape(unescape(str));
 
 export function generateTooltipFn(viewByAttribute, type) {
     const formatValue = (val, format) => {
@@ -213,15 +199,16 @@ export function generateTooltipFn(viewByAttribute, type) {
     };
 
     return (point) => {
-        const formattedValue = formatValue(point.y, point.format).label;
+        const formattedValue = customEscape(formatValue(point.y, point.format).label);
         const textData = [[customEscape(point.series.name), formattedValue]];
 
         if (viewByAttribute) {
-            // For some reason, highcharts ommit categories for pie charts with attribute. Use point.name instead
-            textData.unshift([customEscape(viewByAttribute.name), customEscape(point.category || point.name)]);
+            // For some reason, highcharts ommit categories for pie charts with attribute. Use point.name instead.
+            // use attribute name instead of attribute display form name
+            textData.unshift([customEscape(viewByAttribute.formOf.name), customEscape(point.category || point.name)]);
         } else if (type === PIE_CHART) {
             // Pie charts with measure only have to use point.name instead of series.name to get the measure name
-            textData[0][0] = point.name;
+            textData[0][0] = customEscape(point.name);
         }
 
         return `<table class="tt-values">${textData.map(line => (
@@ -377,6 +364,20 @@ export function getDrillableSeries(
     });
 }
 
+function getCategories(type, viewByAttribute, measureGroup) {
+    // Categories make up bar/slice labels in charts. These usually match view by attribute values.
+    // Measure only pie charts geet categories from measure names
+    if (viewByAttribute) {
+        return viewByAttribute.items.map(({ attributeHeaderItem }) => attributeHeaderItem.name);
+    }
+    if (type === PIE_CHART) {
+        // Pie chart with measures only (no viewByAttribute) needs to list
+        return measureGroup.items.map(wrappedMeasure => unwrap(wrappedMeasure).name);
+        // Pie chart categories are later sorted by seriesItem pointValue
+    }
+    return [];
+}
+
 /**
  * Creates an object providing data for all you need to render a chart except drillability.
  *
@@ -403,7 +404,9 @@ export function getChartOptions(
     const attributeHeaderItems = unfilteredHeaderItems.map((dimension) => {
         return dimension.filter(attributeHeaders => attributeHeaders[0].attributeHeaderItem);
     });
-    invariant(config && config.type, `config.type must not be undefined. Possible values are: ${CHART_TYPES.join(', ')}`);
+
+    invariant(config && CHART_TYPES.includes(config.type), `config.type must be defined and match one of supported chart types: ${CHART_TYPES.join(', ')}`);
+
     const type = config.type;
     const measureGroup = findMeasureGroupInDimensions(dimensions);
     const viewByAttribute = findAttributeInDimension(
@@ -415,13 +418,7 @@ export function getChartOptions(
         attributeHeaderItems[STACK_BY_DIMENSION_INDEX]
     );
 
-    if (!measureGroup) {
-        throw new Error('missing measureGroup');
-    }
-
-    const categories = viewByAttribute
-        ? viewByAttribute.items.map(({ attributeHeaderItem }) => (attributeHeaderItem.name))
-        : measureGroup.items.map(wrappedMeasure => unwrap(wrappedMeasure).name);
+    invariant(measureGroup, 'missing measureGroup');
 
     const colorPalette =
         getColorPalette(config.colors, measureGroup, viewByAttribute, stackByAttribute, afm, type);
@@ -444,7 +441,33 @@ export function getChartOptions(
         type
     );
 
-    const xLabel = config.xLabel || (viewByAttribute ? viewByAttribute.name : '');
+    let categories = getCategories(type, viewByAttribute, measureGroup);
+
+    // Pie charts dataPoints are sorted by default by value in descending order
+    if (type === PIE_CHART) {
+        const dataPoints = series[0].data;
+        const indexSortOrder = [];
+        const sortedDataPoints = dataPoints.sort((pointDataA, pointDataB) => {
+            if (pointDataA.y === pointDataB.y) { return 0; }
+            return pointDataB.y - pointDataA.y;
+        }).map((dataPoint, dataPointIndex) => {
+            // Legend index equals original dataPoint index
+            indexSortOrder.push(dataPoint.legendIndex);
+            return {
+                // after sorting, colors need to be reassigned in original order and legendIndex needs to be reset
+                ...dataPoint,
+                color: dataPoints[dataPoint.legendIndex].color,
+                legendIndex: dataPointIndex
+            };
+        });
+        // categories need to be sorted in exactly the same order as dataPoints
+        categories = categories.map((_category, dataPointIndex) => categories[indexSortOrder[dataPointIndex]]);
+        series[0].data = sortedDataPoints;
+    }
+
+    // Attribute axis labels come from attribute instead of attribute display form.
+    // They are listed in attribute headers. So we need to find one attribute header and read the attribute name
+    const xLabel = config.xLabel || (viewByAttribute ? viewByAttribute.formOf.name : '');
     // if there is only one measure, yLabel is name of this measure, otherwise an empty string
     const yLabel = config.yLabel || (measureGroup.items.length === 1 ? unwrap(measureGroup.items[0]).name : '');
     const yFormat = config.yFormat || unwrap(measureGroup.items[0]).format;

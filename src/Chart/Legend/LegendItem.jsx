@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import { unescape } from 'lodash';
 import PropTypes from 'prop-types';
 
 import { LINE_CHART } from '../../VisualizationTypes';
-import { unEscapeAngleBrackets } from '../../utils/common';
 
 const VISIBLE_COLOR = '#6D7680';
 const DISABLED_COLOR = '#CCCCCC';
@@ -49,9 +49,8 @@ export default class LegendItem extends Component {
                 <div
                     className="series-name"
                     style={nameStyle}
-                    title={unEscapeAngleBrackets(item.name)}
-                    dangerouslySetInnerHTML={{ __html: item.name }} // eslint-disable-line react/no-danger
-                />
+                    title={unescape(item.name)}
+                >{item.name}</div>
             </div>
         );
     }

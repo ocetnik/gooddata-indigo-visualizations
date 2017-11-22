@@ -111,10 +111,12 @@ const nativeTotalItemPropTypes = {
     attributeIdentifiers: PropTypes.arrayOf(identifierPropTypes).isRequired
 };
 
+export const FiltersPropTypesShape = PropTypes.arrayOf(compatibilityFilterPropTypes);
+
 const afmPropTypes = {
     attributes: PropTypes.arrayOf(PropTypes.shape(attributePropTypes)),
     measures: PropTypes.arrayOf(PropTypes.shape(measurePropTypes)),
-    filters: PropTypes.arrayOf(compatibilityFilterPropTypes),
+    filters: FiltersPropTypesShape,
     nativeTotals: PropTypes.arrayOf(PropTypes.shape(nativeTotalItemPropTypes))
 };
 
@@ -204,7 +206,12 @@ const responseAttributeHeaderPropTypes = {
         identifier: PropTypes.string.isRequired,
         localIdentifier: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
-        totalItems: PropTypes.arrayOf(PropTypes.shape(totalHeaderItemPropTypes))
+        totalItems: PropTypes.arrayOf(PropTypes.shape(totalHeaderItemPropTypes)),
+        formOf: PropTypes.shape({
+            name: PropTypes.string.isRequired,
+            uri: PropTypes.string.isRequired,
+            identifier: PropTypes.string.isRequired
+        }).isRequired
     }).isRequired
 };
 
@@ -236,9 +243,12 @@ const dataValuePropTypes = PropTypes.oneOfType([
     PropTypes.number
 ]);
 
+export const AfmPropTypesShape = PropTypes.shape(afmPropTypes);
+export const ResultSpecPropTypesShape = PropTypes.shape(resultSpecPropTypes);
+
 export const ExecutionRequestPropTypes = PropTypes.shape({
-    afm: PropTypes.shape(afmPropTypes).isRequired,
-    resultSpec: PropTypes.shape(resultSpecPropTypes)
+    afm: AfmPropTypesShape.isRequired,
+    resultSpec: ResultSpecPropTypesShape
 });
 
 export const ExecutionResponsePropTypes = PropTypes.shape({

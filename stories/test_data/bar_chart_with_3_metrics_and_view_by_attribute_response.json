@@ -8,7 +8,7 @@
                             "items": [
                                 {
                                     "measureHeaderItem": {
-                                        "name": "Lost",
+                                        "name": "<button>Lost</button> ...",
                                         "format": "#,##0.00",
                                         "localIdentifier": "lostMetric",
                                         "uri": "/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1283",
@@ -45,7 +45,12 @@
                             "name": "Year (Created)",
                             "localIdentifier": "yearCreatedAttribute",
                             "uri": "/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/158",
-                            "identifier": "created.aag81lMifn6q"
+                            "identifier": "created.aag81lMifn6q",
+                            "formOf": {
+                                "uri": "/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/157",
+                                "identifier": "created",
+                                "name": "Year created"
+                            }
                         }
                     }
                 ]

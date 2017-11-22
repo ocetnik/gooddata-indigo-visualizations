@@ -38,14 +38,15 @@ describe('ChartTransformation', () => {
             colorPalette = params.chartOptions.colorPalette;
             return <div />;
         };
-        mount(createComponent({
+        const componentProps = {
             renderer,
             ...fixtures.barChartWithStackByAndViewByAttributes,
             config: {
                 ...defaultProps.config,
                 colors: customColors
             }
-        }));
+        };
+        mount(createComponent(componentProps));
         expect(colorPalette).toEqual(customColors);
     });
 
