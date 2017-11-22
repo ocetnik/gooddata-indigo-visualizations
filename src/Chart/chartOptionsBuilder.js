@@ -213,7 +213,7 @@ export function generateTooltipFn(viewByAttribute, type) {
     };
 
     return (point) => {
-        const formattedValue = formatValue(point.y, point.format).label;
+        const formattedValue = customEscape(formatValue(point.y, point.format).label);
         const textData = [[customEscape(point.series.name), formattedValue]];
 
         if (viewByAttribute) {
