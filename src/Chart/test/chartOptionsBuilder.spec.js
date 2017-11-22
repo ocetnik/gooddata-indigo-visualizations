@@ -31,7 +31,7 @@ import {
     DEFAULT_COLOR_PALETTE
 } from '../../utils/color';
 
-export function mockChartOptions(
+export function generateChartOptions(
     dataSet = fixtures.barChartWithStackByAndViewByAttributes,
     config = {
         type: 'column'
@@ -85,12 +85,12 @@ function getSeriesItemDataParameters(dataSet, seriesIndex) {
 }
 
 describe('chartOptionsBuilder', () => {
-    const barChartWithStackByAndViewByAttributesOptions = mockChartOptions();
+    const barChartWithStackByAndViewByAttributesOptions = generateChartOptions();
 
     const barChartWith3MetricsAndViewByAttributeOptions =
-        mockChartOptions(fixtures.barChartWith3MetricsAndViewByAttribute);
+        generateChartOptions(fixtures.barChartWith3MetricsAndViewByAttribute);
 
-    const pieChartOptionsWithNegativeValue = mockChartOptions({
+    const pieChartOptionsWithNegativeValue = generateChartOptions({
         ...fixtures.pieChartWithMetricsOnly,
         executionResult: {
             ...fixtures.pieChartWithMetricsOnly.executionResult,
@@ -106,7 +106,7 @@ describe('chartOptionsBuilder', () => {
         type: 'pie'
     });
 
-    const pieChartWithMetricsOnlyOptions = mockChartOptions({
+    const pieChartWithMetricsOnlyOptions = generateChartOptions({
         ...fixtures.pieChartWithMetricsOnly
     },
     {
@@ -163,7 +163,7 @@ describe('chartOptionsBuilder', () => {
             });
         });
         it(`should validate with "dataTooLarge: true" against default chart categories limit of ${DEFAULT_CATEGORIES_LIMIT}`, () => {
-            const chartOptions = mockChartOptions(fixtures.barChartWith3MetricsAndViewByAttribute);
+            const chartOptions = generateChartOptions(fixtures.barChartWith3MetricsAndViewByAttribute);
             chartOptions.data.categories = range(DEFAULT_CATEGORIES_LIMIT + 1);
 
             const validationResult = validateData({}, chartOptions);
@@ -176,7 +176,7 @@ describe('chartOptionsBuilder', () => {
             });
         });
         it('should validate with "dataTooLarge: true" against default pie chart series limit of 1', () => {
-            const chartOptions = mockChartOptions(fixtures.barChartWith3MetricsAndViewByAttribute,
+            const chartOptions = generateChartOptions(fixtures.barChartWith3MetricsAndViewByAttribute,
                 {
                     type: 'pie'
                 });
@@ -190,7 +190,7 @@ describe('chartOptionsBuilder', () => {
             });
         });
         it(`should validate with "dataTooLarge: true" against default pie chart categories limit of ${PIE_CHART_LIMIT}`, () => {
-            const chartOptions = mockChartOptions(fixtures.pieChartWithMetricsOnly,
+            const chartOptions = generateChartOptions(fixtures.pieChartWithMetricsOnly,
                 {
                     type: 'pie'
                 });
@@ -908,7 +908,7 @@ describe('chartOptionsBuilder', () => {
     describe('getChartOptions', () => {
         const dataSet = fixtures.barChartWith3MetricsAndViewByAttribute;
         const dataSetWithoutMeasureGroup = immutableSet(dataSet, `executionResponse.dimensions[${STACK_BY_DIMENSION_INDEX}].headers`, []);
-        const chartOptionsWithCustomOptions = mockChartOptions(dataSet, {
+        const chartOptionsWithCustomOptions = generateChartOptions(dataSet, {
             xLabel: 'xLabel',
             yLabel: 'yLabel',
             yFormat: 'yFormat',
@@ -917,17 +917,17 @@ describe('chartOptionsBuilder', () => {
         });
 
         it('should throw if measure group is missing in dimensions', () => {
-            expect(mockChartOptions.bind(this, dataSetWithoutMeasureGroup)).toThrow();
+            expect(generateChartOptions.bind(this, dataSetWithoutMeasureGroup)).toThrow();
         });
 
         it('should throw if chart type is of unknown type', () => {
-            expect(mockChartOptions.bind(this, dataSetWithoutMeasureGroup, { type: 'bs' })).toThrow();
+            expect(generateChartOptions.bind(this, dataSetWithoutMeasureGroup, { type: 'bs' })).toThrow();
         });
 
         it('should assign showInPercent true only if at least one measure`s format includes a "%" sign', () => {
             const dataSetWithPercentFormat = immutableSet(dataSet, `executionResponse.dimensions[${STACK_BY_DIMENSION_INDEX}].headers[0].measureGroupHeader.items[0].measureHeaderItem.format`, '0.00 %');
-            const chartOptions = mockChartOptions(dataSetWithPercentFormat);
-            expect(mockChartOptions(dataSet).showInPercent).toBe(false); // false by default
+            const chartOptions = generateChartOptions(dataSetWithPercentFormat);
+            expect(generateChartOptions(dataSet).showInPercent).toBe(false); // false by default
             expect(chartOptions.showInPercent).toBe(true); // true if format includes %
         });
 
@@ -948,7 +948,7 @@ describe('chartOptionsBuilder', () => {
         });
 
         describe('in usecase of bar chart with 3 metrics', () => {
-            const chartOptions = mockChartOptions(fixtures.barChartWith3MetricsAndViewByAttribute);
+            const chartOptions = generateChartOptions(fixtures.barChartWith3MetricsAndViewByAttribute);
 
             it('should assign a default legend format of horizontal', () => {
                 expect(chartOptions.legendLayout).toBe('horizontal');
@@ -1001,7 +1001,7 @@ describe('chartOptionsBuilder', () => {
         });
 
         describe('in usecase of stack bar chart', () => {
-            const chartOptions = mockChartOptions(fixtures.barChartWithStackByAndViewByAttributes);
+            const chartOptions = generateChartOptions(fixtures.barChartWithStackByAndViewByAttributes);
 
             it('should assign stacking normal', () => {
                 expect(chartOptions.stacking).toBe('normal');
@@ -1046,7 +1046,7 @@ describe('chartOptionsBuilder', () => {
         });
 
         describe('in usecase of pie chart with attribute', () => {
-            const chartOptions = mockChartOptions(fixtures.barChartWithViewByAttribute, { type: 'pie' });
+            const chartOptions = generateChartOptions(fixtures.barChartWithViewByAttribute, { type: 'pie' });
 
             it('should assign stacking normal', () => {
                 expect(chartOptions.stacking).toBe(null);
@@ -1091,7 +1091,7 @@ describe('chartOptionsBuilder', () => {
         });
 
         describe('in usecase of pie chart with measures only', () => {
-            const chartOptions = mockChartOptions(fixtures.pieChartWithMetricsOnly, { type: 'pie' });
+            const chartOptions = generateChartOptions(fixtures.pieChartWithMetricsOnly, { type: 'pie' });
 
             it('should assign stacking normal', () => {
                 expect(chartOptions.stacking).toBe(null);
@@ -1114,7 +1114,8 @@ describe('chartOptionsBuilder', () => {
             });
 
             it('should assign categories with names of measures', () => {
-                expect(chartOptions.data.categories).toEqual(['Lost', 'Won', 'Expected']);
+                expect(chartOptions.data.categories).toEqual(['Won', 'Lost', 'Expected']);
+
             });
 
             it('should assign correct tooltip function', () => {
@@ -1134,7 +1135,7 @@ describe('chartOptionsBuilder', () => {
         });
 
         describe('in usecase of bar chart with pop measure', () => {
-            const chartOptions = mockChartOptions(fixtures.barChartWithPopMeasureAndViewByAttribute, { type: 'column' });
+            const chartOptions = generateChartOptions(fixtures.barChartWithPopMeasureAndViewByAttribute, { type: 'column' });
 
             it('should assign stacking normal', () => {
                 expect(chartOptions.stacking).toBe(null);

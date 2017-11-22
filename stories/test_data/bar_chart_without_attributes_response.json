@@ -14,6 +14,15 @@
                                         "uri": "/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1279",
                                         "identifier": "ah1EuQxwaCqs"
                                     }
+                                },
+                                {
+                                    "measureHeaderItem": {
+                                        "name": "Snapshot",
+                                        "format": "#,##0.00",
+                                        "localIdentifier": "snapshotMetric",
+                                        "uri": "/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/1280",
+                                        "identifier": "ah1lkzjdfkl"
+                                    }
                                 }
                             ]
                         }

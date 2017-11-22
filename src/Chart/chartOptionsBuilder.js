@@ -377,6 +377,21 @@ export function getDrillableSeries(
     });
 }
 
+function getCategories(type, viewByAttribute, measureGroup) {
+    if (viewByAttribute) {
+        return viewByAttribute.items.map(({ attributeHeaderItem }) => (attributeHeaderItem.name));
+    }
+    if (measureGroup.items.length === 1) {
+        return unwrap(measureGroup.items[0]).name;
+    }
+    if (type === PIE_CHART) {
+        // Pie chart with measures only (no viewByAttribute) needs to list
+        return measureGroup.items.map(wrappedMeasure => unwrap(wrappedMeasure).name);
+        // Pie chart categories are later sorted by seriesItem pointValue
+    }
+    return [];
+}
+
 /**
  * Creates an object providing data for all you need to render a chart except drillability.
  *
@@ -419,10 +434,6 @@ export function getChartOptions(
         throw new Error('missing measureGroup');
     }
 
-    const categories = viewByAttribute
-        ? viewByAttribute.items.map(({ attributeHeaderItem }) => (attributeHeaderItem.name))
-        : measureGroup.items.map(wrappedMeasure => unwrap(wrappedMeasure).name);
-
     const colorPalette =
         getColorPalette(config.colors, measureGroup, viewByAttribute, stackByAttribute, afm, type);
 
@@ -443,6 +454,31 @@ export function getChartOptions(
         stackByAttribute,
         type
     );
+
+    let categories = getCategories(type, viewByAttribute, measureGroup);
+
+    // Pie charts dataPoints are sorted by default by value in descending order
+    if (type === PIE_CHART) {
+        const dataPoints = series[0].data;
+        const indexSortOrder = [];
+        const sortedDataPoints = dataPoints.sort((pointDataA, pointDataB) => {
+            if (pointDataA.y === pointDataB.y) { return 0; }
+            return pointDataB.y - pointDataA.y;
+        }).map((dataPoint, dataPointIndex) => {
+            // Legend index equals original dataPoint index
+            indexSortOrder.push(dataPoint.legendIndex);
+            return {
+                // after sorting, colors need to be reassigned in original order and legendIndex needs to be reset
+                ...dataPoint,
+                color: dataPoints[dataPoint.legendIndex].color,
+                legendIndex: dataPointIndex
+            };
+        });
+        // categories need to be sorted in exactly the same order as dataPoints
+        categories = categories.map((_category, dataPointIndex) => categories[indexSortOrder[dataPointIndex]]);
+        series[0].data = sortedDataPoints;
+    }
+
 
     const xLabel = config.xLabel || (viewByAttribute ? viewByAttribute.name : '');
     // if there is only one measure, yLabel is name of this measure, otherwise an empty string
