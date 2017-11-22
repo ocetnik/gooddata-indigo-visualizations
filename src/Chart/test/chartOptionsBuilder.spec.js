@@ -1115,7 +1115,6 @@ describe('chartOptionsBuilder', () => {
 
             it('should assign categories with names of measures', () => {
                 expect(chartOptions.data.categories).toEqual(['Won', 'Lost', 'Expected']);
-
             });
 
             it('should assign correct tooltip function', () => {

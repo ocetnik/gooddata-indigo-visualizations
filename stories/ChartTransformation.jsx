@@ -228,6 +228,33 @@ storiesOf('ChartTransformation')
             )
         );
     })
+    .add('Column chart with viewBy and stackBy attribute but only one stack item', () => {
+        const dataSet = fixtures.barChartWithStackByAndOnlyOneStack;
+
+        return screenshotWrap(
+            wrap(
+                <ChartTransformation
+                    drillableItems={[
+                        {
+                            uri: dataSet.executionResult
+                                .headerItems[VIEW_BY_DIMENSION_INDEX][0][0].attributeHeaderItem.uri
+                        }
+                    ]}
+                    config={{
+                        type: 'column',
+                        legend: {
+                            enabled: true,
+                            position: 'top'
+                        },
+                        legendLayout: 'vertical',
+                        colors: fixtures.lgbtPalette
+                    }}
+                    {...dataSet}
+                    onDataTooLarge={f => f}
+                />
+            )
+        );
+    })
     .add('Column chart with 6 pop measures and view by attribute', () => {
         const dataSet = fixtures.barChartWith6PopMeasuresAndViewByAttribute;
 

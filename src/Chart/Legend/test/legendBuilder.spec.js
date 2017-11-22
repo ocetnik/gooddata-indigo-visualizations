@@ -1,25 +1,30 @@
 import { generateChartOptions } from '../../test/chartOptionsBuilder.spec';
 import * as fixtures from '../../../../stories/test_data/fixtures';
 import getLegend, {
-    shouldBeLegendEnabled,
+    shouldLegendBeEnabled,
     getLegendItems,
     DEFAULT_LEGEND_CONFIG
 } from '../legendBuilder';
 
-describe('shouldBeLegendEnabled', () => {
+describe('shouldLegendBeEnabled', () => {
     it('should return false by default', () => {
         const chartOptions = generateChartOptions(fixtures.barChartWithViewByAttribute);
-        expect(shouldBeLegendEnabled(chartOptions)).toBe(false);
+        expect(shouldLegendBeEnabled(chartOptions)).toBe(false);
     });
 
     it('should return true if chart has more than one series', () => {
         const chartOptions = generateChartOptions(fixtures.barChartWith3MetricsAndViewByAttribute);
-        expect(shouldBeLegendEnabled(chartOptions)).toBe(true);
+        expect(shouldLegendBeEnabled(chartOptions)).toBe(true);
     });
 
     it('should return true if pie chart has more than one value', () => {
         const chartOptions = generateChartOptions(fixtures.pieChartWithMetricsOnly, { type: 'pie' });
-        expect(shouldBeLegendEnabled(chartOptions)).toBe(true);
+        expect(shouldLegendBeEnabled(chartOptions)).toBe(true);
+    });
+
+    it('should return true if the chart is stacked and has only one stack item', () => {
+        const chartOptions = generateChartOptions(fixtures.barChartWithStackByAndOnlyOneStack, { type: 'bar' });
+        expect(shouldLegendBeEnabled(chartOptions)).toBe(true);
     });
 });
 
