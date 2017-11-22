@@ -179,8 +179,8 @@ describe('Table utils - Data transformation', () => {
 
             const extendedHeaderItemsWithMeasureGroupHeaderItems = set(
                 EXECUTION_RESULT_1A,
-                'headerItems[0]',
-                EXECUTION_RESULT_1A.headerItems[0].concat([measureGroupHeaderItems])
+                'headerItems[1]',
+                EXECUTION_RESULT_1A.headerItems[1].concat([measureGroupHeaderItems])
             );
 
             const rows = getRows(extendedHeaderItemsWithMeasureGroupHeaderItems);

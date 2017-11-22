@@ -41,7 +41,6 @@ function generateAttributeHeaders(columns) {
 
 function generateHeaderItems(columns, rows) {
     return [
-        [], // empty array => empty 0-th dimension
         range(columns).map((columnNumber) => {
             return range(rows).map((rowNumber) => {
                 return {
@@ -51,7 +50,8 @@ function generateHeaderItems(columns, rows) {
                     }
                 };
             });
-        })
+        }),
+        [] // empty array => empty 1-st dimension
     ];
 }
 
@@ -59,10 +59,10 @@ function generateExecutionResponse(columns, rows) {
     return {
         dimensions: [
             {
-                headers: [] // empty array => empty 0-th dimension
+                headers: generateAttributeHeaders(columns, rows)
             },
             {
-                headers: generateAttributeHeaders(columns, rows)
+                headers: [] // empty array => empty 1-st dimension
             }
         ],
         links: {
@@ -77,16 +77,16 @@ function generateExecutionResult(columns, rows) {
         headerItems: generateHeaderItems(columns, rows),
         paging: {
             count: [
-                1,
-                20
+                20,
+                1
             ],
             offset: [
                 0,
                 0
             ],
             total: [
-                1,
-                20
+                20,
+                1
             ]
         }
     };

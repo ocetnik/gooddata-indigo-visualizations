@@ -37,10 +37,10 @@ export const EXECUTION_REQUEST_POP = {
     resultSpec: {
         dimensions: [
             {
-                itemIdentifiers: ['measureGroup']
+                itemIdentifiers: ['date_attr_local_identifier']
             },
             {
-                itemIdentifiers: ['date_attr_local_identifier']
+                itemIdentifiers: ['measureGroup']
             }
         ]
     }
@@ -48,6 +48,18 @@ export const EXECUTION_REQUEST_POP = {
 
 export const EXECUTION_RESPONSE_POP = {
     dimensions: [
+        {
+            headers: [
+                {
+                    attributeHeader: {
+                        uri: '/gdc/md/project_id/obj/date_attr_df_uri_id',
+                        identifier: 'date_attr_df_identifier',
+                        localIdentifier: 'date_attr_local_identifier',
+                        name: 'Year (Created)'
+                    }
+                }
+            ]
+        },
         {
             headers: [
                 {
@@ -75,18 +87,6 @@ export const EXECUTION_RESPONSE_POP = {
                     }
                 }
             ]
-        },
-        {
-            headers: [
-                {
-                    attributeHeader: {
-                        uri: '/gdc/md/project_id/obj/date_attr_df_uri_id',
-                        identifier: 'date_attr_df_identifier',
-                        localIdentifier: 'date_attr_local_identifier',
-                        name: 'Year (Created)'
-                    }
-                }
-            ]
         }
     ],
     links: {
@@ -98,34 +98,22 @@ export const EXECUTION_RESULT_POP = {
     data: [
         [
             null,
+            '41013'
+        ],
+        [
             '41013',
+            '40786'
+        ],
+        [
             '40786',
             '40661'
         ],
         [
-            '41013',
-            '40786',
             '40661',
             null
         ]
     ],
     headerItems: [
-        [
-            [
-                {
-                    measureHeaderItem: {
-                        name: 'Close [BOP] - Previous year',
-                        order: 0
-                    }
-                },
-                {
-                    measureHeaderItem: {
-                        name: 'Close [BOP]',
-                        order: 1
-                    }
-                }
-            ]
-        ],
         [
             [
                 {
@@ -153,20 +141,36 @@ export const EXECUTION_RESULT_POP = {
                     }
                 }
             ]
+        ],
+        [
+            [
+                {
+                    measureHeaderItem: {
+                        name: 'Close [BOP] - Previous year',
+                        order: 0
+                    }
+                },
+                {
+                    measureHeaderItem: {
+                        name: 'Close [BOP]',
+                        order: 1
+                    }
+                }
+            ]
         ]
     ],
     paging: {
         count: [
-            2,
-            4
+            4,
+            2
         ],
         offset: [
             0,
             0
         ],
         total: [
-            2,
-            4
+            4,
+            2
         ]
     }
 };
