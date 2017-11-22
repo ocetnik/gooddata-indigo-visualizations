@@ -36,10 +36,10 @@ export const EXECUTION_REQUEST_1A_2M = {
     resultSpec: {
         dimensions: [
             {
-                itemIdentifiers: ['measureGroup']
+                itemIdentifiers: ['1st_attr_local_identifier']
             },
             {
-                itemIdentifiers: ['1st_attr_local_identifier']
+                itemIdentifiers: ['measureGroup']
             }
         ]
     }
@@ -47,6 +47,18 @@ export const EXECUTION_REQUEST_1A_2M = {
 
 export const EXECUTION_RESPONSE_1A_2M = {
     dimensions: [
+        {
+            headers: [
+                {
+                    attributeHeader: {
+                        uri: '/gdc/md/project_id/obj/1st_attr_df_uri_id',
+                        identifier: '1st_attr_df_identifier',
+                        localIdentifier: '1st_attr_local_identifier',
+                        name: 'Name'
+                    }
+                }
+            ]
+        },
         {
             headers: [
                 {
@@ -74,18 +86,6 @@ export const EXECUTION_RESPONSE_1A_2M = {
                     }
                 }
             ]
-        },
-        {
-            headers: [
-                {
-                    attributeHeader: {
-                        uri: '/gdc/md/project_id/obj/1st_attr_df_uri_id',
-                        identifier: '1st_attr_df_identifier',
-                        localIdentifier: '1st_attr_local_identifier',
-                        name: 'Name'
-                    }
-                }
-            ]
         }
     ],
     links: {
@@ -96,13 +96,20 @@ export const EXECUTION_RESPONSE_1A_2M = {
 export const EXECUTION_RESULT_1A_2M = {
     data: [
         [
-            '30'
-        ],
-        [
-            '1324'
+            '30', '1324'
         ]
     ],
     headerItems: [
+        [
+            [
+                {
+                    attributeHeaderItem: {
+                        uri: '/gdc/md/project_id/obj/1st_attr_df_uri_id/elements?id=1',
+                        name: 'Wile E. Coyote'
+                    }
+                }
+            ]
+        ],
         [
             [
                 {
@@ -118,30 +125,20 @@ export const EXECUTION_RESULT_1A_2M = {
                     }
                 }
             ]
-        ],
-        [
-            [
-                {
-                    attributeHeaderItem: {
-                        uri: '/gdc/md/project_id/obj/1st_attr_df_uri_id/elements?id=1',
-                        name: 'Wile E. Coyote'
-                    }
-                }
-            ]
         ]
     ],
     paging: {
         count: [
-            3,
-            4
+            1,
+            2
         ],
         offset: [
             0,
             0
         ],
         total: [
-            3,
-            4
+            1,
+            2
         ]
     }
 };

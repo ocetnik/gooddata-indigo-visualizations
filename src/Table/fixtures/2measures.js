@@ -26,10 +26,10 @@ export const EXECUTION_REQUEST_2M = {
     resultSpec: {
         dimensions: [
             {
-                itemIdentifiers: ['measureGroup']
+                itemIdentifiers: []
             },
             {
-                itemIdentifiers: []
+                itemIdentifiers: ['measureGroup']
             }
         ]
     }
@@ -37,6 +37,9 @@ export const EXECUTION_REQUEST_2M = {
 
 export const EXECUTION_RESPONSE_2M = {
     dimensions: [
+        {
+            headers: [] // empty array => empty 0-th dimension
+        },
         {
             headers: [
                 {
@@ -64,9 +67,6 @@ export const EXECUTION_RESPONSE_2M = {
                     }
                 }
             ]
-        },
-        {
-            headers: [] // empty array => empty 1-st dimension
         }
     ],
     links: {
@@ -77,13 +77,12 @@ export const EXECUTION_RESPONSE_2M = {
 export const EXECUTION_RESULT_2M = {
     data: [
         [
-            '42470571.16'
-        ],
-        [
+            '42470571.16',
             '38310753.45'
         ]
     ],
     headerItems: [
+        [], // empty array => empty 0-th dimension
         [
             [
                 {
@@ -99,21 +98,20 @@ export const EXECUTION_RESULT_2M = {
                     }
                 }
             ]
-        ],
-        [] // empty array => empty 1-st dimension
+        ]
     ],
     paging: {
         count: [
-            2,
-            1
+            1,
+            2
         ],
         offset: [
             0,
             0
         ],
         total: [
-            2,
-            1
+            1,
+            2
         ]
     }
 };
