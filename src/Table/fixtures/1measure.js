@@ -16,10 +16,10 @@ export const EXECUTION_REQUEST_1M = {
     resultSpec: {
         dimensions: [
             {
-                itemIdentifiers: ['measureGroup']
+                itemIdentifiers: []
             },
             {
-                itemIdentifiers: []
+                itemIdentifiers: ['measureGroup']
             }
         ]
     }
@@ -27,6 +27,9 @@ export const EXECUTION_REQUEST_1M = {
 
 export const EXECUTION_RESPONSE_1M = {
     dimensions: [
+        {
+            headers: [] // empty array => empty 0-th dimension
+        },
         {
             headers: [
                 {
@@ -45,9 +48,6 @@ export const EXECUTION_RESPONSE_1M = {
                     }
                 }
             ]
-        },
-        {
-            headers: [] // empty array => empty 1-st dimension
         }
     ],
     links: {
@@ -62,6 +62,7 @@ export const EXECUTION_RESULT_1M = {
         ]
     ],
     headerItems: [
+        [], // empty array => empty 0-st dimension
         [
             [
                 {
@@ -71,8 +72,7 @@ export const EXECUTION_RESULT_1M = {
                     }
                 }
             ]
-        ],
-        [] // empty array => empty 1-st dimension
+        ]
     ],
     paging: {
         count: [
