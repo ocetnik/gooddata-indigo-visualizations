@@ -958,8 +958,8 @@ describe('chartOptionsBuilder', () => {
                 expect(chartOptions.stacking).toBe(null);
             });
 
-            it('should assign X axis name by default to view by attribute name', () => {
-                expect(chartOptions.title.x).toEqual('Year (Created)');
+            it('should assign X axis name by default to view by attribute name instead of attribute display form name', () => {
+                expect(chartOptions.title.x).toEqual('Year created');
             });
 
             it('should assign Y axis name to empty string in case of multiple measures', () => {
@@ -1140,8 +1140,8 @@ describe('chartOptionsBuilder', () => {
                 expect(chartOptions.stacking).toBe(null);
             });
 
-            it('should assign X an view by attribute value', () => {
-                expect(chartOptions.title.x).toEqual('Year (Created)');
+            it('should assign X an view by attribute name instead of attribute display form name', () => {
+                expect(chartOptions.title.x).toEqual('Year created');
             });
 
             it('should assign Y an empty string', () => {

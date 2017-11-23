@@ -27,7 +27,12 @@
                             "name": "Product Name",
                             "localIdentifier": "productAttribute",
                             "uri": "/gdc/md/tyajzbsbk0lk1vpjzyvry6exn1ej8ph7/obj/952",
-                            "identifier": "label.product.id.name"
+                            "identifier": "label.product.id.name",
+                            "formOf": {
+                                "uri": "/gdc/md/d20eyb3wfs0xe5l0lfscdnrnyhq1t42q/obj/951",
+                                "identifier": "product",
+                                "name": "Product"
+                            }
                         }
                     }
                 ]
