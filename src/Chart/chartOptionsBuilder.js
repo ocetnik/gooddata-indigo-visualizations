@@ -1,8 +1,8 @@
 import { colors2Object, numberFormat } from '@gooddata/numberjs';
 import invariant from 'invariant';
 
-import { range, get, without } from 'lodash';
-import { parseValue, getAttributeElementIdFromAttributeElementUri, unEscapeAngleBrackets } from '../utils/common';
+import { range, get, without, escape, unescape } from 'lodash';
+import { parseValue, getAttributeElementIdFromAttributeElementUri } from '../utils/common';
 import { DEFAULT_COLOR_PALETTE, getLighterColor } from '../utils/color';
 import { PIE_CHART, CHART_TYPES } from '../VisualizationTypes';
 import { isDataOfReasonableSize } from './highChartsCreators';
@@ -191,21 +191,7 @@ export function getSeries(
     });
 }
 
-export const customEscape = str => str && unEscapeAngleBrackets(str).replace(/\W/gim, (char) => {
-    if (char === '<') {
-        return '&lt;';
-    }
-    if (char === '>') {
-        return '&gt;';
-    }
-    if (char === '"') {
-        return '&quot;';
-    }
-    if (char === '&') {
-        return '&amp;';
-    }
-    return `&#${char.charCodeAt(0)};`;
-});
+export const customEscape = str => str && escape(unescape(str));
 
 export function generateTooltipFn(viewByAttribute, type) {
     const formatValue = (val, format) => {
@@ -380,14 +366,14 @@ export function getDrillableSeries(
 
 function getCategories(type, viewByAttribute, measureGroup) {
     if (viewByAttribute) {
-        return viewByAttribute.items.map(({ attributeHeaderItem }) => (attributeHeaderItem.name));
+        return viewByAttribute.items.map(({ attributeHeaderItem }) => customEscape(attributeHeaderItem.name));
     }
     if (measureGroup.items.length === 1) {
-        return unwrap(measureGroup.items[0]).name;
+        return customEscape(unwrap(measureGroup.items[0]).name);
     }
     if (type === PIE_CHART) {
         // Pie chart with measures only (no viewByAttribute) needs to list
-        return measureGroup.items.map(wrappedMeasure => unwrap(wrappedMeasure).name);
+        return measureGroup.items.map(wrappedMeasure => customEscape(unwrap(wrappedMeasure).name));
         // Pie chart categories are later sorted by seriesItem pointValue
     }
     return [];

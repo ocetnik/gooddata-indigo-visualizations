@@ -817,11 +817,6 @@ describe('chartOptionsBuilder', () => {
     });
 
     describe('customEscape', () => {
-        it('should encode non work characters', () => {
-            const source = 'qwertzuiopasdfghjklyxcvbnm1234567890/(!`?:_';
-            const expected = 'qwertzuiopasdfghjklyxcvbnm1234567890&#47;&#40;&#33;&#96;&#63;&#58;_';
-            expect(customEscape(source)).toBe(expected);
-        });
         it('should encode some characters into named html entities', () => {
             const source = '&"<>';
             const expected = '&amp;&quot;&lt;&gt;';
@@ -864,7 +859,7 @@ describe('chartOptionsBuilder', () => {
                         name: '&lt;series&gt;'
                     }
                 });
-                expect(getValues(tooltip)).toEqual(['Department', 'category', '&lt;series&gt;', '&#32;1']);
+                expect(getValues(tooltip)).toEqual(['Department', 'category', '&lt;series&gt;', ' 1']);
             });
 
             it('should escape other html chars in series name and have output properly escaped', () => {
@@ -874,7 +869,7 @@ describe('chartOptionsBuilder', () => {
                         name: '"&\'&lt;'
                     }
                 });
-                expect(getValues(tooltip)).toEqual(['Department', 'category', '&quot;&amp;&#39;&lt;', '&#32;1']);
+                expect(getValues(tooltip)).toEqual(['Department', 'category', '&quot;&amp;&#39;&lt;', ' 1']);
             });
 
             it('should unescape brackets and htmlescape category', () => {
@@ -882,26 +877,26 @@ describe('chartOptionsBuilder', () => {
                     ...pointData,
                     category: '&gt;"&\'&lt;'
                 });
-                expect(getValues(tooltip)).toEqual(['Department', '&gt;&quot;&amp;&#39;&lt;', 'series', '&#32;1']);
+                expect(getValues(tooltip)).toEqual(['Department', '&gt;&quot;&amp;&#39;&lt;', 'series', ' 1']);
             });
         });
 
         it('should render correct values in usecase of bar chart without attribute', () => {
             const tooltipFn = generateTooltipFn(null, 'column');
             const tooltip = tooltipFn(pointData);
-            expect(getValues(tooltip)).toEqual(['series', '&#32;1']);
+            expect(getValues(tooltip)).toEqual(['series', ' 1']);
         });
 
         it('should render correct values in usecase of pie chart with an attribute', () => {
             const tooltipFn = generateTooltipFn(viewByAttribute, 'pie');
             const tooltip = tooltipFn(pointData);
-            expect(getValues(tooltip)).toEqual(['Department', 'category', 'series', '&#32;1']);
+            expect(getValues(tooltip)).toEqual(['Department', 'category', 'series', ' 1']);
         });
 
         it('should render correct values in usecase of pie chart with measures', () => {
             const tooltipFn = generateTooltipFn(null, 'pie');
             const tooltip = tooltipFn(pointData);
-            expect(getValues(tooltip)).toEqual(['point', '&#32;1']);
+            expect(getValues(tooltip)).toEqual(['point', ' 1']);
         });
     });
 
@@ -975,7 +970,7 @@ describe('chartOptionsBuilder', () => {
             });
 
             it('should assign categories equal to view by attribute values', () => {
-                expect(chartOptions.data.categories).toEqual(['<button>2008</button>', '2009', '2010', '2011', '2012']);
+                expect(chartOptions.data.categories).toEqual(['&lt;button&gt;2008&lt;/button&gt;', '2009', '2010', '2011', '2012']);
             });
 
             it('should assign 3 colors from default colorPalette', () => {

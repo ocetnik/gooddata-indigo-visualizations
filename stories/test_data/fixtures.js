@@ -118,7 +118,7 @@ export const barChartWith6PopMeasuresAndViewByAttribute = (() => {
     return dataSet;
 })();
 
-export const lgbtPalette = [
+export const customPalette = [
     '#FF69B4',
     '#d40606',
     '#ee9c00',

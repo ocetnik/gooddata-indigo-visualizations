@@ -114,7 +114,7 @@ storiesOf('ChartTransformation')
                             position: 'top'
                         },
                         legendLayout: 'horizontal',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -141,7 +141,7 @@ storiesOf('ChartTransformation')
                             position: 'top'
                         },
                         legendLayout: 'horizontal',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -167,7 +167,7 @@ storiesOf('ChartTransformation')
                             position: 'top'
                         },
                         legendLayout: 'horizontal',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -193,7 +193,7 @@ storiesOf('ChartTransformation')
                             position: 'right'
                         },
                         legendLayout: 'horizontal',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -220,7 +220,7 @@ storiesOf('ChartTransformation')
                             position: 'top'
                         },
                         legendLayout: 'vertical',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -247,7 +247,7 @@ storiesOf('ChartTransformation')
                             position: 'top'
                         },
                         legendLayout: 'vertical',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -274,7 +274,7 @@ storiesOf('ChartTransformation')
                             position: 'top'
                         },
                         legendLayout: 'vertical',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -301,7 +301,7 @@ storiesOf('ChartTransformation')
                             position: 'bottom'
                         },
                         legendLayout: 'vertical',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -328,7 +328,7 @@ storiesOf('ChartTransformation')
                             position: 'right'
                         },
                         legendLayout: 'horizontal',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -355,7 +355,7 @@ storiesOf('ChartTransformation')
                             position: 'left'
                         },
                         legendLayout: 'horizontal',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -382,7 +382,7 @@ storiesOf('ChartTransformation')
                             position: 'left'
                         },
                         legendLayout: 'horizontal',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
@@ -409,7 +409,7 @@ storiesOf('ChartTransformation')
                             position: 'left'
                         },
                         legendLayout: 'horizontal',
-                        colors: fixtures.lgbtPalette
+                        colors: fixtures.customPalette
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}

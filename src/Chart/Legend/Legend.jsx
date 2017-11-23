@@ -4,7 +4,6 @@ import { throttle } from 'lodash';
 import Measure from 'react-measure';
 import cx from 'classnames';
 
-import { customEscape } from '../chartOptionsBuilder';
 import FluidLegend from './FluidLegend';
 import StaticLegend from './StaticLegend';
 
@@ -70,7 +69,6 @@ export default class Legend extends PureComponent {
             const isVisible = legendItemsEnabled[seriesItem.legendIndex];
             return {
                 ...seriesItem,
-                name: customEscape(seriesItem.name),
                 isVisible
             };
         });
