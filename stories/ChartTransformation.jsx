@@ -72,7 +72,7 @@ class DynamicChart extends React.Component {
         const dataSet = this.state.dataSet;
         return (<div>
             <div>
-                {wrap(<ChartTransformation
+                {screenshotWrap(wrap(<ChartTransformation
                     config={{
                         type: 'column',
                         legend: {
@@ -82,7 +82,7 @@ class DynamicChart extends React.Component {
                     }}
                     {...dataSet}
                     onDataTooLarge={f => f}
-                />, 600)}
+                />, 600))}
             </div>
             <br />
             <div>
