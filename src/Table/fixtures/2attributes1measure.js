@@ -48,7 +48,12 @@ export const EXECUTION_RESPONSE_2A_1M = {
                         uri: '/gdc/md/tgqkx9leq2tntui4j6fp08tk6epftziu/obj/1028',
                         identifier: 'label.owner.id.name',
                         localIdentifier: 'owner_name',
-                        name: 'Sales Rep (element 1, element 2, element 3, element 4, element 5, element 6, element 7, element 8, element 9, element 10, element 11)'
+                        name: 'Owner Name DF Title',
+                        formOf: {
+                            name: 'Sales Rep (element 1, element 2, element 3, element 4, element 5, element 6, element 7, element 8, element 9, element 10, element 11)',
+                            uri: '/gdc/md/tgqkx9leq2tntui4j6fp08tk6epftziu/obj/12345',
+                            identifier: 'owner_name_attr_local_identifier'
+                        }
                     }
                 },
                 {
@@ -56,7 +61,12 @@ export const EXECUTION_RESPONSE_2A_1M = {
                         uri: '/gdc/md/tgqkx9leq2tntui4j6fp08tk6epftziu/obj/1805',
                         identifier: 'label.stage.name.stagename',
                         localIdentifier: 'stage_name',
-                        name: 'Stage Name'
+                        name: 'Stage Name DF Title',
+                        formOf: {
+                            name: 'Stage Name',
+                            uri: '/gdc/md/tgqkx9leq2tntui4j6fp08tk6epftziu/obj/67890',
+                            identifier: 'stage_name_attr_local_identifier'
+                        }
                     }
                 }
             ]

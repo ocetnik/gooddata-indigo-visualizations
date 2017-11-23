@@ -2,7 +2,7 @@ export const EXECUTION_REQUEST_POP = {
     afm: {
         attributes: [
             {
-                localIdentifier: 'date_attr_local_identifier',
+                localIdentifier: 'date_attr_df_local_identifier',
                 displayForm: {
                     uri: '/gdc/md/project_id/obj/date_attr_df_uri_id'
                 }
@@ -37,7 +37,7 @@ export const EXECUTION_REQUEST_POP = {
     resultSpec: {
         dimensions: [
             {
-                itemIdentifiers: ['date_attr_local_identifier']
+                itemIdentifiers: ['date_attr_df_local_identifier']
             },
             {
                 itemIdentifiers: ['measureGroup']
@@ -54,8 +54,13 @@ export const EXECUTION_RESPONSE_POP = {
                     attributeHeader: {
                         uri: '/gdc/md/project_id/obj/date_attr_df_uri_id',
                         identifier: 'date_attr_df_identifier',
-                        localIdentifier: 'date_attr_local_identifier',
-                        name: 'Year (Created)'
+                        localIdentifier: 'date_attr_df_local_identifier',
+                        name: 'Year DF Title',
+                        formOf: {
+                            name: 'Year (Created)',
+                            uri: '/gdc/md/project_id/obj/date_attr_uri_id',
+                            identifier: 'date_attr_local_identifier'
+                        }
                     }
                 }
             ]
@@ -180,7 +185,7 @@ export const TABLE_HEADERS_POP = [
         type: 'attribute',
         uri: '/gdc/md/project_id/obj/date_attr_df_uri_id',
         identifier: 'date_attr_df_identifier',
-        localIdentifier: 'date_attr_local_identifier',
+        localIdentifier: 'date_attr_df_local_identifier',
         name: 'Year (Created)'
     },
     {

@@ -22,8 +22,12 @@ function generateExecutionRequest() {
     };
 }
 
+function generateAttributeUriForColumn(rowNumber) {
+    return `/gdc/md/project_id/obj/attr_${rowNumber}_uri_id`;
+}
+
 function generateAttributeDisplayFormUriForColumn(rowNumber) {
-    return `/gdc/md/project_id/obj/attr_${rowNumber}_df_uri_id`;
+    return `${generateAttributeUriForColumn(rowNumber)}_df`;
 }
 
 function generateAttributeHeaders(columns) {
@@ -32,8 +36,13 @@ function generateAttributeHeaders(columns) {
             attributeHeader: {
                 uri: generateAttributeDisplayFormUriForColumn(columnNumber),
                 identifier: `identifier_${columnNumber}`,
-                localIdentifier: `local_identifier_${columnNumber}`,
-                name: `Column ${columnNumber}`
+                localIdentifier: `df_local_identifier_${columnNumber}`,
+                name: `Column DF ${columnNumber}`,
+                formOf: {
+                    name: `Column ${columnNumber}`,
+                    uri: generateAttributeUriForColumn(columnNumber),
+                    identifier: `local_identifier_${columnNumber}`,
+                }
             }
         };
     });

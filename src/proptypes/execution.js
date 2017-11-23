@@ -204,7 +204,12 @@ const responseAttributeHeaderPropTypes = {
         identifier: PropTypes.string.isRequired,
         localIdentifier: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
-        totalItems: PropTypes.arrayOf(PropTypes.shape(totalHeaderItemPropTypes))
+        totalItems: PropTypes.arrayOf(PropTypes.shape(totalHeaderItemPropTypes)),
+        formOf: PropTypes.shape({
+            name: PropTypes.string.isRequired,
+            uri: PropTypes.string.isRequired,
+            identifier: PropTypes.string.isRequired
+        }).isRequired
     }).isRequired
 };
 

@@ -2,7 +2,7 @@ export const EXECUTION_REQUEST_1A_2M = {
     afm: {
         attributes: [
             {
-                localIdentifier: '1st_attr_local_identifier',
+                localIdentifier: '1st_attr_df_local_identifier',
                 displayForm: {
                     uri: '/gdc/md/project_id/obj/1st_attr_df_uri_id'
                 }
@@ -36,7 +36,7 @@ export const EXECUTION_REQUEST_1A_2M = {
     resultSpec: {
         dimensions: [
             {
-                itemIdentifiers: ['1st_attr_local_identifier']
+                itemIdentifiers: ['1st_attr_df_local_identifier']
             },
             {
                 itemIdentifiers: ['measureGroup']
@@ -53,8 +53,13 @@ export const EXECUTION_RESPONSE_1A_2M = {
                     attributeHeader: {
                         uri: '/gdc/md/project_id/obj/1st_attr_df_uri_id',
                         identifier: '1st_attr_df_identifier',
-                        localIdentifier: '1st_attr_local_identifier',
-                        name: 'Name'
+                        localIdentifier: '1st_attr_df_local_identifier',
+                        name: 'Full Name',
+                        formOf: {
+                            name: 'Name',
+                            uri: '/gdc/md/project_id/obj/1st_attr_uri_id',
+                            identifier: '1st_attr_local_identifier'
+                        }
                     }
                 }
             ]
@@ -148,7 +153,7 @@ export const TABLE_HEADERS_1A_2M = [
         type: 'attribute',
         uri: '/gdc/md/project_id/obj/1st_attr_df_uri_id',
         identifier: '1st_attr_df_identifier',
-        localIdentifier: '1st_attr_local_identifier',
+        localIdentifier: '1st_attr_df_local_identifier',
         name: 'Name'
     }, {
         type: 'measure',

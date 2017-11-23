@@ -5,7 +5,7 @@ import { TABLE_HEADERS_2A_3M } from '../../fixtures/2attributes3measures';
 const ATTRIBUTE_SORT_ITEM = {
     attributeSortItem: {
         direction: ASC,
-        attributeIdentifier: '2nd_attr_local_identifier'
+        attributeIdentifier: '2nd_attr_df_local_identifier'
     }
 };
 
@@ -24,7 +24,7 @@ const MEASURE_SORT_ITEM = {
 
 const ATTRIBUTE_SORT_ITEM_WITHOUT_DIRECTION = {
     attributeSortItem: {
-        attributeIdentifier: '2nd_attr_local_identifier'
+        attributeIdentifier: '2nd_attr_df_local_identifier'
     }
 };
 

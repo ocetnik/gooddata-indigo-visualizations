@@ -1,12 +1,13 @@
 import invariant from 'invariant';
-import { get, has, isObject, zip } from 'lodash';
+import { get, has, isObject, omit, zip } from 'lodash';
 import { getAttributeElementIdFromAttributeElementUri } from '../../utils/common';
 
 function getAttributeHeaders(attributeDimension) {
     return attributeDimension.headers
         .map((attributeHeader) => {
             return {
-                ...attributeHeader.attributeHeader,
+                ...omit(attributeHeader.attributeHeader, 'formOf'),
+                name: attributeHeader.attributeHeader.formOf.name,
                 type: 'attribute'
             };
         });

@@ -60,7 +60,7 @@ describe('Table utils - Header', () => {
         it('should get header class names', () => {
             expect(
                 getHeaderClassNames(ATTRIBUTE_HEADER)
-            ).toEqual('gd-table-header-ordering s-id-1st_attr_local_identifier');
+            ).toEqual('gd-table-header-ordering s-id-1st_attr_df_local_identifier');
         });
     });
 
