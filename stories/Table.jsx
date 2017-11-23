@@ -41,7 +41,7 @@ function generateAttributeHeaders(columns) {
                 formOf: {
                     name: `Column ${columnNumber}`,
                     uri: generateAttributeUriForColumn(columnNumber),
-                    identifier: `local_identifier_${columnNumber}`,
+                    identifier: `local_identifier_${columnNumber}`
                 }
             }
         };
