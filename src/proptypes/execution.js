@@ -111,10 +111,12 @@ const nativeTotalItemPropTypes = {
     attributeIdentifiers: PropTypes.arrayOf(identifierPropTypes).isRequired
 };
 
+export const FiltersPropTypesShape = PropTypes.arrayOf(compatibilityFilterPropTypes);
+
 const afmPropTypes = {
     attributes: PropTypes.arrayOf(PropTypes.shape(attributePropTypes)),
     measures: PropTypes.arrayOf(PropTypes.shape(measurePropTypes)),
-    filters: PropTypes.arrayOf(compatibilityFilterPropTypes),
+    filters: FiltersPropTypesShape,
     nativeTotals: PropTypes.arrayOf(PropTypes.shape(nativeTotalItemPropTypes))
 };
 
@@ -241,9 +243,12 @@ const dataValuePropTypes = PropTypes.oneOfType([
     PropTypes.number
 ]);
 
+export const AfmPropTypesShape = PropTypes.shape(afmPropTypes);
+export const ResultSpecPropTypesShape = PropTypes.shape(resultSpecPropTypes);
+
 export const ExecutionRequestPropTypes = PropTypes.shape({
-    afm: PropTypes.shape(afmPropTypes).isRequired,
-    resultSpec: PropTypes.shape(resultSpecPropTypes)
+    afm: AfmPropTypesShape.isRequired,
+    resultSpec: ResultSpecPropTypesShape
 });
 
 export const ExecutionResponsePropTypes = PropTypes.shape({

@@ -6,7 +6,14 @@ import TableTransformation from './Table/TableTransformation';
 import ResponsiveTable from './Table/ResponsiveTable';
 import Table from './Table/Table';
 
-import { ExecutionRequestPropTypes, ExecutionResponsePropTypes, ExecutionResultPropTypes } from './proptypes/execution';
+import {
+    AfmPropTypesShape,
+    ResultSpecPropTypesShape,
+    FiltersPropTypesShape,
+    ExecutionRequestPropTypes,
+    ExecutionResponsePropTypes,
+    ExecutionResultPropTypes
+} from './proptypes/execution';
 
 export {
     Visualization,
@@ -16,6 +23,10 @@ export {
 
     ResponsiveTable,
     Table,
+
+    AfmPropTypesShape,
+    ResultSpecPropTypesShape,
+    FiltersPropTypesShape,
 
     ExecutionRequestPropTypes,
     ExecutionResponsePropTypes,
