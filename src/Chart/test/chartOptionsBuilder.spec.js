@@ -970,7 +970,7 @@ describe('chartOptionsBuilder', () => {
             });
 
             it('should assign categories equal to view by attribute values', () => {
-                expect(chartOptions.data.categories).toEqual(['&lt;button&gt;2008&lt;/button&gt;', '2009', '2010', '2011', '2012']);
+                expect(chartOptions.data.categories).toEqual(['<button>2008</button>', '2009', '2010', '2011', '2012']);
             });
 
             it('should assign 3 colors from default colorPalette', () => {

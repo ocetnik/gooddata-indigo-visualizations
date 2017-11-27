@@ -208,7 +208,7 @@ export function generateTooltipFn(viewByAttribute, type) {
             textData.unshift([customEscape(viewByAttribute.formOf.name), customEscape(point.category || point.name)]);
         } else if (type === PIE_CHART) {
             // Pie charts with measure only have to use point.name instead of series.name to get the measure name
-            textData[0][0] = point.name;
+            textData[0][0] = customEscape(point.name);
         }
 
         return `<table class="tt-values">${textData.map(line => (
@@ -365,15 +365,14 @@ export function getDrillableSeries(
 }
 
 function getCategories(type, viewByAttribute, measureGroup) {
+    // Categories make up bar/slice labels in charts. These usually match view by attribute values.
+    // Measure only pie charts geet categories from measure names
     if (viewByAttribute) {
-        return viewByAttribute.items.map(({ attributeHeaderItem }) => customEscape(attributeHeaderItem.name));
-    }
-    if (measureGroup.items.length === 1) {
-        return customEscape(unwrap(measureGroup.items[0]).name);
+        return viewByAttribute.items.map(({ attributeHeaderItem }) => attributeHeaderItem.name);
     }
     if (type === PIE_CHART) {
         // Pie chart with measures only (no viewByAttribute) needs to list
-        return measureGroup.items.map(wrappedMeasure => customEscape(unwrap(wrappedMeasure).name));
+        return measureGroup.items.map(wrappedMeasure => unwrap(wrappedMeasure).name);
         // Pie chart categories are later sorted by seriesItem pointValue
     }
     return [];
@@ -405,7 +404,9 @@ export function getChartOptions(
     const attributeHeaderItems = unfilteredHeaderItems.map((dimension) => {
         return dimension.filter(attributeHeaders => attributeHeaders[0].attributeHeaderItem);
     });
-    invariant(config && config.type, `config.type must not be undefined. Possible values are: ${CHART_TYPES.join(', ')}`);
+
+    invariant(config && CHART_TYPES.includes(config.type), `config.type must be defined and match one of supported chart types: ${CHART_TYPES.join(', ')}`);
+
     const type = config.type;
     const measureGroup = findMeasureGroupInDimensions(dimensions);
     const viewByAttribute = findAttributeInDimension(
@@ -417,9 +418,7 @@ export function getChartOptions(
         attributeHeaderItems[STACK_BY_DIMENSION_INDEX]
     );
 
-    if (!measureGroup) {
-        throw new Error('missing measureGroup');
-    }
+    invariant(measureGroup, 'missing measureGroup');
 
     const colorPalette =
         getColorPalette(config.colors, measureGroup, viewByAttribute, stackByAttribute, afm, type);

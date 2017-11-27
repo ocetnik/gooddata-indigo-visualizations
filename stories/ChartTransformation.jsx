@@ -1,5 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
 
 import ChartTransformation from '../src/Chart/ChartTransformation';
 import { FLUID_LEGEND_THRESHOLD } from '../src/Chart/Legend/Legend';
@@ -56,10 +57,26 @@ class DynamicChart extends React.Component {
             ))(fixtures.barChartWith3MetricsAndViewByAttribute)
         };
 
-        this.state = {
-            dataSet: this.fixtures.barChartWith3MetricsAndViewByAttribute
+        this.legendOptions = {
+            'no legend': { enabled: false },
+            'legend top': { enabled: true, position: 'top' },
+            'legend right': { enabled: true, position: 'right' },
+            'legend bottom': { enabled: true, position: 'bottom' },
+            'legend left': { enabled: true, position: 'left' }
         };
-        this.setDataSet = this.setDataSet.bind(this);
+
+        this.chartTypes = [
+            'column',
+            'bar',
+            'line',
+            'pie'
+        ];
+
+        this.state = {
+            chartType: 'column',
+            dataSet: this.fixtures.barChartWith3MetricsAndViewByAttribute,
+            legendOption: this.legendOptions['legend top']
+        };
     }
 
     setDataSet(dataSetName) {
@@ -68,26 +85,50 @@ class DynamicChart extends React.Component {
         });
     }
 
+    setLegend(legendOption) {
+        this.setState({
+            legendOption: this.legendOptions[legendOption]
+        });
+    }
+
+    setChartType(chartType) {
+        this.setState({
+            chartType
+        });
+    }
+
     render() {
-        const dataSet = this.state.dataSet;
+        const { dataSet, legendOption, chartType } = this.state;
         return (<div>
             <div>
                 {screenshotWrap(wrap(<ChartTransformation
                     config={{
-                        type: 'column',
-                        legend: {
-                            enabled: true,
-                            position: 'top'
-                        }
+                        type: chartType,
+                        legend: legendOption
                     }}
                     {...dataSet}
-                    onDataTooLarge={f => f}
+                    onDataTooLarge={action('Data too large')}
+                    onNegativeValues={action('Negative values in pie chart')}
                 />, 600))}
             </div>
             <br />
             <div>
                 { Object.keys(this.fixtures).map(dataSetName => (
-                    <button onClick={() => this.setDataSet(dataSetName)} >{dataSetName}</button>
+                    <button key={dataSetName} onClick={() => this.setDataSet(dataSetName)} >{dataSetName}</button>
+                )) }
+            </div>
+            <div>
+                { Object.keys(this.legendOptions).map(legendOptionsItem => (
+                    <button key={legendOptionsItem} onClick={() => this.setLegend(legendOptionsItem)} >
+                        {legendOptionsItem}
+                    </button>
+                )) }
+            </div>
+            <div>
+                { this.chartTypes.map(chartTypeOption => (
+                    <button key={chartTypeOption} onClick={() => this.setChartType(chartTypeOption)} >
+                        {chartTypeOption}
+                    </button>
                 )) }
             </div>
         </div>);
@@ -95,6 +136,40 @@ class DynamicChart extends React.Component {
 }
 
 storiesOf('ChartTransformation')
+    .add('Column chart with one measure and no attributes', () => {
+        const dataSet = {
+            ...fixtures.barChartWithSingleMeasureAndNoAttributes
+        };
+
+        return screenshotWrap(
+            wrap(
+                <ChartTransformation
+                    drillableItems={[
+                        {
+                            uri: dataSet.executionResponse.dimensions[STACK_BY_DIMENSION_INDEX]
+                                .headers[0].measureGroupHeader.items[0].measureHeaderItem.uri
+                        }
+                    ]}
+                    config={{
+                        type: 'column',
+                        legend: {
+                            enabled: true,
+                            position: 'top'
+                        },
+                        legendLayout: 'horizontal',
+                        colors: fixtures.customPalette
+                    }}
+                    {...dataSet}
+                    onDataTooLarge={() => {
+                        throw new Error('Data too large');
+                    }}
+                    onNegativeValues={() => {
+                        throw new Error('Negative values in pie chart');
+                    }}
+                />
+            )
+        );
+    })
     .add('Column chart without attributes', () => {
         const dataSet = fixtures.barChartWithoutAttributes;
 
