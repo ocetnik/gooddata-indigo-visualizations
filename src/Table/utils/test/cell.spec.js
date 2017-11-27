@@ -19,11 +19,11 @@ describe('Table utils - Cell', () => {
 
     describe('getCellClassNames', () => {
         it('should get class names for non drillable cell', () => {
-            expect(getCellClassNames(3, 9, false)).toEqual('s-cell-3-9');
+            expect(getCellClassNames(3, 9, false)).toEqual('s-cell-3-9 s-table-cell');
         });
 
         it('should get class names for drillable cell', () => {
-            expect(getCellClassNames(3, 9, true)).toEqual('gd-cell-drillable s-cell-3-9');
+            expect(getCellClassNames(3, 9, true)).toEqual('gd-cell-drillable s-cell-3-9 s-table-cell');
         });
     });
 
